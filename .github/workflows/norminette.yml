@@ -31,7 +31,7 @@ jobs:
         run: norminette
 
   build:
-    name: Build Pipex Project
+    name: Build Minishell Project
     runs-on: ubuntu-latest
 
     steps:
