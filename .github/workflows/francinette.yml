@@ -1,0 +1,50 @@
+name: CI for Minishell Project
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+    branches:
+      - main
+      - dev
+
+jobs:
+  norminette:
+    name: Run Norminette
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install Norminette
+        run: pip install norminette
+
+      - name: Run Norminette
+        run: norminette
+
+  build:
+    name: Build Pipex Project
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y gcc make
+
+      - name: Run Makefile
+        run: make
+      
+      - name: Run Makefile
+        run: make bonus
