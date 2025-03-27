@@ -29,22 +29,3 @@ jobs:
 
       - name: Run Norminette
         run: norminette
-
-  build:
-    name: Build Minishell Project
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Install dependencies
-        run: |
-          sudo apt update
-          sudo apt install -y gcc make
-
-      - name: Run Makefile
-        run: make
-      
-      - name: Run Makefile
-        run: make bonus
