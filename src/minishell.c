@@ -9,5 +9,10 @@
 /*   Updated: 2025/02/22 21:49:33 by rmarrero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+#include "minishell.h"
 
-
+int	main(int argc, char **argv)
+{
+	lexer(argv[1]);
+	return (0);
+}
