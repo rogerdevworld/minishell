@@ -14,7 +14,7 @@ NAME = minishell
 SRC_DIR = ./src/
 OBJ_DIR = ./obj
 
-SRCS =	$(SRC_DIR)minishell.c 
+SRCS =	$(SRC_DIR)minishell.c $(SRC_DIR)lexer.c $(SRC_DIR)free_split.c 
 
 #$(SRC_DIR)lexer.c
 

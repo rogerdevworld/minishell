@@ -9,10 +9,10 @@
 /*   Updated: 2025/03/27 11:57:56 by rmarrero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../include/lexer.h"
+#include "../include/minishell.h"
 
 // -- main funtion for lexer -- //
-void	*lexer(char *token)
+t_token	*lexer(char *token)
 {
 	t_token	*tokens;
 	int		i;
@@ -22,21 +22,22 @@ void	*lexer(char *token)
 	i = 0;
 	tmp = ft_split(token, ' ');
 	if (!tmp)
-		return ;
+		return (NULL);
 	while (tmp[i])
 	{
-		add_back(&tokens, init_lexer(token[i]));
+		add_back(&tokens, init_lexer(tmp[i]));
 		i++;
 	}
 	free_split(tmp);
+	return (tokens);
 }
 
 // -- malloc t_token -- //
 t_token	*init_lexer(char *token)
 {
-	t_token	result;
+	t_token	*result;
 
-	result = (t_token)malloc(sizeof(t_token));
+	result = (t_token *)malloc(sizeof(t_token));
 	if (!result)
 		return (NULL);
 	result->value = ft_strdup(token);
@@ -45,7 +46,16 @@ t_token	*init_lexer(char *token)
 		free(result);
 		return (NULL);
 	}
-	result->type = 0;
+	if (ft_strcmp(token, "&&") == 0)
+		result->type = TOKEN_OPERATOR;
+	else if (ft_strcmp(token, "||") == 0)
+		result->type = TOKEN_OPERATOR;
+	else if (ft_strcmp(token, ";") == 0)
+		result->type = TOKEN_SEPARATOR;
+	else if (token[0] == '>' || token[0] == '<')
+		result->type = TOKEN_REDIRECTION;
+	else
+		result->type = TOKEN_COMMAND;
 	result->next = NULL;
 	return (result);
 }
@@ -74,4 +84,19 @@ void	add_back(t_token **tokens, t_token *token)
 		last_token = get_last_token(*tokens);
 		last_token->next = token;
 	}
+}
+
+// -- Función para convertir el tipo de token en una cadena -- //
+char	*token_type_to_string(TokenType type)
+{
+	if (type == TOKEN_COMMAND)
+		return ("COMANDO");
+	else if (type == TOKEN_OPERATOR)
+		return ("OPERADOR");
+	else if (type == TOKEN_SEPARATOR)
+		return ("SEPARADOR");
+	else if (type == TOKEN_REDIRECTION)
+		return ("REDIRECCION");
+	else
+		return ("DESCONOCIDO");
 }
