@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "../include/lexer.h"
-#include "../include/minishel.h"
 
 // -- main funtion for lexer -- //
 void	*lexer(char *token)
@@ -21,7 +20,7 @@ void	*lexer(char *token)
 
 	tokens = NULL;
 	i = 0;
-	tmp = ft_split(str, ' ');
+	tmp = ft_split(token, ' ');
 	if (!tmp)
 		return ;
 	while (tmp[i])

@@ -13,6 +13,13 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+// -- system libs -- //
+# include <fcntl.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <sys/wait.h>
+# include <unistd.h>
+
 // -- internal libs -- //
 # include "../src/libft/libft.h"
 # include "./lexer.h"

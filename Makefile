@@ -14,7 +14,9 @@ NAME = minishell
 SRC_DIR = ./src/
 OBJ_DIR = ./obj
 
-SRCS =	$(SRC_DIR)minishell.c $(SRC_DIR)lexer.c
+SRCS =	$(SRC_DIR)minishell.c 
+
+#$(SRC_DIR)lexer.c
 
 OBJS = $(SRCS:$(SRC_DIR)%.c=$(OBJ_DIR)/%.o)
 
