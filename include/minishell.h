@@ -25,6 +25,10 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
+// -- readline -- //
+#include <readline/readline.h>
+#include <readline/history.h>
+
 // -- minishell.h -- //
 
 // -- internal strcts -- //
