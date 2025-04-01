@@ -15,12 +15,14 @@
 void	main_loop(char *delimiter, int *p_fd)
 {
 	char	*line;
-
 	close(p_fd[0]);
 	while (1)
 	{
-		write(1, "minishell> ", 11);
-		line = get_next_line(STDIN_FILENO);
+		line = readline("minishell> ");
+		if (!line)
+			break ;
+		if (*line)
+			add_history(line);
 		if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)
 		{
 			free(line);
