@@ -15,12 +15,16 @@
 void	main_loop(char *delimiter, int *p_fd)
 {
 	char	*line;
+	t_token	*tokens;
+	
+	tokens = NULL;
 	close(p_fd[0]);
 	while (1)
 	{
 		line = readline("minishell> ");
 		if (!line)
 			break ;
+		tokens = lexer(line);
 		if (*line)
 			add_history(line);
 		if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)
@@ -28,6 +32,7 @@ void	main_loop(char *delimiter, int *p_fd)
 			free(line);
 			break ;
 		}
+		print_tokens(tokens);
 		free(line);
 	}
 	close(p_fd[1]);
