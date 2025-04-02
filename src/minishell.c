@@ -34,7 +34,7 @@ void	main_loop(char **envp)
 			break ;
 		}
 		cmd = parse_tokens(tokens, envp);
-		print_command_list(cmd);
+		built(cmd, tokens);
 		free(line);
 	}
 	exit(0);
