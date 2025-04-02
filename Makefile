@@ -14,7 +14,7 @@ NAME = minishell
 SRC_DIR = ./src/
 OBJ_DIR = ./obj
 
-SRCS =	$(SRC_DIR)minishell.c $(SRC_DIR)exit.c $(SRC_DIR)lexer.c $(SRC_DIR)free_split.c 
+SRCS =	$(SRC_DIR)minishell.c $(SRC_DIR)exit.c $(SRC_DIR)lexer/lexer.c $(SRC_DIR)lexer/free_split.c $(SRC_DIR)lexer/ft_split_quotes.c $(SRC_DIR)lexer/print_lexer.c $(SRC_DIR)parser/parser.c $(SRC_DIR)parser/get_path.c
 
 OBJS = $(SRCS:$(SRC_DIR)%.c=$(OBJ_DIR)/%.o)
 
@@ -58,13 +58,15 @@ libs:
 
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
+	mkdir -p ./obj/lexer
+	mkdir -p ./obj/parser
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)%.c $(HEADER) Makefile | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(NAME): $(EX_LIB) $(OBJECTS) $(HEADER)
 	@echo "$(GREEN)Compilando $(NAME)...$(RESET)"
-	$(CC) $(CFLAGS) $(OBJECTS) $(EX_LIB) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJECTS) $(EX_LIB) -o $(NAME) -lreadline
 	@echo "$(BLUE)"
 	@echo "$(YELLOW)           ($(RESET)__$(YELLOW))\           $(RESET)"
 	@echo "$(YELLOW)           ($(RESET)oo$(YELLOW))\\________  $(RESET)"

@@ -14,9 +14,9 @@
 # define MINISHELL_H
 
 // -- internal libs -- //
+# include "../src/libft/libft.h"
 # include "lexer.h"
 # include "parser.h"
-# include "../src/libft/libft.h"
 
 // -- system.h -- //
 
@@ -27,6 +27,10 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
+// -- readline -- //
+# include <readline/history.h>
+# include <readline/readline.h>
+
 // -- minishell.h -- //
 
 // -- internal strcts -- //
@@ -36,8 +40,5 @@ void	ft_here_doc(char *delimiter);
 
 // -- exit.h -- //
 void	ft_exit(int status, char *msg);
-
-// -- free.h -- //
-void					free_split(char **split);
 
 #endif
