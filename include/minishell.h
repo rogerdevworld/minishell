@@ -16,8 +16,8 @@
 // -- internal libs -- //
 # include "../src/libft/libft.h"
 # include "lexer.h"
-# include "builtins.h"
 # include "parser.h"
+# include "builtins.h"
 
 // -- system.h -- //
 
