@@ -12,6 +12,8 @@
 #include "../include/minishell.h"
 
 // -- main loop for minishell -- //
+// -- line 32: lo deberia hacer el execve(); 
+// clasificar si es local o de sistema -- //
 void	main_loop(int *p_fd)
 {
 	char	*line;
@@ -28,19 +30,12 @@ void	main_loop(int *p_fd)
 		if (*line)
 			add_history(line);
 		token = lexer(line);
-		// -- lo deberia hacer el execve(); clasificar si es local o de sistema -- //
-		while (token)
-		{
-			if (get_builtin_cmd(token->value))
-				execute_builtin(get_builtin_cmd(token->value), token);
-			token = token->next;
-		}
+		built(token);
 		if (ft_strncmp(line, "exit", 4) == 0)
 		{
 			free(line);
 			break ;
 		}
-		print_tokens(token);
 		free(line);
 	}
 	close(p_fd[1]);
