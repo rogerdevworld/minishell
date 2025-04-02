@@ -14,7 +14,7 @@
 
 t_command	*init_command(void)
 {
-	t_command *cmd;
+	t_command	*cmd;
 
 	cmd = (t_command *)malloc(sizeof(t_command));
 	if (!cmd)
@@ -66,7 +66,8 @@ t_command	*parse_tokens(t_token *tokens)
 			current->args[i++] = ft_strdup(tokens->value);
 		else if (tokens->type == TOKEN_REDIRECTION)
 			handle_redirect(current, &tokens);
-		else if (tokens->type == TOKEN_OPERATOR && ft_strcmp(tokens->value, "|") == 0)
+		else if (tokens->type == TOKEN_OPERATOR && ft_strcmp(tokens->value,
+				"|") == 0)
 		{
 			current->next = init_command();
 			current = current->next;
@@ -91,7 +92,8 @@ void	print_command_list(t_command *cmds)
 		if (cmds->input_file)
 			printf("  Input: %s\n", cmds->input_file);
 		if (cmds->output_file)
-			printf("  Output: %s (append: %d)\n", cmds->output_file, cmds->append);
+			printf("  Output: %s (append: %d)\n", cmds->output_file,
+				cmds->append);
 		printf("----------------------------------------\n");
 		cmds = cmds->next;
 	}
