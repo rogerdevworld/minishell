@@ -9,7 +9,6 @@
 /*   Updated: 2025/04/01 14:11:55 by xviladri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "../include/minishell.h"
 
 t_command	*init_command(void)
