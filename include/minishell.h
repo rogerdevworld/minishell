@@ -16,6 +16,8 @@
 // -- internal libs -- //
 # include "../src/libft/libft.h"
 
+// -- const var -- //
+# define EXIT "exit"
 // -- system.h -- //
 
 // -- system libs -- //
@@ -33,8 +35,8 @@
 
 // -- internal strcts -- //
 
-void	main_loop(char *delimiter, int *p_fd);
-void	ft_here_doc(char *delimiter);
+void	main_loop(int *p_fd);
+void	ft_here_doc(void);
 
 // -- exit.h -- //
 void	ft_exit(int status, char *msg);
