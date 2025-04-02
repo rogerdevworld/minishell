@@ -19,8 +19,6 @@
 # include "builtins.h"
 # include "parser.h"
 
-// -- const var -- //
-//# define EXIT "exit"
 // -- system.h -- //
 
 // -- system libs -- //
@@ -43,8 +41,5 @@ void	ft_here_doc(void);
 
 // -- exit.h -- //
 void	ft_exit(int status, char *msg);
-
-// -- free.h -- //
-void	free_split(char **split);
 
 #endif

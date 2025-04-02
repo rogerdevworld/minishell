@@ -13,10 +13,14 @@
 NAME = minishell
 SRC_DIR = ./src/
 SRC_DIR_BUI = ./src/builtins/
+SRC_DIR_LEX = ./src/lexer/
 OBJ_DIR = ./obj
-OBJ_DIR_BUI = ./obj/builtins
+OBJ_DIR_BUI = ./obj/builtins/
+OBJ_DIR_LEX = ./obj/lexer/
 
-SRCS =	$(SRC_DIR)minishell.c $(SRC_DIR)exit.c $(SRC_DIR)lexer.c $(SRC_DIR)free_split.c $(SRC_DIR_BUI)builtins.c $(SRC_DIR_BUI)pwd.c $(SRC_DIR_BUI)clear.c 
+SRCS =	$(SRC_DIR)minishell.c $(SRC_DIR)exit.c \
+	$(SRC_DIR)lexer/lexer.c $(SRC_DIR)lexer/free_split.c $(SRC_DIR)lexer/ft_split_quotes.c $(SRC_DIR)lexer/print_lexer.c \
+	$(SRC_DIR_BUI)builtins.c $(SRC_DIR_BUI)pwd.c $(SRC_DIR_BUI)clear.c 
 
 OBJS = $(SRCS:$(SRC_DIR)%.c=$(OBJ_DIR)/%.o)
 
@@ -61,6 +65,7 @@ libs:
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
 	mkdir -p $(OBJ_DIR_BUI)
+	mkdir -p ./obj/lexer/
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)%.c $(HEADER) Makefile | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@

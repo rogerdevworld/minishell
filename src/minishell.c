@@ -24,6 +24,7 @@ void	main_loop(int *p_fd)
 		line = readline("minishell> ");
 		if (!line)
 			break ;
+		token = lexer(line);
 		if (*line)
 			add_history(line);
 		token = lexer(line);
@@ -31,9 +32,7 @@ void	main_loop(int *p_fd)
 		while (token)
 		{
 			if (get_builtin_cmd(token->value))
-			{
 				execute_builtin(get_builtin_cmd(token->value), token);
-			}
 			token = token->next;
 		}
 		if (ft_strncmp(line, "exit", 4) == 0)
@@ -41,6 +40,7 @@ void	main_loop(int *p_fd)
 			free(line);
 			break ;
 		}
+		print_tokens(token);
 		free(line);
 	}
 	close(p_fd[1]);
