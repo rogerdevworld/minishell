@@ -17,6 +17,8 @@
 # include "lexer.h"
 # include "../src/libft/libft.h"
 
+// -- const var -- //
+# define EXIT "exit"
 // -- system.h -- //
 
 // -- system libs -- //
@@ -26,12 +28,16 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
+// -- readline -- //
+#include <readline/readline.h>
+#include <readline/history.h>
+
 // -- minishell.h -- //
 
 // -- internal strcts -- //
 
-void	main_loop(char *delimiter, int *p_fd);
-void	ft_here_doc(char *delimiter);
+void	main_loop(int *p_fd);
+void	ft_here_doc(void);
 
 // -- exit.h -- //
 void	ft_exit(int status, char *msg);

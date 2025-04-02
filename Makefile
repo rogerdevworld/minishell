@@ -26,7 +26,7 @@ BSRCS =	$(BSRC_DIR)pipex_bonus.c $(BSRC_DIR)parse_bonus.c $(BSRC_DIR)cmd_bonus.c
 
 BOBJS = $(BSRCS:$(BSRC_DIR)%.c=$(OBJ_DIR)/%.o)
 
-CC = gcc
+CC = cc
 CFLAGS = -Wall -Werror -Wextra -I./include
 RM = rm -rf
 
@@ -64,7 +64,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)%.c $(HEADER) Makefile | $(OBJ_DIR)
 
 $(NAME): $(EX_LIB) $(OBJECTS) $(HEADER)
 	@echo "$(GREEN)Compilando $(NAME)...$(RESET)"
-	$(CC) $(CFLAGS) $(OBJECTS) $(EX_LIB) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJECTS) $(EX_LIB) -o $(NAME) -lreadline
 	@echo "$(BLUE)"
 	@echo "$(YELLOW)           ($(RESET)__$(YELLOW))\           $(RESET)"
 	@echo "$(YELLOW)           ($(RESET)oo$(YELLOW))\\________  $(RESET)"
