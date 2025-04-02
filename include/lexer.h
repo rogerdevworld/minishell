@@ -13,7 +13,7 @@
 # define LEXER_H
 
 // -- lexer.h -- //
-typedef enum
+enum
 {
 	TOKEN_COMMAND,
 	TOKEN_OPERATOR,
@@ -21,12 +21,12 @@ typedef enum
 	TOKEN_REDIRECTION,
 	TOKEN_ARGUMENT,
 	TOKEN_END
-}					TokenType;
+};
 
 typedef struct s_token
 {
 	char			*value;
-	TokenType		type;
+	int				type;
 	struct s_token	*next;
 }					t_token;
 
@@ -35,6 +35,10 @@ t_token				*init_lexer(char *token);
 t_token				*get_last_token(t_token *token);
 void				add_back(t_token **tokens, t_token *token);
 void				print_tokens(t_token *tokens);
-char				*token_type_to_string(TokenType type);
+char				*token_type_to_string(int type);
+
+// -- ft_split.h -- //
+char				**ft_split_quotes(char const *s, char c);
+void				free_split(char **split);
 
 #endif
