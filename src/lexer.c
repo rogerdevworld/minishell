@@ -20,7 +20,7 @@ t_token	*lexer(char *token)
 
 	tokens = NULL;
 	i = 0;
-	tmp = ft_split(token, ' ');
+	tmp = ft_split_full(token, ' ');
 	if (!tmp)
 		return (NULL);
 	while (tmp[i])
