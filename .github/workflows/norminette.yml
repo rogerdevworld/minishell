@@ -29,3 +29,17 @@ jobs:
 
       - name: Run Norminette
         run: norminette
+
+  build:
+    name: Build Project
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: sudo apt update && sudo apt install -y make gcc
+
+      - name: Run Makefile
+        run: make
