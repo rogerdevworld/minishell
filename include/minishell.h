@@ -41,8 +41,4 @@ void	ft_here_doc(char *delimiter);
 // -- exit.h -- //
 void	ft_exit(int status, char *msg);
 
-// -- free.h -- //
-char	**ft_split_full(char const *s, char c);
-void	free_split(char **split);
-
 #endif
