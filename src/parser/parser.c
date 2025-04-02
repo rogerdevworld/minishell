@@ -54,8 +54,8 @@ t_command	*parse_tokens(t_token *tokens, char **envp)
 	t_command	*cmds;
 	t_command	*current;
 	int			i;
-	envp = envp;
 
+	envp = envp;
 	cmds = init_command();
 	if (!cmds)
 		return (NULL);
