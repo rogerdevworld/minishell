@@ -63,14 +63,16 @@ t_command	*parse_tokens(t_token *tokens, char **envp)
 	i = 0;
 	while (tokens)
 	{
-		if (tokens->type == TOKEN_COMMAND &&  ft_strncmp(tokens->value, "-", 1) != 0)
-			current->args[i++] = ft_strdup(tokens->value);
+		if (tokens->type == TOKEN_COMMAND)
+		{
+			current->args[i] = ft_strdup(tokens->value);
+			current->path = get_path(current->args[i], envp);
+			i++;
+		}
 		else if (tokens->type == TOKEN_REDIRECTION)
 			handle_redirect(current, &tokens);
-		else if (ft_strcmp(tokens->value, "||") == 0 || ft_strncmp(tokens->value, "-", 1) == 0)
+		else if (tokens->type == TOKEN_OPERATOR)
 		{
-			current->args[i++] = ft_strdup(tokens->value);
-			current->path = get_path(current->args[0], envp);
 			current->next = init_command();
 			current = current->next;
 			i = 0;
@@ -83,22 +85,33 @@ t_command	*parse_tokens(t_token *tokens, char **envp)
 void	print_command_list(t_command *cmds)
 {
 	int	i;
+	int	j;
+	int	k;
 
+	k = 1;
 	while (cmds)
 	{
 		i = 0;
+		j = 0;
+		ft_printf("comandos + flag %i: ", k);
 		while (cmds->args[i])
 		{
+			while (cmds->args[j])
+			{
+				ft_printf("%s -> ", cmds->args[j]);
+				j++;
+			}
 			if (!cmds->path)
-				printf("minishell: %s: commad not found\n", cmds->args[0]);
+				printf("\nminishell: %s: commad not found\n", cmds->args[i]);
 			else
 			{
-				ft_printf("Command correcto: ");
+				ft_printf("\nCommand correcto: ");
 				ft_printf("%i: %s\n", i, cmds->args[i]);
-				ft_printf("%s: %s\n", cmds->args[0], cmds->path);
+				ft_printf("%s: %s\n", cmds->args[i], cmds->path);
 			}
 			i++;
 		}
+		k++;
 		ft_printf("\n");
 		if (cmds->input_file)
 			ft_printf("  Input: %s\n", cmds->input_file);
