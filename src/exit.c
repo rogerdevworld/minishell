@@ -9,7 +9,6 @@
 /*   Updated: 2025/04/01 13:05:50 by rmarrero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "../include/minishell.h"
 
 void	ft_exit(int status, char *msg)
