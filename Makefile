@@ -12,9 +12,17 @@
 # --- Mandatory --- #
 NAME = minishell
 SRC_DIR = ./src/
+SRC_DIR_BUI = ./src/builtins/
+SRC_DIR_LEX = ./src/lexer/
 OBJ_DIR = ./obj
+OBJ_DIR_BUI = ./obj/builtins/
+OBJ_DIR_LEX = ./obj/lexer/
 
-SRCS =	$(SRC_DIR)minishell.c $(SRC_DIR)exit.c $(SRC_DIR)lexer/lexer.c $(SRC_DIR)lexer/free_split.c $(SRC_DIR)lexer/ft_split_quotes.c $(SRC_DIR)lexer/print_lexer.c $(SRC_DIR)parser/parser.c $(SRC_DIR)parser/get_path.c
+SRCS =	$(SRC_DIR)minishell.c $(SRC_DIR)exit.c \
+	$(SRC_DIR)lexer/lexer.c $(SRC_DIR)lexer/free_split.c $(SRC_DIR)lexer/ft_split_quotes.c $(SRC_DIR)lexer/print_lexer.c \
+	$(SRC_DIR_BUI)builtins.c $(SRC_DIR_BUI)pwd.c $(SRC_DIR_BUI)clear.c \
+	$(SRC_DIR)parser/parser.c $(SRC_DIR)parser/get_path.c \
+	$(SRC_DIR)executor/executor.c
 
 OBJS = $(SRCS:$(SRC_DIR)%.c=$(OBJ_DIR)/%.o)
 
@@ -60,6 +68,8 @@ $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
 	mkdir -p ./obj/lexer
 	mkdir -p ./obj/parser
+	mkdir -p ./obj/builtins
+	mkdir -p ./obj/executor
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)%.c $(HEADER) Makefile | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@

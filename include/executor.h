@@ -1,18 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   executor.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/01 13:05:47 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/04/01 13:05:50 by rmarrero         ###   ########.fr       */
+/*   Created: 2025/03/27 11:56:13 by rmarrero          #+#    #+#             */
+/*   Updated: 2025/03/27 11:57:56 by rmarrero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../include/minishell.h"
+#ifndef EXECUTOR_H
+# define EXECUTOR_H
 
-void	ft_exit(char *msg)
-{
-	ft_putstr_fd("minishell: ", 2);
-	ft_putendl_fd(msg, 2);
-}
+void	ft_check_executor(t_command *cmd, t_token *token, char **envp);
+void	ft_exec_cmd(t_command *cmd, char **envp);
+void	ft_pipe_and_fork(t_command *cmd, char **env);
+
+#endif

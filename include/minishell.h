@@ -17,6 +17,8 @@
 # include "../src/libft/libft.h"
 # include "lexer.h"
 # include "parser.h"
+# include "builtins.h"
+# include "executor.h"
 
 // -- system.h -- //
 
@@ -38,7 +40,6 @@
 void	main_loop(char **envp);
 
 // -- exit.h -- //
-void	ft_exit(int status, char *msg);
-void	ft_exit_print(char *msg);
+void	ft_exit(char *msg);
 
 #endif

@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -11,8 +11,13 @@
 /* ************************************************************************** */
 #include "../include/minishell.h"
 
-void	ft_exit(char *msg)
+// -- char *getcwd(char *buf, size_t size); -- //
+void	pwd(void)
 {
-	ft_putstr_fd("minishell: ", 2);
-	ft_putendl_fd(msg, 2);
+	char	cwd[1024];
+
+	if (getcwd(cwd, sizeof(cwd)))
+		ft_printf("%s\n", cwd);
+	else
+		perror("getcwd() error");
 }
