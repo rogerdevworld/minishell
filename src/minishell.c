@@ -15,6 +15,7 @@
 void	main_loop(int *p_fd)
 {
 	char	*line;
+
 	close(p_fd[0]);
 	while (1)
 	{

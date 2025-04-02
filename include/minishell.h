@@ -26,8 +26,8 @@
 # include <unistd.h>
 
 // -- readline -- //
-#include <readline/readline.h>
-#include <readline/history.h>
+# include <readline/history.h>
+# include <readline/readline.h>
 
 // -- minishell.h -- //
 
