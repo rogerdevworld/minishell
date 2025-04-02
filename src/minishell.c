@@ -16,7 +16,7 @@ void	main_loop(char *delimiter, int *p_fd)
 {
 	char	*line;
 	t_token	*tokens;
-	
+
 	tokens = NULL;
 	close(p_fd[0]);
 	while (1)
