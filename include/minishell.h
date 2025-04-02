@@ -36,10 +36,10 @@
 
 // -- internal strcts -- //
 
-void	main_loop(int *p_fd);
-void	ft_here_doc(void);
+void	main_loop(char **envp);
 
 // -- exit.h -- //
 void	ft_exit(int status, char *msg);
+void	ft_exit_print(char *msg);
 
 #endif
