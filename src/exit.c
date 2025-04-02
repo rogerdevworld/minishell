@@ -11,9 +11,8 @@
 /* ************************************************************************** */
 #include "../include/minishell.h"
 
-void	ft_exit(int status, char *msg)
+void	ft_exit(char *msg)
 {
-	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	ft_putendl_fd(msg, STDERR_FILENO);
-	exit(status);
+	ft_putstr_fd("minishell: ", 2);
+	ft_putendl_fd(msg, 2);
 }
