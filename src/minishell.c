@@ -23,7 +23,7 @@ void	main_loop(int *p_fd)
 			break ;
 		if (*line)
 			add_history(line);
-		if (ft_strncmp(line, EXIT, ft_strlen(EXIT)) == 0)
+		if (ft_strncmp(line, "exit", 4) == 0)
 		{
 			free(line);
 			break ;

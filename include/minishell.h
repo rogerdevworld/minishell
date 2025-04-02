@@ -16,8 +16,6 @@
 // -- internal libs -- //
 # include "../src/libft/libft.h"
 
-// -- const var -- //
-# define EXIT "exit"
 // -- system.h -- //
 
 // -- system libs -- //
