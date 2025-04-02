@@ -10,15 +10,16 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "../include/minishell.h"
+#include "../include/parser.h"
 
 // -- main loop for minishell -- //
-void	main_loop(char *delimiter, int *p_fd)
+void	main_loop(char **envp)
 {
-	char	*line;
-	t_token	*tokens;
+	char		*line;
+	t_token		*tokens;
+	t_command	*cmd;
 
 	tokens = NULL;
-	close(p_fd[0]);
 	while (1)
 	{
 		line = readline("minishell> ");
@@ -27,45 +28,29 @@ void	main_loop(char *delimiter, int *p_fd)
 		tokens = lexer(line);
 		if (*line)
 			add_history(line);
-		if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)
+		if (ft_strncmp(line, "exit", 4) == 0)
 		{
 			free(line);
 			break ;
 		}
-		print_tokens(tokens);
+		cmd = parse_tokens(tokens, envp);
+		print_command_list(cmd);
 		free(line);
 	}
-	close(p_fd[1]);
 	exit(0);
 }
 
-// -- main function to handle here_doc -- //
-void	ft_here_doc(char *delimiter)
+int	main(int argc, char **argv, char **envp)
 {
-	int		p_fd[2];
-	pid_t	pid;
-
-	if (pipe(p_fd) == -1)
-		ft_exit(1, "Pipe creation failed");
-	pid = fork();
-	if (pid == -1)
-		ft_exit(1, "Fork failed");
-	if (pid == 0)
-		main_loop(delimiter, p_fd);
-	else
-	{
-		close(p_fd[1]);
-		dup2(p_fd[0], STDIN_FILENO);
-		waitpid(pid, NULL, 0);
-	}
-}
-
-int	main(void)
-{
-	ft_here_doc("hola");
+	argc = argc;
+	argv = argv;
+	main_loop(envp);
 	return (0);
 }
 
 // -- commad for test -- //
-// ls -la || cat -e && echo "holo world" > new_text || text; echo hola
-//	&& $VAR = range
+/*
+ls -la > text && cat -e text && echo "holo world" > new_text && cat text
+&& echo hola && cat < new_text || ls -la > text && wc - l text > text_c
+&& cat text*
+*/
