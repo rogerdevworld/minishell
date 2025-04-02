@@ -22,7 +22,7 @@ void	main_loop(char **envp)
 	tokens = NULL;
 	while (1)
 	{
-		line = readline("minishell> ");
+		line = readline("xeniamariashell> ");
 		if (!line)
 			break ;
 		tokens = lexer(line);
@@ -34,7 +34,7 @@ void	main_loop(char **envp)
 			break ;
 		}
 		cmd = parse_tokens(tokens, envp);
-		built(cmd, tokens);
+		ft_check_executor(cmd, tokens, envp);
 		free(line);
 	}
 	exit(0);
