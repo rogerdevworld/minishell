@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer.h                                            :+:      :+:    :+:   */
+/*   builtins.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -9,36 +9,33 @@
 /*   Updated: 2025/03/27 11:57:56 by rmarrero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#ifndef LEXER_H
-# define LEXER_H
+#ifndef BUILTINS_H
+# define BUILTINS_H
 
 // -- lexer.h -- //
+
+// --- internal commads -- //
 enum
 {
-	TOKEN_COMMAND,
-	TOKEN_OPERATOR,
-	TOKEN_SEPARATOR,
-	TOKEN_REDIRECTION,
-	TOKEN_ARGUMENT,
-	TOKEN_END
+	CD,
+	EXIT,
+	ECHO,
+	PWD,
+	EXPORT,
+	UNSET,
+	CLEAR,
+	NUM_BUILTINS
 };
 
-typedef struct s_token
-{
-	char			*value;
-	int				type;
-	struct s_token	*next;
-}					t_token;
+// -- internal to execve() -- //
+void	built(t_command *cmd, t_token *token);
 
-t_token				*lexer(char *str);
-t_token				*init_lexer(char *token);
-t_token				*get_last_token(t_token *token);
-void				add_back(t_token **tokens, t_token *token);
-void				print_tokens(t_token *tokens);
-char				*token_type_to_string(int type);
+int		get_builtin_cmd(char *cmd);
+void	execute_builtin(int cmd, t_token *know_token);
+void	clear_screen(void);
 
-// -- ft_split.h -- //
-char				**ft_split_quotes(char const *s, char c);
-void				free_split(char **split);
+// -- local commands -- //
+void	pwd(void);
+void	clear(void);
 
 #endif

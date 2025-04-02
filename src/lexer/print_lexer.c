@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer.h                                            :+:      :+:    :+:   */
+/*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -9,36 +9,32 @@
 /*   Updated: 2025/03/27 11:57:56 by rmarrero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#ifndef LEXER_H
-# define LEXER_H
+#include "../../include/minishell.h"
 
-// -- lexer.h -- //
-enum
+// -- Función para convertir el tipo de token en una cadena -- //
+char	*token_type_to_string(int type)
 {
-	TOKEN_COMMAND,
-	TOKEN_OPERATOR,
-	TOKEN_SEPARATOR,
-	TOKEN_REDIRECTION,
-	TOKEN_ARGUMENT,
-	TOKEN_END
-};
+	if (type == TOKEN_COMMAND)
+		return ("COMANDO");
+	else if (type == TOKEN_OPERATOR)
+		return ("OPERADOR");
+	else if (type == TOKEN_ARGUMENT)
+		return ("ARGUMENT");
+	else if (type == TOKEN_REDIRECTION)
+		return ("REDIRECCION");
+	else
+		return ("DESCONOCIDO");
+}
 
-typedef struct s_token
+void	print_tokens(t_token *tokens)
 {
-	char			*value;
-	int				type;
-	struct s_token	*next;
-}					t_token;
-
-t_token				*lexer(char *str);
-t_token				*init_lexer(char *token);
-t_token				*get_last_token(t_token *token);
-void				add_back(t_token **tokens, t_token *token);
-void				print_tokens(t_token *tokens);
-char				*token_type_to_string(int type);
-
-// -- ft_split.h -- //
-char				**ft_split_quotes(char const *s, char c);
-void				free_split(char **split);
-
-#endif
+	while (tokens)
+	{
+		ft_putstr_fd("Token Type -> ", 1);
+		ft_putstr_fd(token_type_to_string(tokens->type), 1);
+		ft_putstr_fd("-> ", 2);
+		ft_putstr_fd(tokens->value, 1);
+		ft_putstr_fd("\n", 1);
+		tokens = tokens->next;
+	}
+}

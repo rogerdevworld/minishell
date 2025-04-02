@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   clear.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -11,9 +11,7 @@
 /* ************************************************************************** */
 #include "../include/minishell.h"
 
-void	ft_exit(int status, char *msg)
+void	clear(void)
 {
-	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	ft_putendl_fd(msg, STDERR_FILENO);
-	exit(status);
+	ft_printf("\033[H\033[J");
 }
