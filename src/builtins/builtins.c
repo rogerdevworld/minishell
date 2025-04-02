@@ -11,26 +11,37 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-builtin_cmd	get_builtin_cmd(char *cmd)
+// --- this functions is internal execve() -- //
+void	built(t_token *token)
 {
-	if (strcmp(cmd, "cd") == 0)
+	while (token)
+	{
+		if (get_builtin_cmd(token->value))
+			execute_builtin(get_builtin_cmd(token->value), token);
+		token = token->next;
+	}
+}
+
+int	get_builtin_cmd(char *cmd)
+{
+	if (ft_strcmp(cmd, "cd") == 0)
 		return (CD);
-	if (strcmp(cmd, "exit") == 0)
+	if (ft_strcmp(cmd, "exit") == 0)
 		return (EXIT);
-	if (strcmp(cmd, "echo") == 0)
+	if (ft_strcmp(cmd, "echo") == 0)
 		return (ECHO);
-	if (strcmp(cmd, "pwd") == 0)
+	if (ft_strcmp(cmd, "pwd") == 0)
 		return (PWD);
-	if (strcmp(cmd, "export") == 0)
+	if (ft_strcmp(cmd, "export") == 0)
 		return (EXPORT);
-	if (strcmp(cmd, "unset") == 0)
+	if (ft_strcmp(cmd, "unset") == 0)
 		return (UNSET);
-	if (strcmp(cmd, "clear") == 0)
+	if (ft_strcmp(cmd, "clear") == 0)
 		return (CLEAR);
 	return (-1);
 }
 
-void	execute_builtin(builtin_cmd cmd, t_token *know_token)
+void	execute_builtin(int cmd, t_token *know_token)
 {
 	if (cmd == CD)
 		ft_printf("Ejecutando cd\n");
@@ -47,6 +58,6 @@ void	execute_builtin(builtin_cmd cmd, t_token *know_token)
 	else if (cmd == CLEAR)
 		clear();
 	else
-		ft_printf("Type -> %s Know Token - > %s\n",
+		ft_printf("Type -> %s - > %s\n",
 			token_type_to_string(know_token->type), know_token->value);
 }
