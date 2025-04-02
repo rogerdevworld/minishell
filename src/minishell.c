@@ -12,7 +12,7 @@
 #include "../include/minishell.h"
 
 // -- main loop for minishell -- //
-void	main_loop(char *delimiter, int *p_fd)
+void	main_loop(int *p_fd)
 {
 	char	*line;
 	close(p_fd[0]);
@@ -23,7 +23,7 @@ void	main_loop(char *delimiter, int *p_fd)
 			break ;
 		if (*line)
 			add_history(line);
-		if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)
+		if (ft_strncmp(line, EXIT, ft_strlen(EXIT)) == 0)
 		{
 			free(line);
 			break ;
@@ -35,7 +35,7 @@ void	main_loop(char *delimiter, int *p_fd)
 }
 
 // -- main function to handle here_doc -- //
-void	ft_here_doc(char *delimiter)
+void	ft_here_doc(void)
 {
 	int		p_fd[2];
 	pid_t	pid;
@@ -46,7 +46,7 @@ void	ft_here_doc(char *delimiter)
 	if (pid == -1)
 		ft_exit(1, "Fork failed");
 	if (pid == 0)
-		main_loop(delimiter, p_fd);
+		main_loop(p_fd);
 	else
 	{
 		close(p_fd[1]);
@@ -57,7 +57,7 @@ void	ft_here_doc(char *delimiter)
 
 int	main(void)
 {
-	ft_here_doc("hola");
+	ft_here_doc();
 	return (0);
 }
 
