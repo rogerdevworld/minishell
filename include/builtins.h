@@ -14,7 +14,8 @@
 
 // -- lexer.h -- //
 
-typedef enum
+// --- internal commads -- //
+enum
 {
 	CD,
 	EXIT,
@@ -24,14 +25,17 @@ typedef enum
 	UNSET,
 	CLEAR,
 	NUM_BUILTINS
-}			builtin_cmd;
+};
 
-builtin_cmd	get_builtin_cmd(char *cmd);
-void		execute_builtin(builtin_cmd cmd, t_token *know_token);
-void		clear_screen(void);
+// -- internal to execve() -- //
+void	built(t_token *token);
+
+int		get_builtin_cmd(char *cmd);
+void	execute_builtin(int cmd, t_token *know_token);
+void	clear_screen(void);
 
 // -- local commands -- //
-void		pwd(void);
-void		clear(void);
+void	pwd(void);
+void	clear(void);
 
 #endif
