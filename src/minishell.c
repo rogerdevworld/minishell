@@ -15,6 +15,9 @@
 void	main_loop(int *p_fd)
 {
 	char	*line;
+	t_token	*token;
+
+	token = NULL;
 	close(p_fd[0]);
 	while (1)
 	{
@@ -23,7 +26,17 @@ void	main_loop(int *p_fd)
 			break ;
 		if (*line)
 			add_history(line);
-		if (ft_strncmp(line, EXIT, ft_strlen(EXIT)) == 0)
+		token = lexer(line);
+		// -- lo deberia hacer el execve(); clasificar si es local o de sistema -- //
+		while (token)
+		{
+			if (get_builtin_cmd(token->value))
+			{
+				execute_builtin(get_builtin_cmd(token->value), token);
+			}
+			token = token->next;
+		}
+		if (ft_strncmp(line, "exit", 4) == 0)
 		{
 			free(line);
 			break ;
