@@ -3,12 +3,10 @@ name: CI for Minishell Project
 on:
   push:
     branches:
-      - main
-      - dev
+      - '*'
   pull_request:
     branches:
-      - main
-      - dev
+      - '*'
 
 jobs:
   norminette:
@@ -29,3 +27,17 @@ jobs:
 
       - name: Run Norminette
         run: norminette
+
+  build:
+    name: Build Project
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: sudo apt update && sudo apt install -y make gcc libreadline-dev
+
+      - name: Run Makefile
+        run: make
