@@ -22,7 +22,7 @@ void	main_loop(char **envp)
 	tokens = NULL;
 	while (1)
 	{
-		line = readline("XeniaMariaShell> ");
+		line = readline(meta_path());
 		if (!line)
 			break ;
 		tokens = lexer(line);
