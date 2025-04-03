@@ -18,18 +18,11 @@ void	ft_check_executor(t_command *cmd, t_token *token, char **envp)
 	while (cmd)
 	{
 		i = 0;
-		while (cmd->args[i]) // Recorre todos los argumentos
-		{
-			if (get_builtin_cmd(cmd->args[i]) != -1)
-			{
-				execute_builtin(get_builtin_cmd(cmd->args[i]), token);
-			}
-			else
-			{
-				ft_exec_cmd(cmd, envp);
-			}
-			i++;
-		}
+		if (get_builtin_cmd(cmd->args[i]) != -1)
+			execute_builtin(get_builtin_cmd(cmd->args[i]), token);
+		else
+			ft_exec_cmd(cmd, envp);
+		i++;
 		cmd = cmd->next;
 	}
 }
