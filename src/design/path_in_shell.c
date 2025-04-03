@@ -70,5 +70,5 @@ const char	*get_os(void)
 char	*meta_path(char **envp)
 {
 	return (ft_strjoin(get_user(envp), ft_strjoin((ft_strjoin(path_terminal(),
-						get_git_branch())), "\033[0m\033[33m\033[0m\n>")));
+						get_git_branch())), "\033[0m\033[33m\033[0m\n$")));
 }
