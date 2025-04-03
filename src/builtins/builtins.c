@@ -12,16 +12,18 @@
 #include "../../include/minishell.h"
 
 // --- this functions is internal execve() -- //
-void	built(t_command *cmd, t_token *token)
+void	built(t_command *cmd, char **envp)
 {
 	int	i;
 
-	i = 0;
+	envp = envp;
 	while (cmd)
 	{
+		i = 0;
 		if (get_builtin_cmd(cmd->args[i]))
 		{
-			execute_builtin(get_builtin_cmd(cmd->args[i]), token);
+			ft_printf("%s", cmd->args[i + 1]);
+			execute_builtin(get_builtin_cmd(cmd->args[i]), cmd->args[i + 1]);
 			i++;
 		}
 		cmd = cmd->next;
@@ -46,15 +48,15 @@ int	get_builtin_cmd(char *cmd)
 		return (CLEAR);
 	return (-1);
 }
-
-void	execute_builtin(int cmd, t_token *know_token)
+// -- design -- //
+void	execute_builtin(int cmd, char *path)
 {
 	if (cmd == CD)
-		ft_printf("Ejecutando cd\n");
+		ft_cd(path);
 	else if (cmd == EXIT)
 		ft_printf("Ejecutando exit\n");
 	else if (cmd == ECHO)
-		ft_cd(getcwd(envp))
+		ft_printf("Ejecutando cd\n");
 	else if (cmd == PWD)
 		pwd();
 	else if (cmd == EXPORT)
@@ -64,6 +66,5 @@ void	execute_builtin(int cmd, t_token *know_token)
 	else if (cmd == CLEAR)
 		clear();
 	else
-		ft_printf("Type -> %s - > %s\n", token_type_to_string(know_token->type),
-			know_token->value);
+		ft_printf("not");
 }

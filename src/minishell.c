@@ -20,6 +20,7 @@ void	main_loop(char **envp)
 	t_command	*cmd;
 
 	tokens = NULL;
+	envp = envp;
 	while (1)
 	{
 		line = readline(meta_path(envp));
@@ -34,7 +35,7 @@ void	main_loop(char **envp)
 			break ;
 		}
 		cmd = parse_tokens(tokens, envp);
-		ft_check_executor(cmd, tokens, envp);
+		ft_check_executor(cmd, envp);
 		free(line);
 	}
 	exit(0);
@@ -54,3 +55,6 @@ ls -la > text && cat -e text && echo "holo world" > new_text && cat text
 && echo hola && cat < new_text || ls -la > text && wc - l text > text_c
 && cat text*
 */
+
+// valgrind --leak-check=full --show-leak-kinds=all ./minishell
+// valgrind --leak-check=full ./minishell

@@ -18,5 +18,8 @@ void	ft_cd(const char *path)
     if (!path)
         return ;
     if (chdir(path) != 0)
-        perror("cd");
+    {
+        ft_printf("Path: %s", path);
+        perror(": ");
+    }
 }
