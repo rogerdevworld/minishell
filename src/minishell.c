@@ -22,7 +22,7 @@ void	main_loop(char **envp)
 	tokens = NULL;
 	while (1)
 	{
-		line = readline(meta_path());
+		line = readline(meta_path(envp));
 		if (!line)
 			break ;
 		tokens = lexer(line);

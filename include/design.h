@@ -13,8 +13,10 @@
 # define DESING_H
 
 // -- lexer.h -- //
-char *path_terminal(void);
-char *get_git_branch();
-char *meta_path(void);
+char		*path_terminal(void);
+char		*get_git_branch(void);
+char		*meta_path(char **envp);
+const char	*get_os(void);
+char		*get_user(char **envp);
 
 #endif

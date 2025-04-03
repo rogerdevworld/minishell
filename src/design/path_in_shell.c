@@ -39,7 +39,30 @@ char	*path_terminal(void)
 	return (ft_strjoin("\033[42m", ft_strjoin(" ⚡⚙ ", ft_strjoin(ft_strdup(path), ">\033[0m"))));
 }
 
-char	*meta_path(void)
+char *get_user(char **envp)
 {
-	return (ft_strjoin((ft_strjoin(path_terminal(), get_git_branch())), ">\033[0m "));
+    char *user = ft_getenv("USER", envp);
+    if (!user) 
+        return (NULL);
+    return (ft_strjoin("\033[44m", ft_strjoin(ft_strdup(user), get_os())));
+}
+
+const char *get_os(void)
+{
+#ifdef _WIN32
+    return "Windows";
+#elif __APPLE__
+    return "macOS";
+#elif __linux__
+    return "Linux";
+#elif __unix__
+    return "Unix";
+#else
+    return "Desconocido";
+#endif
+}
+
+char	*meta_path(char **envp)
+{
+	return (ft_strjoin(get_user(envp), ft_strjoin((ft_strjoin(path_terminal(), get_git_branch())), ">\033[0m ")));
 }
