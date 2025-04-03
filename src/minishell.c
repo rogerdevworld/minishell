@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "../include/minishell.h"
-#include "../include/parser.h"
 
 // -- main loop for minishell -- //
 void	main_loop(char **envp)
@@ -44,6 +43,17 @@ int	main(int argc, char **argv, char **envp)
 {
 	argc = argc;
 	argv = argv;
+
+	// -- signals -- //
+	//struct sigaction sa;
+
+	//sa.sa_handler = ignore_signal;
+    //sa.sa_flags = 0;
+    //sigemptyset(&sa.sa_mask);
+    //sigaction(SIGINT, &sa, NULL);
+
+	//signal(SIGINT, sigint_handler);
+	//sigaction(SIGQUIT, &sa, NULL);
 	main_loop(envp);
 	return (0);
 }
