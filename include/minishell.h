@@ -19,6 +19,7 @@
 # include "parser.h"
 # include "builtins.h"
 # include "executor.h"
+# include "signals.h"
 
 // -- system.h -- //
 
@@ -28,6 +29,7 @@
 # include <stdlib.h>
 # include <sys/wait.h>
 # include <unistd.h>
+#include <signal.h>
 
 // -- readline -- //
 # include <readline/history.h>
