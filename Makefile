@@ -78,7 +78,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)%.c $(HEADER) Makefile | $(OBJ_DIR)
 
 $(NAME): $(EX_LIB) $(OBJECTS) $(HEADER)
 	@echo "$(GREEN)Compilando $(NAME)...$(RESET)"
-	$(CC) $(CFLAGS) $(OBJECTS) $(EX_LIB) -o $(NAME) -lreadline
+	$(CC) $(CFLAGS) $(OBJECTS) $(EX_LIB) -o $(NAME) -lreadline -g
 	@echo "$(BLUE)"
 	@echo "$(YELLOW)           ($(RESET)__$(YELLOW))\           $(RESET)"
 	@echo "$(YELLOW)           ($(RESET)oo$(YELLOW))\\________  $(RESET)"
