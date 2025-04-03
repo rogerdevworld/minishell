@@ -22,7 +22,6 @@ void	built(t_command *cmd, char **envp)
 		i = 0;
 		if (get_builtin_cmd(cmd->args[i]))
 		{
-			ft_printf("%s", cmd->args[i + 1]);
 			execute_builtin(get_builtin_cmd(cmd->args[i]), cmd->args[i + 1]);
 			i++;
 		}
@@ -48,6 +47,7 @@ int	get_builtin_cmd(char *cmd)
 		return (CLEAR);
 	return (-1);
 }
+
 // -- design -- //
 void	execute_builtin(int cmd, char *path)
 {

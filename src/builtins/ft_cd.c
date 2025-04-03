@@ -15,11 +15,11 @@
 // -- int chdir(const char *path); -- //
 void	ft_cd(const char *path)
 {
-    if (!path)
-        return ;
-    if (chdir(path) != 0)
-    {
-        ft_printf("Path: %s", path);
-        perror(": ");
-    }
+	if (!path)
+		return ;
+	if (chdir(path) != 0)
+	{
+		ft_printf("Path: %s", path);
+		perror(": ");
+	}
 }
