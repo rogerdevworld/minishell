@@ -36,7 +36,7 @@ char	*path_terminal(void)
 
 	if (!getcwd(path, sizeof(path)))
 		return (NULL);
-	return (ft_strjoin("\033[42m", ft_strjoin(" ⚡⚙ ", ft_strjoin(ft_strdup(path), ">\033[0m"))));
+	return (ft_strjoin("\033[42m", ft_strjoin(" ⚡⚙ ", ft_strjoin(ft_strdup(path), "\033[43m\033[32m\033[0m"))));
 }
 
 char *get_user(char **envp)
@@ -44,7 +44,16 @@ char *get_user(char **envp)
     char *user = ft_getenv("USER", envp);
     if (!user) 
         return (NULL);
-    return (ft_strjoin("\033[44m", ft_strjoin(ft_strdup(user), get_os())));
+		return ft_strjoin(
+			ft_strjoin("\033[44m", 
+				ft_strjoin(
+					ft_strjoin(ft_strdup(user), "@"), 
+					get_os()
+				)
+			), 
+			"\033[42m\033[34m\033[0m"
+		);
+		
 }
 
 const char *get_os(void)
@@ -64,5 +73,5 @@ const char *get_os(void)
 
 char	*meta_path(char **envp)
 {
-	return (ft_strjoin(get_user(envp), ft_strjoin((ft_strjoin(path_terminal(), get_git_branch())), ">\033[0m ")));
+	return (ft_strjoin(get_user(envp), ft_strjoin((ft_strjoin(path_terminal(), get_git_branch())), "\033[0m\033[33m\033[0m\n")));
 }
