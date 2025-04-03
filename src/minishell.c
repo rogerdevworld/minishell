@@ -16,17 +16,17 @@
 void	main_loop(char **envp)
 {
 	char		*line;
-	//t_token		*tokens;
-	//t_command	*cmd;
+	t_token		*tokens;
+	t_command	*cmd;
 
-	//tokens = NULL;
+	tokens = NULL;
 	envp =envp;
 	while (1)
 	{
 		line = readline(meta_path(envp));
 		if (!line)
 			break ;
-		//tokens = lexer(line);
+		tokens = lexer(line);
 		if (*line)
 			add_history(line);
 		if (ft_strncmp(line, "exit", 4) == 0)
@@ -34,8 +34,8 @@ void	main_loop(char **envp)
 			free(line);
 			break ;
 		}
-		//cmd = parse_tokens(tokens, envp);
-		//ft_check_executor(cmd, tokens, envp);
+		cmd = parse_tokens(tokens, envp);
+		ft_check_executor(cmd, tokens, envp);
 		free(line);
 	}
 	exit(0);
