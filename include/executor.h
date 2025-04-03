@@ -12,7 +12,7 @@
 #ifndef EXECUTOR_H
 # define EXECUTOR_H
 
-void	ft_check_executor(t_command *cmd, t_token *token, char **envp);
+void	ft_check_executor(t_command *cmd, char **envp);
 void	ft_exec_cmd(t_command *cmd, char **envp);
 void	ft_pipe_and_fork(t_command *cmd, char **env);
 

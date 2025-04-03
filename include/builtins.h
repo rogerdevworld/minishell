@@ -28,10 +28,10 @@ enum
 };
 
 // -- internal to execve() -- //
-void	built(t_command *cmd, t_token *token);
+void	built(t_command *cmd);
 
 int		get_builtin_cmd(char *cmd);
-void	execute_builtin(int cmd, t_token *know_token);
+void	execute_builtin(int cmd);
 void	clear_screen(void);
 
 // -- local commands -- //

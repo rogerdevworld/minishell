@@ -12,7 +12,7 @@
 #include "../../include/minishell.h"
 
 // --- this functions is internal execve() -- //
-void	built(t_command *cmd, t_token *token)
+void	built(t_command *cmd)
 {
 	int	i;
 
@@ -21,7 +21,7 @@ void	built(t_command *cmd, t_token *token)
 	{
 		if (get_builtin_cmd(cmd->args[i]))
 		{
-			execute_builtin(get_builtin_cmd(cmd->args[i]), token);
+			execute_builtin(get_builtin_cmd(cmd->args[i]));
 			i++;
 		}
 		cmd = cmd->next;
@@ -47,7 +47,7 @@ int	get_builtin_cmd(char *cmd)
 	return (-1);
 }
 
-void	execute_builtin(int cmd, t_token *know_token)
+void	execute_builtin(int cmd)
 {
 	if (cmd == CD)
 		ft_printf("Ejecutando cd\n");
@@ -64,6 +64,5 @@ void	execute_builtin(int cmd, t_token *know_token)
 	else if (cmd == CLEAR)
 		clear();
 	else
-		ft_printf("Type -> %s - > %s\n", token_type_to_string(know_token->type),
-			know_token->value);
+		ft_printf("not");
 }
