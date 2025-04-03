@@ -54,7 +54,7 @@ void	execute_builtin(int cmd, t_token *know_token)
 	else if (cmd == EXIT)
 		ft_printf("Ejecutando exit\n");
 	else if (cmd == ECHO)
-		ft_printf("Ejecutando echo\n");
+		ft_cd(getcwd(envp))
 	else if (cmd == PWD)
 		pwd();
 	else if (cmd == EXPORT)
