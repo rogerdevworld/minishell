@@ -11,3 +11,12 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
+void sigint_handler(int signum)
+{
+    (void)signum;
+    write(1, "\n", 1);
+}
+void sigquit_handler(int signum)
+{
+    (void)signum;
+}
