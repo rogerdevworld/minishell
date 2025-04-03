@@ -16,9 +16,9 @@ void	built(t_command *cmd)
 {
 	int	i;
 
-	i = 0;
 	while (cmd)
 	{
+		i = 0;
 		if (get_builtin_cmd(cmd->args[i]))
 		{
 			execute_builtin(get_builtin_cmd(cmd->args[i]));
@@ -30,19 +30,19 @@ void	built(t_command *cmd)
 
 int	get_builtin_cmd(char *cmd)
 {
-	if (ft_strcmp(cmd, "cd") == 0)
+	if (ft_strncmp(cmd, "cd", 2) == 0)
 		return (CD);
-	if (ft_strcmp(cmd, "exit") == 0)
+	if (ft_strncmp(cmd, "exit", 5) == 0)
 		return (EXIT);
-	if (ft_strcmp(cmd, "echo") == 0)
+	if (ft_strncmp(cmd, "echo", 4) == 0)
 		return (ECHO);
-	if (ft_strcmp(cmd, "pwd") == 0)
+	if (ft_strncmp(cmd, "pwd", 3) == 0)
 		return (PWD);
-	if (ft_strcmp(cmd, "export") == 0)
+	if (ft_strncmp(cmd, "export", 5) == 0)
 		return (EXPORT);
-	if (ft_strcmp(cmd, "unset") == 0)
+	if (ft_strncmp(cmd, "unset", 5) == 0)
 		return (UNSET);
-	if (ft_strcmp(cmd, "clear") == 0)
+	if (ft_strncmp(cmd, "clear", 5) == 0)
 		return (CLEAR);
 	return (-1);
 }

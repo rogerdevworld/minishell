@@ -15,13 +15,18 @@ void	ft_check_executor(t_command *cmd, char **envp)
 {
 	int	i;
 
+	if (!cmd->args[0])
+		return ;
+	envp = envp;
 	while (cmd)
 	{
 		i = 0;
 		if (get_builtin_cmd(cmd->args[i]) != -1)
  			execute_builtin(get_builtin_cmd(cmd->args[i]));
- 		else
+		else
+		{
  			ft_exec_cmd(cmd, envp);
+		}
  		i++;
 		cmd = cmd->next;
 	}

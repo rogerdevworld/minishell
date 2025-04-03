@@ -24,8 +24,8 @@ void	main_loop(char **envp)
 	while (1)
 	{
 		line = readline(meta_path(envp));
-		if (line)
-			ft_printf("line: %s\n", line);
+		if (!line)
+			break ;
 		tokens = lexer(line);
 		if (*line)
 			add_history(line);
