@@ -13,13 +13,16 @@
 
 // -- cd .. -- //
 // -- int chdir(const char *path); -- //
-void	ft_cd(const char *path)
+void	ft_cd(const char *path, char **envp)
 {
 	if (!path)
+	{
+		chdir(ft_getenv("HOME", envp));
 		return ;
+	}
 	if (chdir(path) != 0)
 	{
-		ft_printf("Path: %s", path);
-		perror(": ");
+		ft_printf("minishell: cd %s: ", path);
+		perror("");
 	}
 }
