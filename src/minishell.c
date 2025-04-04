@@ -42,6 +42,15 @@ void	main_loop(char **envp)
 	exit(0);
 }
 
+
+// -- structuracion del codigo para el main -- //
+/*
+	1. inicializacion de las structs para el shell
+		1.1 t_shell
+	2. prompt para el path in input
+	3. bucle main
+	4. free
+*/
 int	main(int argc, char **argv, char **envp)
 {
 	argc = argc;
