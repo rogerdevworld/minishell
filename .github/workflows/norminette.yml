@@ -26,7 +26,7 @@ jobs:
         run: pip install norminette
 
       - name: Run Norminette
-        run: norminette ./src/builtins ./include/builtings.h
+        run: norminette ./src/parser ./include/parser.h
 
   build:
     name: Build Project

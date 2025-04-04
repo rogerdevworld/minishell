@@ -63,10 +63,12 @@ t_command	*parse_tokens(t_token *tokens, char **envp)
 	i = 0;
 	while (tokens)
 	{
-		if (tokens->type == TOKEN_COMMAND)
+		// -- falta agregar caso de si "argumento es el primer parametro no aceptar", NO TIENE QUE HACER \n --//
+		if ((tokens->type == TOKEN_COMMAND) || (tokens->type == TOKEN_ARGUMENT))
 		{
 			current->args[i] = ft_strdup(tokens->value);
-			current->path = get_path(current->args[i], envp);
+			// -- el path de args[0] simpre sera asi pero eso el 0 esta statico -- //
+			current->path = get_path(current->args[0], envp);
 			i++;
 		}
 		else if (tokens->type == TOKEN_REDIRECTION)
@@ -92,23 +94,19 @@ void	print_command_list(t_command *cmds)
 	while (cmds)
 	{
 		i = 0;
-		j = 0;
+		
 		ft_printf("comandos + flag %i: ", k);
 		while (cmds->args[i])
 		{
+			j = 0;
 			while (cmds->args[j])
 			{
 				ft_printf("%s -> ", cmds->args[j]);
 				j++;
 			}
-			if (!cmds->path)
-				printf("\nminishell: %s: commad not found\n", cmds->args[i]);
-			else
-			{
-				ft_printf("\nCommand correcto: ");
-				ft_printf("%i: %s\n", i, cmds->args[i]);
-				ft_printf("%s: %s\n", cmds->args[i], cmds->path);
-			}
+			ft_printf("\nNodo: %p\n", cmds);
+			ft_printf("%i: %s\n", i, cmds->args[i]);
+			ft_printf("%s: %s\n", cmds->args[i], cmds->path);
 			i++;
 		}
 		k++;
