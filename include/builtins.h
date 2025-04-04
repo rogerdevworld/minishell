@@ -31,11 +31,11 @@ enum
 void	built(t_command *cmd, char **envp);
 
 int		get_builtin_cmd(char *cmd);
-void	execute_builtin(int cmd, char *path);
+void	execute_builtin(int cmd, char *path, char **envp);
 
 // -- local commands -- //
 void	pwd(void);
 void	clear(void);
-void	ft_cd(const char *path);
+void	ft_cd(const char *path, char **envp);
 
 #endif
