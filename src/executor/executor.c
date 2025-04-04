@@ -49,26 +49,3 @@ void	ft_exec_cmd(t_command *cmd, char **envp)
 	else if (pid > 0)
 		waitpid(pid, NULL, 0);
 }
-
-// -- prompt inicial parser manejar "> < << | || &&"
-// -- pwd | cat -e | cat -e
-// -- ahora
-// -- t_cmd 1. pwd t_cmd 2. cat -e t_cmd 3. cat -e
-// -- flags | || &&
-
-// -- pipe
-// -- t_bonus 1. flag pipe
-// -- -- t_cmd 1. pwd
-// -- t_bonus 2. flag pipe
-// -- -- t_cmd 2. cat -e
-// -- t_bonus 3. flag pipe
-// -- -- t_cmd 3. cat -e
-
-// -- &&, || or (both)
-// -- pwd && cat -e || pwd > text | cat -e text
-// -- t_bonus 1. flag pipe
-// -- -- t_cmd 1. pwd
-// -- t_bonus 2. flag pipe
-// -- -- t_cmd 2. cat -e
-// -- t_bonus 3. flag pipe
-// -- -- t_cmd 3. cat -e

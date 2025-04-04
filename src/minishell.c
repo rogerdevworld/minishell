@@ -72,3 +72,28 @@ ls -la > text && cat -e text && echo "holo world" > new_text && cat text
 
 // valgrind --leak-check=full --show-leak-kinds=all ./minishell
 // valgrind --leak-check=full ./minishell
+
+
+
+// -- prompt inicial parser manejar "> < << | || &&"
+// -- pwd | cat -e | cat -e
+// -- ahora
+// -- t_cmd 1. pwd t_cmd 2. cat -e t_cmd 3. cat -e
+// -- flags | || &&
+
+// -- pipe
+// -- t_bonus 1. flag pipe
+// -- -- t_cmd 1. pwd
+// -- t_bonus 2. flag pipe
+// -- -- t_cmd 2. cat -e
+// -- t_bonus 3. flag pipe
+// -- -- t_cmd 3. cat -e
+
+// -- &&, || or (both)
+// -- pwd > text && cat -e text || pwd > text | cat -e text
+// -- t_bonus 1. && first element
+// -- -- t_cmd 1. pwd > text
+// -- t_bonus 2. rigth pwd, left cat -e
+// -- -- t_cmd 2. cat -e
+// -- t_bonus 3. rigth 
+// -- -- t_cmd 3. cat -e
