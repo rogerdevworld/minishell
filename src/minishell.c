@@ -23,7 +23,7 @@ void	main_loop(char **envp)
 	envp = envp;
 	while (1)
 	{
-		line = readline(meta_path(envp));
+		line = readline("XeniaMariaShell> ");//meta_path(envp)
 		if (!line)
 			break ;
 		tokens = lexer(line);
@@ -32,6 +32,8 @@ void	main_loop(char **envp)
 		if (ft_strncmp(line, "exit", 4) == 0)
 		{
 			free(line);
+			rl_free_line_state();
+			rl_clear_history();
 			break ;
 		}
 		cmd = parse_tokens(tokens, envp);
