@@ -26,7 +26,6 @@ void	main_loop(char **envp)
 		line = readline(meta_path(envp));
 		if (!line)
 			break ;
-		
 		if (*line)
 			add_history(line);
 		if (ft_strncmp(line, "exit", 4) == 0)
@@ -38,6 +37,7 @@ void	main_loop(char **envp)
 		}
 		tokens = lexer(line);
 		cmd = parse_tokens(tokens, envp);
+		init_minishell(envp, tokens, cmd);
 		print_tokens(tokens);
 		print_command_list(cmd);
 		ft_check_executor(cmd, envp);
