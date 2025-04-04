@@ -20,6 +20,7 @@
 # include "builtins.h"
 # include "design.h"
 # include "executor.h"
+# include "bonus.h"
 
 // -- system.h -- //
 

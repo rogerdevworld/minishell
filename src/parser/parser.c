@@ -49,10 +49,14 @@ void	handle_redirect(t_command *cmd, t_token **tokens)
 	}
 }
 
-t_command	*parse_tokens(t_token *tokens, char **envp)
+t_bonus	*parse_tokens(t_token *tokens, char **envp)
 {
 	t_command	*cmds;
 	t_command	*current;
+	t_bonus		*root = NULL;
+	t_bonus		*prev = NULL;
+	t_bonus		*next = NULL;
+	t_bonus		*node;
 	int			i;
 
 	envp = envp;
@@ -75,47 +79,82 @@ t_command	*parse_tokens(t_token *tokens, char **envp)
 			handle_redirect(current, &tokens);
 		else if (tokens->type == TOKEN_OPERATOR)
 		{
+			node = init_bonus(resolve_operator(tokens->value), current, prev, next);
+			prev = node;
+			if (!root)
+				root = node;
 			current->next = init_command();
 			current = current->next;
 			i = 0;
 		}
 		tokens = tokens->next;
 	}
-	return (cmds);
+	if (!root)
+	{
+		root = init_bonus(COMMAND, cmds, NULL, NULL);
+	}
+	return (root);
 }
 
-void	print_command_list(t_command *cmds)
+void	print_operator(t_operator op)
 {
-	int	i;
-	int	j;
-	int	k;
+	if (op == PIPE)
+		ft_printf("Operador: |\n");
+	else if (op == AND)
+		ft_printf("Operador: &&\n");
+	else if (op == OR)
+		ft_printf("Operador: ||\n");
+	else if (op == COMMAND)
+		ft_printf("Operador: NONE\n");
+	else
+		ft_printf("Operador: UNKNOWN (%d)\n", op);
+}
 
-	k = 1;
-	while (cmds)
+void	print_command(t_command *cmd)
+{
+	int	i = 0;
+
+	if (!cmd)
 	{
-		i = 0;
-		
-		ft_printf("comandos + flag %i: ", k);
-		while (cmds->args[i])
+		ft_printf("  [Comando vacío]\n");
+		return;
+	}
+
+	while (cmd)
+	{
+		ft_printf("  Comando:\n");
+		while (cmd->args && cmd->args[i])
 		{
-			j = 0;
-			while (cmds->args[j])
-			{
-				ft_printf("%s -> ", cmds->args[j]);
-				j++;
-			}
-			ft_printf("\nNodo: %p\n", cmds);
-			ft_printf("%i: %s\n", i, cmds->args[i]);
-			ft_printf("%s: %s\n", cmds->args[i], cmds->path);
+			ft_printf("    Arg[%d]: %s\n", i, cmd->args[i]);
 			i++;
 		}
-		k++;
-		ft_printf("\n");
-		if (cmds->input_file)
-			ft_printf("  Input: %s\n", cmds->input_file);
-		if (cmds->output_file)
-			ft_printf("  Output: %s (append: %d)\n", cmds->output_file,
-				cmds->append);
-		cmds = cmds->next;
+		if (cmd->path)
+			ft_printf("    Path: %s\n", cmd->path);
+		if (cmd->input_file)
+			ft_printf("    Input: %s\n", cmd->input_file);
+		if (cmd->output_file)
+			ft_printf("    Output: %s (append: %d)\n", cmd->output_file, cmd->append);
+		ft_printf("Nodo: %p", cmd);
+		cmd = cmd->next;
 	}
 }
+
+void	print_bonus_tree(t_bonus *node, int level)
+{
+	if (!node)
+		return;
+	print_bonus_tree(node->right, level + 1);
+	for (int i = 0; i < level; i++)
+		ft_printf("    ");
+	print_operator(node->type);
+	print_command(node->cmd);
+	print_bonus_tree(node->left, level + 1);
+}
+
+// -- cosas por aplciar -- //
+// 1. free de strcuts
+// 2. comillas solas simpre en parejas o dentro de una pareja 
+// 3. si pasan un separador ; es un error
+// 4. si pasan operadores en formato error();
+// 4.1 ejemplo >&& >||, > &&||, cosas asi
+// 5. 

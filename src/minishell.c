@@ -11,13 +11,13 @@
 /* ************************************************************************** */
 #include "../include/minishell.h"
 #include "../include/parser.h"
+#include "../include/bonus.h"
 
 // -- main loop for minishell -- //
 void	main_loop(char **envp)
 {
 	char		*line;
 	t_token		*tokens;
-	t_command	*cmd;
 
 	tokens = NULL;
 	envp = envp;
@@ -36,11 +36,12 @@ void	main_loop(char **envp)
 			break ;
 		}
 		tokens = lexer(line);
-		cmd = parse_tokens(tokens, envp);
-		init_minishell(envp, tokens, cmd);
-		print_tokens(tokens);
-		print_command_list(cmd);
-		ft_check_executor(cmd, envp);
+		t_bonus *cmd = parse_tokens(tokens, envp);
+		//init_minishell(envp, tokens, cmd);
+		//print_tokens(tokens);
+		//print_command_list(cmd);
+		print_bonus_tree(cmd, 0);
+		//ft_check_executor(cmd, envp);
 		free(line);
 	}
 	exit(0);
