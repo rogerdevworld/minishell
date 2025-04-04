@@ -44,7 +44,6 @@ char	*path_terminal(void)
 	int		i;
 	int		j;
 	char	*tmp;
-	char	*tmp;
 	char	*last;
 
 	i = 0;
