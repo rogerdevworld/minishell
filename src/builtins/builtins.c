@@ -22,7 +22,7 @@ void	built(t_command *cmd, char **envp)
 		i = 0;
 		if (get_builtin_cmd(cmd->args[i]))
 		{
-			execute_builtin(get_builtin_cmd(cmd->args[i]), cmd->args[i + 1]);
+			execute_builtin(get_builtin_cmd(cmd->args[i]), cmd->args[i + 1], envp);
 			i++;
 		}
 		cmd = cmd->next;
@@ -31,7 +31,7 @@ void	built(t_command *cmd, char **envp)
 
 int	get_builtin_cmd(char *cmd)
 {
-	if (ft_strncmp(cmd, "cd", 2) == 0)
+	if (ft_strcmp(cmd, "cd") == 0)
 		return (CD);
 	if (ft_strncmp(cmd, "exit", 5) == 0)
 		return (EXIT);
@@ -49,10 +49,10 @@ int	get_builtin_cmd(char *cmd)
 }
 
 // -- design -- //
-void	execute_builtin(int cmd, char *path)
+void	execute_builtin(int cmd, char *path, char **envp)
 {
 	if (cmd == CD)
-		ft_cd(path);
+		ft_cd(path, envp);
 	else if (cmd == EXIT)
 		ft_printf("Ejecutando exit\n");
 	else if (cmd == ECHO)
