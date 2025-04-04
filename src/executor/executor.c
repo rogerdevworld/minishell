@@ -22,7 +22,7 @@ void	ft_check_executor(t_command *cmd, char **envp)
 	{
 		i = 0;
 		if (get_builtin_cmd(cmd->args[i]) != -1)
- 			execute_builtin(get_builtin_cmd(cmd->args[i]), cmd->args[i + 1]);
+ 			execute_builtin(get_builtin_cmd(cmd->args[i]), cmd->args[i + 1], envp);
 		else
 		{
  			ft_exec_cmd(cmd, envp);
