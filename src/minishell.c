@@ -23,10 +23,32 @@ void	main_loop(char **envp)
 	envp = envp;
 	while (1)
 	{
-		line = readline("XeniaMariaShell> ");//meta_path(envp)
+		//line = readline("XeniaMariaShell> ");//meta_path(envp)
+		line = ft_readline("XeniaMariaShell> ");
+        if (*line == '\0')
+        {
+            free(line);
+            continue;
+        }
+		add_history(line);
 		if (!line)
+        {
+            ft_putstr_fd("exit\n", STDOUT_FILENO);
+            break;
+        }
+		
+        tokens = lexer(line);
+		if (!tokens)
+            continue;
+		if (ft_strncmp(line, "exit", 4) == 0)
+		{
+			free(line);
 			break ;
-		tokens = lexer(line);
+		}
+		free(line);
+		// -- version estable -- //
+		/*
+		
 		if (*line)
 			add_history(line);
 		if (ft_strncmp(line, "exit", 4) == 0)
@@ -35,13 +57,14 @@ void	main_loop(char **envp)
 			rl_free_line_state();
 			rl_clear_history();
 			break ;
-		}
+		}*/
 		cmd = parse_tokens(tokens, envp);
-		//print_command_list(cmd);
 		ft_check_executor(cmd, envp);
-		free(line);
+        //free_tokens(tokens);
+        //free_commands(cmd);
 	}
-	exit(0);
+	ft_rl_cleanup();
+	exit(EXIT_SUCCESS);
 }
 
 
@@ -70,3 +93,4 @@ ls -la > text && cat -e text && echo "holo world" > new_text && cat text
 
 // valgrind --leak-check=full --show-leak-kinds=all ./minishell
 // valgrind --leak-check=full ./minishell
+//valgrind --leak-check=full --show-leak-kinds=definite ./minishell

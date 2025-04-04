@@ -20,6 +20,7 @@
 # include "builtins.h"
 # include "executor.h"
 # include "design.h"
+# include "../src/ft_readline/ft_readline.h"
 
 // -- system.h -- //
 

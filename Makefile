@@ -23,7 +23,8 @@ SRCS =	$(SRC_DIR)minishell.c $(SRC_DIR)exit.c \
 	$(SRC_DIR_BUI)builtins.c $(SRC_DIR_BUI)pwd.c $(SRC_DIR_BUI)clear.c $(SRC_DIR_BUI)ft_cd.c \
 	$(SRC_DIR)parser/parser.c $(SRC_DIR)parser/get_path.c \
 	$(SRC_DIR)executor/executor.c \
-	$(SRC_DIR)design/path_in_shell.c
+	$(SRC_DIR)design/path_in_shell.c \
+	$(SRC_DIR)ft_readline/ft_readline.c \
 
 OBJS = $(SRCS:$(SRC_DIR)%.c=$(OBJ_DIR)/%.o)
 
@@ -36,7 +37,8 @@ BSRCS =	$(BSRC_DIR)pipex_bonus.c $(BSRC_DIR)parse_bonus.c $(BSRC_DIR)cmd_bonus.c
 BOBJS = $(BSRCS:$(BSRC_DIR)%.c=$(OBJ_DIR)/%.o)
 
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -I./include -fsanitize=leak
+CFLAGS = -Wall -Werror -Wextra -I./include 
+#-fsanitize=leak
 RM = rm -rf
 
 # --- libft --- #
@@ -72,6 +74,7 @@ $(OBJ_DIR):
 	mkdir -p ./obj/builtins
 	mkdir -p ./obj/executor
 	mkdir -p ./obj/design
+	mkdir -p ./obj/ft_readline
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)%.c $(HEADER) Makefile | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
