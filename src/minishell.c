@@ -37,9 +37,8 @@ void	main_loop(char **envp)
 		}
 		tokens = lexer(line);
 		cmd = parse_tokens(tokens, envp);
-		init_minishell(envp, tokens, cmd);
-		print_tokens(tokens);
-		print_command_list(cmd);
+		//print_tokens(tokens);
+		//print_command_list(cmd);
 		ft_check_executor(cmd, envp);
 		free(line);
 	}
