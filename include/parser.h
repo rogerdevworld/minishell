@@ -41,12 +41,20 @@ typedef struct s_command
 // 1 si es ">>", 0 si es ">"
 // para encadenar comandos cuando hay un pipe "|| &&
 //" falta ver si es un file el siguente comando ejemplo "cat -e file"
-
+//
+//parser_utils.c
 t_command				*init_command(void);
 void					handle_redirect(t_command *cmd, t_token **tokens);
+int					handle_first_argument(t_token *tokens, t_command *current);
+void					handle_operator(t_token *tokens, t_command **current);
+//parser.c
+char					**process_cmd_args(t_token *tokens, char **envp, char **args);
 t_command				*parse_tokens(t_token *tokens, char **envp);
 void					print_command_list(t_command *cmds);
-t_operator	resolve_operator(char *operator);
+t_operator				resolve_operator(char *operator);
+const char*				operator_to_str(t_operator op);
+//get_path.c
 char					*get_path(char *cmd, char **env);
-const char* operator_to_str(t_operator op);
+//ft_isoperator.c
+int					ft_isoperator(char *str);
 #endif
