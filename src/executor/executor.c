@@ -94,7 +94,8 @@ void	child_process(t_command *cmd, char **envp, int builtin_id, int prev_fd,
 		execute_builtin(builtin_id, cmd->args[1], envp);
 	else
 		execve(get_path(cmd->args[0], envp), cmd->args, envp);
-	ft_exit("command failed");
+	//ft_exit("command failed");
+	exit(0);
 }
 
 void	parent_process(t_command *cmd, int *prev_fd, int p_fd[2])

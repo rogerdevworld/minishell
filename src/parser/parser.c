@@ -130,8 +130,8 @@ t_operator	resolve_operator(char *operator)
 		return (OR);
 	if (ft_strcmp(operator, "&&") == 0)
 		return (AND);
-	if (ft_strncmp(operator, "|", 1) == 0)
-		return (OR);
+	if (ft_strcmp(operator, "|") == 0)
+		return (PIPE);
 	return (COMMAND);
 }
 const char* operator_to_str(t_operator op)
