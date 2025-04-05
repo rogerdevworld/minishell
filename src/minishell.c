@@ -23,7 +23,7 @@ void	main_loop(char **envp)
 	envp = envp;
 	while (1)
 	{
-		line = readline(meta_path(envp));
+		line = readline("text> ");//meta_path(envp)
 		if (!line)
 			break ;
 		if (*line)
