@@ -126,11 +126,11 @@ void	print_command_list(t_command *cmds)
 
 t_operator	resolve_operator(char *operator)
 {
-	if (ft_strcmp(operator, "|") == 0)
-		return (PIPE);
+	if (ft_strncmp(operator, "||", 2) == 0)
+		return (OR);
 	if (ft_strcmp(operator, "&&") == 0)
 		return (AND);
-	if (ft_strcmp(operator, "||") == 0)
+	if (ft_strncmp(operator, "|", 1) == 0)
 		return (OR);
 	return (COMMAND);
 }
