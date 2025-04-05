@@ -11,82 +11,51 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-t_command	*init_command(void)
+char	**process_cmd_args(t_token *tokens, char **envp, char **args)
 {
-	t_command	*cmd;
+	int	i;
 
-	cmd = (t_command *)malloc(sizeof(t_command));
-	if (!cmd)
-		return (NULL);
-	cmd->args = ft_calloc(10, sizeof(char *));
-	cmd->path = NULL;
-	cmd->input_file = NULL;
-	cmd->output_file = NULL;
-	cmd->append = 0;
-	cmd->operator = NONE;
-	cmd->next = NULL;
-	return (cmd);
-}
-
-void	handle_redirect(t_command *cmd, t_token **tokens)
-{
-	if (ft_strcmp((*tokens)->value, ">") == 0)
+	envp = envp;
+	i = 0;
+	while (tokens && (tokens->type == TOKEN_COMMAND || tokens->type == TOKEN_ARGUMENT))
 	{
-		*tokens = (*tokens)->next;
-		cmd->output_file = ft_strdup((*tokens)->value);
-		cmd->append = 0;
+		if (i >= 10)//evitar desbord.
+			break ;
+		args[i] = ft_strdup(tokens->value);
+		tokens = tokens->next;
+		i++;
 	}
-	else if (ft_strcmp((*tokens)->value, ">>") == 0)
-	{
-		*tokens = (*tokens)->next;
-		cmd->output_file = ft_strdup((*tokens)->value);
-		cmd->append = 1;
-	}
-	else if (ft_strcmp((*tokens)->value, "<") == 0)
-	{
-		*tokens = (*tokens)->next;
-		cmd->input_file = ft_strdup((*tokens)->value);
-		cmd->append = 0;
-	}
+	return (args);
 }
 
 t_command	*parse_tokens(t_token *tokens, char **envp)
 {
 	t_command	*cmds;
 	t_command	*current;
-	int			i;
 
-	envp = envp;
 	cmds = init_command();
 	if (!cmds)
 		return (NULL);
 	current = cmds;
-	i = 0;
 	while (tokens)
 	{
-		// -- falta agregar caso de si "argumento es el primer parametro no aceptar", NO TIENE QUE HACER \n --//
 		if ((tokens->type == TOKEN_COMMAND) || (tokens->type == TOKEN_ARGUMENT))
 		{
-			current->args[i] = ft_strdup(tokens->value);
-			// -- el path de args[0] simpre sera asi pero eso el 0 esta statico -- //
-			current->path = get_path(current->args[0], envp);
-			i++;
+			if(!handle_first_argument(tokens, current))// -- falta agregar caso de si "argumento es el primer parametro no aceptar", NO TIENE QUE HACER \n --//
+				return (NULL);
+			current->args = process_cmd_args(tokens, envp, current->args);
+			if (current->args[0] && !current->path)// -- el path de args[0] simpre sera asi pero eso el 0 esta statico -- (xeni: asi asginamos la ruta solo al 1er argum(cmd)?)//
+				current->path = get_path(current->args[0], envp);
 		}
 		else if (tokens->type == TOKEN_REDIRECTION)
 			handle_redirect(current, &tokens);
 		else if (tokens->type == TOKEN_OPERATOR)
-		{
-			// -- estoy haciendo un arbol de ejecucion para ver grupo de comandso orden etc -- //
-			current->operator = resolve_operator(tokens->value);
-			current->next = init_command();
-			current = current->next;
-			i = 0;
-		}
+			handle_operator(tokens, &current);
 		tokens = tokens->next;
 	}
 	return (cmds);
 }
-
+/*
 void	print_command_list(t_command *cmds)
 {
 	int	i;
@@ -122,7 +91,7 @@ void	print_command_list(t_command *cmds)
 				cmds->append);
 		cmds = cmds->next;
 	}
-}
+}*/
 
 t_operator	resolve_operator(char *operator)
 {
@@ -131,9 +100,10 @@ t_operator	resolve_operator(char *operator)
 	if (ft_strcmp(operator, "&&") == 0)
 		return (AND);
 	if (ft_strncmp(operator, "|", 1) == 0)
-		return (OR);
+		return (PIPE);
 	return (COMMAND);
 }
+/*
 const char* operator_to_str(t_operator op)
 {
     if (op == PIPE)
@@ -146,4 +116,5 @@ const char* operator_to_str(t_operator op)
         return "COMMAND";
     else
         return "UNKNOWN";
-}
+    return (cmd);
+}*/

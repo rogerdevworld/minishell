@@ -25,8 +25,7 @@ void	main_loop(char **envp)
 	{
 		line = readline(meta_path(envp));
 		if (!line)
-			break ;
-		
+			break ;	
 		if (*line)
 			add_history(line);
 		if (ft_strncmp(line, "exit", 4) == 0)
@@ -39,14 +38,12 @@ void	main_loop(char **envp)
 		tokens = lexer(line);
 		cmd = parse_tokens(tokens, envp);
 		//print_tokens(tokens);
-		print_command_list(cmd);
+		//print_command_list(cmd);
 		ft_check_executor(cmd, envp);
 		free(line);
 	}
 	exit(0);
 }
-
-
 // -- structuracion del codigo para el main -- //
 /*
 	1. inicializacion de las structs para el shell
@@ -62,7 +59,6 @@ int	main(int argc, char **argv, char **envp)
 	main_loop(envp);
 	return (0);
 }
-
 // -- commad for test -- //
 /*
 ls -la > text && cat -e text && echo "holo world" > new_text && cat text
