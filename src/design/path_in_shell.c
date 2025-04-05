@@ -112,12 +112,13 @@ char	*get_user(char **envp)
 char	*get_computer_name(void)
 {
 	static char	hostname[1024];
-
+	char *str = malloc(8);
 	if (gethostname(hostname, sizeof(hostname)) != 0)
 	{
 		return ("Desconocido");
 	}
-	return (hostname);
+	ft_strlcpy(str, hostname, 8);
+	return (str);
 }
 
 char	*meta_path(char **envp)
