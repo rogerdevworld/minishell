@@ -33,7 +33,7 @@ void	main_loop(char **envp)
 			free(line);
 			rl_free_line_state();
 			rl_clear_history();
-			break ;
+			//break ;
 		}
 		tokens = lexer(line);
 		cmd = parse_tokens(tokens, envp);
