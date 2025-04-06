@@ -23,6 +23,7 @@ t_command	*init_command(void)
 	cmd->input_file = NULL;
 	cmd->output_file = NULL;
 	cmd->append = 0;
+	cmd->operator = NONE;
 	cmd->next = NULL;
 	return (cmd);
 }
@@ -63,16 +64,20 @@ t_command	*parse_tokens(t_token *tokens, char **envp)
 	i = 0;
 	while (tokens)
 	{
-		if (tokens->type == TOKEN_COMMAND)
+		// -- falta agregar caso de si "argumento es el primer parametro no aceptar", NO TIENE QUE HACER \n --//
+		if ((tokens->type == TOKEN_COMMAND) || (tokens->type == TOKEN_ARGUMENT))
 		{
 			current->args[i] = ft_strdup(tokens->value);
-			current->path = get_path(current->args[i], envp);
+			// -- el path de args[0] simpre sera asi pero eso el 0 esta statico -- //
+			current->path = get_path(current->args[0], envp);
 			i++;
 		}
 		else if (tokens->type == TOKEN_REDIRECTION)
 			handle_redirect(current, &tokens);
 		else if (tokens->type == TOKEN_OPERATOR)
 		{
+			// -- estoy haciendo un arbol de ejecucion para ver grupo de comandso orden etc -- //
+			current->operator = resolve_operator(tokens->value);
 			current->next = init_command();
 			current = current->next;
 			i = 0;
@@ -92,23 +97,20 @@ void	print_command_list(t_command *cmds)
 	while (cmds)
 	{
 		i = 0;
-		j = 0;
-		ft_printf("comandos + flag %i: ", k);
+		
+		ft_printf("OPERADOR: %s\n", operator_to_str(cmds->operator));
+		ft_printf("--comandos + flag %i: ", k);
 		while (cmds->args[i])
 		{
+			j = 0;
 			while (cmds->args[j])
 			{
 				ft_printf("%s -> ", cmds->args[j]);
 				j++;
 			}
-			if (!cmds->path)
-				printf("\nminishell: %s: commad not found\n", cmds->args[i]);
-			else
-			{
-				ft_printf("\nCommand correcto: ");
-				ft_printf("%i: %s\n", i, cmds->args[i]);
-				ft_printf("%s: %s\n", cmds->args[i], cmds->path);
-			}
+			ft_printf("\n---Nodo: %p\n", cmds);
+			ft_printf("----N: %i - comando: %s\n", i, cmds->args[i]);
+			ft_printf("----comandos: %s - path: %s\n", cmds->args[i], cmds->path);
 			i++;
 		}
 		k++;
@@ -120,4 +122,28 @@ void	print_command_list(t_command *cmds)
 				cmds->append);
 		cmds = cmds->next;
 	}
+}
+
+t_operator	resolve_operator(char *operator)
+{
+	if (ft_strncmp(operator, "||", 2) == 0)
+		return (OR);
+	if (ft_strcmp(operator, "&&") == 0)
+		return (AND);
+	if (ft_strcmp(operator, "|") == 0)
+		return (PIPE);
+	return (COMMAND);
+}
+const char* operator_to_str(t_operator op)
+{
+    if (op == PIPE)
+        return "|";
+    else if (op == AND)
+        return "&&";
+    else if (op == OR)
+        return "||";
+    else if (op == COMMAND)
+        return "COMMAND";
+    else
+        return "UNKNOWN";
 }

@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -11,13 +11,18 @@
 /* ************************************************************************** */
 #include "../include/minishell.h"
 
-// -- char *getcwd(char *buf, size_t size); -- //
-void	pwd(void)
+// -- cd .. -- //
+// -- int chdir(const char *path); -- //
+void	ft_cd(const char *path, char **envp)
 {
-	char	cwd[1024];
-
-	if (getcwd(cwd, sizeof(cwd)))
-		ft_printf("%s\n", cwd);
-	else
-		perror("getcwd() error");
+	if (!path)
+	{
+		chdir(ft_getenv("HOME", envp));
+		return ;
+	}
+	if (chdir(path) != 0)
+	{
+		ft_printf("minishell: cd %s: ", path);
+		perror("");
+	}
 }

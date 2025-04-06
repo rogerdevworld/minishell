@@ -11,31 +11,16 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-char	*get_path(char *cmd, char **env)
+int ft_isoperator(char *str)
 {
-	int		i;
-	char	*exec;
-	char	**allpath;
-	char	*path_part;
-	char	**s_cmd;
+    int i;
 
-	i = -1;
-	allpath = ft_split(ft_getenv("PATH", env), ':');
-	s_cmd = ft_split(cmd, ' ');
-	while (allpath[++i])
-	{
-		path_part = ft_strjoin(allpath[i], "/");
-		exec = ft_strjoin(path_part, s_cmd[0]);
-		free(path_part);
-		if (access(exec, F_OK | X_OK) == 0)
-		{
-			free_split(allpath);
-			free_split(s_cmd);
-			return (exec);
-		}
-		free(exec);
-	}
-	free_split(allpath);
-	free_split(s_cmd);
-	return (ft_strdup(cmd));
+    i = 0;
+    if (!str)
+        return (-1);
+    if (ft_strcmp(str, "&&") == 0)
+        return (1);
+    else if (ft_strcmp(str, "||") == 0)
+        return (2);
+    return (0);
 }

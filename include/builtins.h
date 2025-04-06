@@ -28,14 +28,14 @@ enum
 };
 
 // -- internal to execve() -- //
-void	built(t_command *cmd, t_token *token);
+void	built(t_command *cmd, char **envp);
 
 int		get_builtin_cmd(char *cmd);
-void	execute_builtin(int cmd, t_token *know_token);
-void	clear_screen(void);
+void	execute_builtin(int cmd, char *path, char **envp);
 
 // -- local commands -- //
 void	pwd(void);
 void	clear(void);
+void	ft_cd(const char *path, char **envp);
 
 #endif

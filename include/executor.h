@@ -12,8 +12,11 @@
 #ifndef EXECUTOR_H
 # define EXECUTOR_H
 
-void	ft_check_executor(t_command *cmd, t_token *token, char **envp);
+void	ft_check_executor(t_command *cmd, char **envp);
 void	ft_exec_cmd(t_command *cmd, char **envp);
 void	ft_pipe_and_fork(t_command *cmd, char **env);
+void	parent_process(t_command *cmd, int *prev_fd, int p_fd[2]);
+void	child_process(t_command *cmd, char **envp, int builtin_id, int prev_fd, int p_fd[2]);
+pid_t	external_command(t_command *cmd, char **envp, int builtin_id, int *prev_fd, int p_fd[2]);
 
 #endif

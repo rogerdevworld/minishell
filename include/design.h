@@ -1,23 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   desing.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/01 13:05:47 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/04/01 13:05:50 by rmarrero         ###   ########.fr       */
+/*   Created: 2025/03/27 11:56:13 by rmarrero          #+#    #+#             */
+/*   Updated: 2025/03/27 11:57:56 by rmarrero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../include/minishell.h"
+#ifndef DESING_H
+# define DESING_H
 
-// -- char *getcwd(char *buf, size_t size); -- //
-void	pwd(void)
-{
-	char	cwd[1024];
+// -- lexer.h -- //
+char	*path_terminal(void);
+char	*get_git_branch(void);
+char	*meta_path(char **envp);
+char	*get_computer_name(void);
+char	*get_user(char **envp);
 
-	if (getcwd(cwd, sizeof(cwd)))
-		ft_printf("%s\n", cwd);
-	else
-		perror("getcwd() error");
-}
+#endif
