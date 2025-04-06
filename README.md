@@ -1,7 +1,7 @@
 # 🛠 Planificación del Proyecto Minishell
 
 
-![minishell bonus Image](./doc/images/minishell.svg)
+![minishell bonus Image](./doc/images/minishell.png)
 
 ## 🔧 Organización del Proyecto
 
