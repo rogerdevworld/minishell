@@ -9,7 +9,6 @@
 /*   Updated: 2025/03/27 17:36:15 by rmarrero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -20,7 +19,7 @@
 # include "builtins.h"
 # include "design.h"
 # include "executor.h"
-# include "executor.h"
+# include "redirections.h"
 # include "signals.h"
 # include "design.h"
 
