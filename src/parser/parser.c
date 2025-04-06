@@ -20,33 +20,38 @@ t_command	*init_command(void)
 		return (NULL);
 	cmd->args = ft_calloc(10, sizeof(char *));
 	cmd->path = NULL;
-	cmd->input_file = NULL;
-	cmd->output_file = NULL;
-	cmd->append = 0;
-	cmd->operator = NONE;
+	cmd->input_file = -1;
+	cmd->output_file = -1;
+	cmd->limiter = NULL;
+	cmd->operator= NONE;
 	cmd->next = NULL;
 	return (cmd);
 }
 
 void	handle_redirect(t_command *cmd, t_token **tokens)
 {
-	if (ft_strcmp((*tokens)->value, ">") == 0)
+	t_token	*tmp;
+
+	if (ft_strncmp((*tokens)->value, ">", 1) == 0)
 	{
 		*tokens = (*tokens)->next;
-		cmd->output_file = ft_strdup((*tokens)->value);
-		cmd->append = 0;
+		cmd->output_file = ft_open((*tokens)->value, 1);
+		// cmd->append = 0;
 	}
-	else if (ft_strcmp((*tokens)->value, ">>") == 0)
+	else if (ft_strncmp((*tokens)->value, ">>", 2) == 0
+		|| ft_strncmp((*tokens)->value, "<<", 2) == 0)
 	{
+		// -- tenemos que controlar el limitador del here_doc
 		*tokens = (*tokens)->next;
-		cmd->output_file = ft_strdup((*tokens)->value);
-		cmd->append = 1;
+		tmp = get_last_token(*tokens);
+		cmd->output_file = ft_open(tmp->value, 2);
+		cmd->limiter = ft_strdup((*tokens)->value);
 	}
-	else if (ft_strcmp((*tokens)->value, "<") == 0)
+	else if (ft_strncmp((*tokens)->value, "<", 1) == 0)
 	{
 		*tokens = (*tokens)->next;
-		cmd->input_file = ft_strdup((*tokens)->value);
-		cmd->append = 0;
+		cmd->input_file = ft_open((*tokens)->value, 0);
+		// cmd->append = 0;
 	}
 }
 
@@ -64,11 +69,13 @@ t_command	*parse_tokens(t_token *tokens, char **envp)
 	i = 0;
 	while (tokens)
 	{
-		// -- falta agregar caso de si "argumento es el primer parametro no aceptar", NO TIENE QUE HACER \n --//
+		// -- falta agregar caso de si "argumento es el primer parametro no aceptar",
+		//	NO TIENE QUE HACER \n --//
 		if ((tokens->type == TOKEN_COMMAND) || (tokens->type == TOKEN_ARGUMENT))
 		{
 			current->args[i] = ft_strdup(tokens->value);
-			// -- el path de args[0] simpre sera asi pero eso el 0 esta statico -- //
+			// -- el path de args[0] simpre sera asi pero eso el 0 esta statico --
+				//
 			current->path = get_path(current->args[0], envp);
 			i++;
 		}
@@ -76,8 +83,9 @@ t_command	*parse_tokens(t_token *tokens, char **envp)
 			handle_redirect(current, &tokens);
 		else if (tokens->type == TOKEN_OPERATOR)
 		{
-			// -- estoy haciendo un arbol de ejecucion para ver grupo de comandso orden etc -- //
-			current->operator = resolve_operator(tokens->value);
+			// -- estoy haciendo un arbol de ejecucion para ver grupo de comandso orden etc --
+				//
+			current->operator= resolve_operator(tokens->value);
 			current->next = init_command();
 			current = current->next;
 			i = 0;
@@ -97,7 +105,6 @@ void	print_command_list(t_command *cmds)
 	while (cmds)
 	{
 		i = 0;
-		
 		ft_printf("OPERADOR: %s\n", operator_to_str(cmds->operator));
 		ft_printf("--comandos + flag %i: ", k);
 		while (cmds->args[i])
@@ -110,16 +117,24 @@ void	print_command_list(t_command *cmds)
 			}
 			ft_printf("\n---Nodo: %p\n", cmds);
 			ft_printf("----N: %i - comando: %s\n", i, cmds->args[i]);
-			ft_printf("----comandos: %s - path: %s\n", cmds->args[i], cmds->path);
+			ft_printf("----comandos: %s - path: %s\n", cmds->args[i],
+				cmds->path);
+			if (cmds->limiter)
+				ft_printf("------------------------------\nCaso here_doc: limiter: %s\n", cmds->limiter);
+			ft_printf("infile: %i\n", cmds->input_file);
+			ft_printf("outfile: %i\n", cmds->output_file);
 			i++;
 		}
 		k++;
+		// -- dejare el infile y el outfile como fd en la struct para nejarlos desde ahi solo
+		// en forma de texto luego lo hago mejor para que se vea mas claro con parse bonus --
+			//
 		ft_printf("\n");
-		if (cmds->input_file)
-			ft_printf("  Input: %s\n", cmds->input_file);
-		if (cmds->output_file)
-			ft_printf("  Output: %s (append: %d)\n", cmds->output_file,
-				cmds->append);
+		// if (cmds->input_file)
+		//	ft_printf("  Input: %s\n", cmds->input_file);
+		// if (cmds->output_file)
+		//	ft_printf("  Output: %s (append: %d)\n", cmds->output_file,
+		//		cmds->append);
 		cmds = cmds->next;
 	}
 }
@@ -134,16 +149,16 @@ t_operator	resolve_operator(char *operator)
 		return (PIPE);
 	return (COMMAND);
 }
-const char* operator_to_str(t_operator op)
+const char	*operator_to_str(t_operator op)
 {
-    if (op == PIPE)
-        return "|";
-    else if (op == AND)
-        return "&&";
-    else if (op == OR)
-        return "||";
-    else if (op == COMMAND)
-        return "COMMAND";
-    else
-        return "UNKNOWN";
+	if (op == PIPE)
+		return ("|");
+	else if (op == AND)
+		return ("&&");
+	else if (op == OR)
+		return ("||");
+	else if (op == COMMAND)
+		return ("COMMAND");
+	else
+		return ("UNKNOWN");
 }
