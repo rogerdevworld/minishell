@@ -1,19 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor.h                                         :+:      :+:    :+:   */
+/*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/27 11:56:13 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/03/27 11:57:56 by rmarrero         ###   ########.fr       */
+/*   Created: 2025/04/01 13:05:47 by rmarrero          #+#    #+#             */
+/*   Updated: 2025/04/01 13:05:50 by rmarrero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#ifndef EXECUTOR_H
-# define EXECUTOR_H
+#include "../include/minishell.h"
 
-void	ft_check_executor(t_command *cmd, char **envp);
-void	ft_exec_cmd(t_command *cmd, char **envp);
-void	ft_pipe_and_fork(t_command *cmd, char **env);
-
-#endif
+// -- cd .. -- //
+// -- int chdir(const char *path); -- //
+void	ft_cd(const char *path)
+{
+	if (!path)
+		return ;
+	if (chdir(path) != 0)
+	{
+		ft_printf("Path: %s", path);
+		perror(": ");
+	}
+}

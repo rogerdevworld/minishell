@@ -20,6 +20,8 @@ t_token	*lexer(char *token)
 
 	tokens = NULL;
 	i = 0;
+	if (!token)
+		return (NULL);
 	tmp = ft_split_quotes(token, ' ');
 	if (!tmp)
 		return (NULL);

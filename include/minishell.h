@@ -20,6 +20,7 @@
 # include "builtins.h"
 # include "executor.h"
 # include "signals.h"
+# include "design.h"
 
 // -- system.h -- //
 
@@ -30,6 +31,7 @@
 # include <sys/wait.h>
 # include <unistd.h>
 #include <signal.h>
+#include <limits.h>
 
 // -- readline -- //
 # include <readline/history.h>

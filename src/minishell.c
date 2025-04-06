@@ -19,9 +19,10 @@ void	main_loop(char **envp)
 	t_command	*cmd;
 
 	tokens = NULL;
+	envp = envp;
 	while (1)
 	{
-		line = readline("XeniaMariaShell> ");
+		line = readline(meta_path(envp));
 		if (!line)
 			break ;
 		tokens = lexer(line);
@@ -30,15 +31,27 @@ void	main_loop(char **envp)
 		if (ft_strncmp(line, "exit", 4) == 0)
 		{
 			free(line);
+			rl_free_line_state();
+			rl_clear_history();
 			break ;
 		}
 		cmd = parse_tokens(tokens, envp);
-		ft_check_executor(cmd, tokens, envp);
+		//print_command_list(cmd);
+		ft_check_executor(cmd, envp);
 		free(line);
 	}
 	exit(0);
 }
 
+
+// -- structuracion del codigo para el main -- //
+/*
+	1. inicializacion de las structs para el shell
+		1.1 t_shell
+	2. prompt para el path in input
+	3. bucle main
+	4. free
+*/
 int	main(int argc, char **argv, char **envp)
 {
 	argc = argc;
@@ -52,7 +65,7 @@ int	main(int argc, char **argv, char **envp)
     //sigemptyset(&sa.sa_mask);
     //sigaction(SIGINT, &sa, NULL);
 
-	//signal(SIGINT, sigint_handler);
+	signal(SIGINT, sigint_handler);
 	//sigaction(SIGQUIT, &sa, NULL);
 	main_loop(envp);
 	return (0);
@@ -64,3 +77,6 @@ ls -la > text && cat -e text && echo "holo world" > new_text && cat text
 && echo hola && cat < new_text || ls -la > text && wc - l text > text_c
 && cat text*
 */
+
+// valgrind --leak-check=full --show-leak-kinds=all ./minishell
+// valgrind --leak-check=full ./minishell

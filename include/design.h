@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtins.h                                         :+:      :+:    :+:   */
+/*   desing.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -9,33 +9,14 @@
 /*   Updated: 2025/03/27 11:57:56 by rmarrero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#ifndef BUILTINS_H
-# define BUILTINS_H
+#ifndef DESING_H
+# define DESING_H
 
 // -- lexer.h -- //
-
-// --- internal commads -- //
-enum
-{
-	CD,
-	EXIT,
-	ECHO,
-	PWD,
-	EXPORT,
-	UNSET,
-	CLEAR,
-	NUM_BUILTINS
-};
-
-// -- internal to execve() -- //
-void	built(t_command *cmd, char **envp);
-
-int		get_builtin_cmd(char *cmd);
-void	execute_builtin(int cmd, char *path);
-
-// -- local commands -- //
-void	pwd(void);
-void	clear(void);
-void	ft_cd(const char *path);
+char	*path_terminal(void);
+char	*get_git_branch(void);
+char	*meta_path(char **envp);
+char	*get_computer_name(void);
+char	*get_user(char **envp);
 
 #endif
