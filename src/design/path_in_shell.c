@@ -114,12 +114,12 @@ char	*get_user(char **envp)
 char	*get_computer_name(void)
 {
 	static char	hostname[1024];
-	char *str = malloc(7);
+	char *str = malloc(8);
 	if (gethostname(hostname, sizeof(hostname)) != 0)
 	{
 		return ("Desconocido");
 	}
-	ft_strlcpy(str, hostname, 7);
+	ft_strlcpy(str, hostname, 8);
 	return (str);
 }
 
