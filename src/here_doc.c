@@ -22,6 +22,7 @@ void	ft_here_doc_child(char *delimiter, int *p_fd)
 		line = get_next_line(STDIN_FILENO);
 		if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)
 		{
+			ft_printf("sale");
 			free(line);
 			break ;
 		}
@@ -29,7 +30,7 @@ void	ft_here_doc_child(char *delimiter, int *p_fd)
 		free(line);
 	}
 	close(p_fd[1]);
-	exit(0);
+	_exit(0);
 }
 
 // -- main function to handle here_doc -- //
