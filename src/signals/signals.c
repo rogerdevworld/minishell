@@ -19,4 +19,5 @@ void sigint_handler(int signum)
 void sigquit_handler(int signum)
 {
     (void)signum;
+    write(1, "\n", 1);
 }
