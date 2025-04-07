@@ -103,6 +103,8 @@ char	*get_user(char **envp)
 {
 	char	*user;
 
+	if (!envp)
+		return (ft_strdup("Roger"));
 	user = ft_getenv("USER", envp);
 	if (!user)
 		return (NULL);

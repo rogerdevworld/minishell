@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 #include "../include/minishell.h"
 
+// -- aun hay problemas con las entras y salidas de los comandos -- /
 void	ft_here_doc_child(char *delimiter, int *p_fd)
 {
 	char	*line;
@@ -30,7 +31,7 @@ void	ft_here_doc_child(char *delimiter, int *p_fd)
 		free(line);
 	}
 	close(p_fd[1]);
-	_exit(0);
+	exit(0);
 }
 
 // -- main function to handle here_doc -- //

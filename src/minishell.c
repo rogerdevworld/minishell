@@ -22,7 +22,7 @@ void	main_loop(char **envp)
 	envp = envp;
 	while (1)
 	{
-		line = readline(meta_path(envp));//"text> "
+		line = readline(meta_path(envp)); //"text> "
 		if (!line)
 			break ;
 		if (*line)
@@ -36,14 +36,13 @@ void	main_loop(char **envp)
 		}
 		tokens = lexer(line);
 		cmd = parse_tokens(tokens, envp);
-		//print_tokens(tokens);
-		//print_command_list(cmd);
+		// print_tokens(tokens);
+		// print_command_list(cmd);
 		ft_check_executor(cmd, envp);
 		free(line);
 	}
 	exit(0);
 }
-
 
 // -- structuracion del codigo para el main -- //
 /*
@@ -57,17 +56,15 @@ int	main(int argc, char **argv, char **envp)
 {
 	argc = argc;
 	argv = argv;
-
 	// -- signals -- //
-	//struct sigaction sa;
-
-	//sa.sa_handler = ignore_signal;
-    //sa.sa_flags = 0;
-    //sigemptyset(&sa.sa_mask);
-    //sigaction(SIGINT, &sa, NULL);
-
+	// struct sigaction sa;
+	// sa.sa_handler = ignore_signal;
+	// sa.sa_flags = 0;
+	// sigemptyset(&sa.sa_mask);
+	// sigaction(SIGINT, &sa, NULL);
 	signal(SIGINT, sigint_handler);
-	//sigaction(SIGQUIT, &sa, NULL);
+	signal(SIGQUIT, ft_sigquit);
+	// sigaction(SIGQUIT, &sa, NULL);
 	main_loop(envp);
 	return (0);
 }
@@ -81,8 +78,6 @@ ls -la > text && cat -e text && echo "holo world" > new_text && cat text
 
 // valgrind --leak-check=full --show-leak-kinds=all ./minishell
 // valgrind --leak-check=full ./minishell
-
-
 
 // -- prompt inicial parser manejar "> < << | || &&"
 // -- pwd | cat -e | cat -e
@@ -104,5 +99,5 @@ ls -la > text && cat -e text && echo "holo world" > new_text && cat text
 // -- -- t_cmd 1. pwd > text
 // -- t_bonus 2. rigth pwd, left cat -e
 // -- -- t_cmd 2. cat -e
-// -- t_bonus 3. rigth 
+// -- t_bonus 3. rigth
 // -- -- t_cmd 3. cat -e
