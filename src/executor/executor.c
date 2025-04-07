@@ -21,6 +21,7 @@ void	ft_check_executor(t_command *cmd, char **envp)
 	prev_fd = -1;
 	while (cmd)
 	{
+		ft_wildcards(&(cmd->args));
 		if (cmd->limiter)
 		{
 			ft_here_doc(cmd->limiter);
@@ -45,26 +46,6 @@ void	ft_check_executor(t_command *cmd, char **envp)
 			waitpid(pid, NULL, 0);
 		cmd = cmd->next;
 	}
-}
-
-// -- function to execute a command -- //
-// --  de momento esta funcion esta fuera pero la dejare para comandos unicos --
-	//
-void	ft_exec_cmd(t_command *cmd, char **envp)
-{
-	pid_t	pid;
-
-	pid = fork();
-	if (pid == -1)
-		ft_exit("Failed to fork");
-	if (pid == 0)
-	{
-		if (execve(get_path(cmd->args[0], envp), cmd->args, envp) == -1)
-			ft_exit("Command execution failed");
-		exit(0);
-	}
-	else if (pid > 0)
-		waitpid(pid, NULL, 0);
 }
 
 pid_t	external_command(t_command *cmd, char **envp, int builtin_id,
