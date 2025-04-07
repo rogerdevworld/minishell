@@ -11,8 +11,8 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-// --- this functions is internal execve() -- //
-void	built(t_command *cmd, char **envp)
+// --- this functions is internal execve() -- xenia: para q sirve esta funcion?? No es como la de ft_check_executor??//
+/*void	built(t_command *cmd, char **envp)
 {
 	int	i;
 
@@ -27,7 +27,7 @@ void	built(t_command *cmd, char **envp)
 		}
 		cmd = cmd->next;
 	}
-}
+}*/
 
 int	get_builtin_cmd(char *cmd)
 {
@@ -45,24 +45,28 @@ int	get_builtin_cmd(char *cmd)
 		return (UNSET);
 	if (ft_strncmp(cmd, "clear", 5) == 0)
 		return (CLEAR);
+	if (ft_strncmp(cmd, "env", 3) == 0)
+		return (ENV);
 	return (-1);
 }
 
 // -- design -- //
-void	execute_builtin(int cmd, char *path, char **envp)
+void	execute_builtin(int cmd, char **args, char **envp)
 {
 	if (cmd == CD)
-		ft_cd(path, envp);
+		ft_cd(args[1], *envp);
 	else if (cmd == EXIT)
-		ft_printf("Ejecutando exit\n");
+		ft_exit_builtin();
 	else if (cmd == ECHO)
-		ft_printf("Ejecutando cd\n");
+		ft_echo(args);
 	else if (cmd == PWD)
 		pwd();
 	else if (cmd == EXPORT)
-		ft_printf("Ejecutando export\n");
+		ft_export(args, envp);
 	else if (cmd == UNSET)
-		ft_printf("Ejecutando unset\n");
+		ft_unset(args, envp);
+	else if (cmd == ENV)
+		ft_env(*envp);
 	else if (cmd == CLEAR)
 		clear();
 	else

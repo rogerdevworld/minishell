@@ -28,7 +28,7 @@ void	ft_check_executor(t_command *cmd, char **envp)
 		}
 		builtin_id = get_builtin_cmd(cmd->args[0]);
 		if (builtin_id != -1 && cmd->operator!= PIPE)
-			execute_builtin(builtin_id, cmd->args[1], envp);
+			execute_builtin(builtin_id, cmd->args, &envp);
 		else
 			pid = external_command(cmd, envp, builtin_id, &prev_fd,
 					p_fd);
@@ -91,7 +91,7 @@ void	child_process(t_command *cmd, char **envp, int builtin_id, int prev_fd,
 		close(p_fd[1]);
 	}
 	if (builtin_id != -1)
-		execute_builtin(builtin_id, cmd->args[1], envp);
+		execute_builtin(builtin_id, cmd->args, &envp);
 	else
 		execve(get_path(cmd->args[0], envp), cmd->args, envp);
 	//ft_exit("command failed");

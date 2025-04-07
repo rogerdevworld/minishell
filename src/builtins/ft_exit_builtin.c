@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_cd.c                                            :+:      :+:    :+:   */
+/*   ft_exit_builtin.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -11,31 +11,8 @@
 /* ************************************************************************** */
 #include "../include/minishell.h"
 
-// -- cd .. -- //
-// -- int chdir(const char *path); -- //
-void	ft_cd(const char *path, char **envp)
+void	ft_exit_builtin(void)
 {
-	if (!path)
-	{
-		chdir(ft_getenv("HOME", envp));
-		return ;
-	}
-	if (chdir(path) != 0)
-	{
-		ft_printf("minishell: cd %s: ", path);
-		perror("");
-	}
+	ft_printf("exit\n");
+	exit(0);
 }
-/*void	ft_cd(const char *path, char **envp)
-{
-	if (!path)//si no le pasamos una ruta (un argum), vamos a HOME
-	{
-		chdir(getenv("HOME"));//chdir cambia el direct de trabajo.
-		return (0);
-	}
-	if (chdir(path) != 0)//si se le pasa una ruta, cambiamos a ella.
-	{
-		ft_printf("minishell: cd %s: ", path);
-		perror("No such file or directory");
-	}
-}*/
