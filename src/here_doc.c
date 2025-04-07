@@ -22,7 +22,7 @@ void	ft_here_doc_child(char *delimiter, int *p_fd)
 		line = get_next_line(STDIN_FILENO);
 		if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)
 		{
-			ft_printf("sale");
+			//ft_printf("sale");
 			free(line);
 			break ;
 		}
