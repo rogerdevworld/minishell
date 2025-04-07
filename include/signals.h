@@ -13,7 +13,7 @@
 # define SIGNALS_H
 
 // -- signals.h -- //
-void sigint_handler(int signum);
-void sigquit_handler(int signum);
+void	sigint_handler(int signum);
+void	ft_sigquit(int sig);
 
 #endif

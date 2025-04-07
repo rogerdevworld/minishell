@@ -21,6 +21,10 @@ void	ft_check_executor(t_command *cmd, char **envp)
 	prev_fd = -1;
 	while (cmd)
 	{
+		if (cmd->limiter)
+		{
+			ft_here_doc(cmd->limiter);
+		}
 		if (!cmd->args || !cmd->args[0])
 		{
 			cmd = cmd->next;

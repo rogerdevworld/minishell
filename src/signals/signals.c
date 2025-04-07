@@ -11,12 +11,15 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-void sigint_handler(int signum)
+void	sigint_handler(int signum)
 {
-    (void)signum;
-    write(1, "\n", 1);
+	(void)signum;
+    //char **user = NULL;
+
+    //ft_printf("%s", meta_path(user));
+    write(1, "$\n", 2);
 }
-void sigquit_handler(int signum)
+void	ft_sigquit(int sig)
 {
-    (void)signum;
+    sig = sig;
 }
