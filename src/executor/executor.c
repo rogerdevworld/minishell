@@ -48,8 +48,7 @@ void	ft_check_executor(t_command *cmd, char **envp)
 }
 
 // -- function to execute a command -- //
-// --  de momento esta funcion esta fuera pero la dejare para comandos unicos --
-	//
+// de momento esta funcion esta fuera pero la dejare para comandos unicos -- //
 void	ft_exec_cmd(t_command *cmd, char **envp)
 {
 	pid_t	pid;
@@ -86,6 +85,7 @@ pid_t	external_command(t_command *cmd, char **envp, int builtin_id,
 		parent_process(cmd, prev_fd, p_fd);
 	return (pid);
 }
+
 // -- hay muchos parametros pero las funciones solo se les pasara dos struct t_shell
 // y las struct de las pipes para esta parte aplicare esto mas adelante mini 2.0 --
 	//
