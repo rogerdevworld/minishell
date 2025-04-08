@@ -1,7 +1,7 @@
 # 🛠 Planificación del Proyecto Minishell
 
 
-![minishell bonus Image](./doc/images/minishell.svg)
+![minishell bonus Image](./doc/images/minishell.png)
 
 ## 🔧 Organización del Proyecto
 
@@ -40,49 +40,49 @@
 
 ### 🛠 Paso 1: Configuración Inicial
 
-**Responsable:** Todos
+**Responsable:** Roger: funcionando
 
 - Crear el repositorio y configurar el `Makefile`.
 
 ### 📄 Paso 2: Lexer (Tokenización)
 
-**Responsable:** Roger
+**Responsable:** Roger: completado
 
 - Separar la entrada en tokens (`echo`, `ls`, `<`, `>`, `|`, etc.).
 
 ### 📝 Paso 3: Parser (Estructura de Comandos)
 
-**Responsable:** Xenia
+**Responsable:** Xenia y Roger: parseado completado
 
 - Construir estructuras para comandos y operadores (`&&`, `||`).
 
-### 🚀 Paso 4: Ejecutor (Execution)
+### 🚀 Paso 4: Ejecutor (Execution) constrola && falta ||
 
-**Responsable:** ambos
+**Responsable:** Roger
 
 - Implementar `execve` para ejecutar comandos.
 
 ### ⚙️ Paso 5: Built-ins
 
-**Responsable:** Roger
+**Responsable:** Roger: cd ✅ pwd ✅ exit ✅ clear ✅
 
 - Implementar `echo`, `cd`, `pwd`, `export`, `unset`, `env`, `exit`.
 
 ### ⚡ Paso 6: Manejo de Señales
 
-**Responsable:** Xenia
+**Responsable:** Roger: ctrl+c controlado
 
 - Implementar `CTRL+C`, `CTRL+D`, `CTRL+\`.
 
 ### 📌 Paso 7: Redirecciones y Pipes
 
-**Responsable:** ambos
+**Responsable:** Roger: > < | controlado falta here_doc
 
 - Implementar `<`, `>`, `>>`, `|`.
 
 ### 📚 Paso 8: Heredoc
 
-**Responsable:** Roger
+**Responsable:** Roger en curso
 
 - Implementar `<<` para recibir delimitadores.
 
@@ -96,7 +96,7 @@
 
 ### ✅ Bonus 1: Operadores Lógicos (`&&` y `||`)
 
-**Responsable:** Roger
+**Responsable:** Roger: && funciona falta ||
 
 - Implementar `&&` y `||` para ejecución condicional.
 

@@ -9,7 +9,6 @@
 /*   Updated: 2025/03/27 17:36:15 by rmarrero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -21,6 +20,9 @@
 # include "design.h"
 # include "executor.h"
 # include "bonus.h"
+# include "redirections.h"
+# include "signals.h"
+# include "design.h"
 
 // -- system.h -- //
 
@@ -31,6 +33,8 @@
 # include <stdlib.h>
 # include <sys/wait.h>
 # include <unistd.h>
+#include <signal.h>
+#include <limits.h>
 
 // -- readline -- //
 # include <readline/history.h>

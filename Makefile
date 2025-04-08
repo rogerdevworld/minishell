@@ -25,6 +25,10 @@ SRCS =	$(SRC_DIR)minishell.c $(SRC_DIR)minishell/init.c $(SRC_DIR)exit.c \
 	$(SRC_DIR)executor/executor.c \
 	$(SRC_DIR)design/path_in_shell.c \
 	$(SRC_DIR)bonus/cmd.c \
+	$(SRC_DIR)signals/signals.c \
+	$(SRC_DIR)design/path_in_shell.c \
+	$(SRC_DIR)redirections/redirections.c $(SRC_DIR)redirections/ft_open.c \
+	$(SRC_DIR)here_doc.c
 
 OBJS = $(SRCS:$(SRC_DIR)%.c=$(OBJ_DIR)/%.o)
 
@@ -74,8 +78,10 @@ $(OBJ_DIR):
 	mkdir -p ./obj/parser
 	mkdir -p ./obj/builtins
 	mkdir -p ./obj/executor
+	mkdir -p ./obj/signals
 	mkdir -p ./obj/design
 	mkdir -p ./obj/bonus
+	mkdir -p ./obj/redirections
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)%.c $(HEADER) Makefile | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@

@@ -20,32 +20,38 @@ t_command	*init_command(void)
 		return (NULL);
 	cmd->args = ft_calloc(10, sizeof(char *));
 	cmd->path = NULL;
-	cmd->input_file = NULL;
-	cmd->output_file = NULL;
-	cmd->append = 0;
+	cmd->input_file = -1;
+	cmd->output_file = -1;
+	cmd->limiter = NULL;
+	cmd->operator= NONE;
 	cmd->next = NULL;
 	return (cmd);
 }
 
 void	handle_redirect(t_command *cmd, t_token **tokens)
 {
-	if (ft_strcmp((*tokens)->value, ">") == 0)
+	t_token	*tmp;
+
+	if (ft_strncmp((*tokens)->value, ">", 1) == 0)
 	{
 		*tokens = (*tokens)->next;
-		cmd->output_file = ft_strdup((*tokens)->value);
-		cmd->append = 0;
+		cmd->output_file = ft_open((*tokens)->value, 1);
+		// cmd->append = 0;
 	}
-	else if (ft_strcmp((*tokens)->value, ">>") == 0)
+	else if (ft_strncmp((*tokens)->value, ">>", 2) == 0
+		|| ft_strncmp((*tokens)->value, "<<", 2) == 0)
 	{
+		// -- tenemos que controlar el limitador del here_doc
 		*tokens = (*tokens)->next;
-		cmd->output_file = ft_strdup((*tokens)->value);
-		cmd->append = 1;
+		tmp = get_last_token(*tokens);
+		cmd->output_file = ft_open(tmp->value, 2);
+		cmd->limiter = ft_strdup((*tokens)->value);
 	}
-	else if (ft_strcmp((*tokens)->value, "<") == 0)
+	else if (ft_strncmp((*tokens)->value, "<", 1) == 0)
 	{
 		*tokens = (*tokens)->next;
-		cmd->input_file = ft_strdup((*tokens)->value);
-		cmd->append = 0;
+		cmd->input_file = ft_open((*tokens)->value, 0);
+		// cmd->append = 0;
 	}
 }
 
@@ -67,11 +73,13 @@ t_bonus	*parse_tokens(t_token *tokens, char **envp)
 	i = 0;
 	while (tokens)
 	{
-		// -- falta agregar caso de si "argumento es el primer parametro no aceptar", NO TIENE QUE HACER \n --//
+		// -- falta agregar caso de si "argumento es el primer parametro no aceptar",
+		//	NO TIENE QUE HACER \n --//
 		if ((tokens->type == TOKEN_COMMAND) || (tokens->type == TOKEN_ARGUMENT))
 		{
 			current->args[i] = ft_strdup(tokens->value);
-			// -- el path de args[0] simpre sera asi pero eso el 0 esta statico -- //
+			// -- el path de args[0] simpre sera asi pero eso el 0 esta statico --
+				//
 			current->path = get_path(current->args[0], envp);
 			i++;
 		}
@@ -83,6 +91,8 @@ t_bonus	*parse_tokens(t_token *tokens, char **envp)
 			prev = node;
 			if (!root)
 				root = node;
+			// -- estoy haciendo un arbol de ejecucion para ver grupo de comandso orden etc -- //
+			current->operator= resolve_operator(tokens->value);
 			current->next = init_command();
 			current = current->next;
 			i = 0;
@@ -130,11 +140,6 @@ void	print_command(t_command *cmd)
 		}
 		if (cmd->path)
 			ft_printf("    Path: %s\n", cmd->path);
-		if (cmd->input_file)
-			ft_printf("    Input: %s\n", cmd->input_file);
-		if (cmd->output_file)
-			ft_printf("    Output: %s (append: %d)\n", cmd->output_file, cmd->append);
-		ft_printf("Nodo: %p", cmd);
 		cmd = cmd->next;
 	}
 }
@@ -150,11 +155,26 @@ void	print_bonus_tree(t_bonus *node, int level)
 	print_command(node->cmd);
 	print_bonus_tree(node->left, level + 1);
 }
-
-// -- cosas por aplciar -- //
-// 1. free de strcuts
-// 2. comillas solas simpre en parejas o dentro de una pareja 
-// 3. si pasan un separador ; es un error
-// 4. si pasan operadores en formato error();
-// 4.1 ejemplo >&& >||, > &&||, cosas asi
-// 5. 
+t_operator	resolve_operator(char *operator)
+{
+	if (ft_strncmp(operator, "||", 2) == 0)
+		return (OR);
+	if (ft_strcmp(operator, "&&") == 0)
+		return (AND);
+	if (ft_strcmp(operator, "|") == 0)
+		return (PIPE);
+	return (COMMAND);
+}
+const char	*operator_to_str(t_operator op)
+{
+	if (op == PIPE)
+		return ("|");
+	else if (op == AND)
+		return ("&&");
+	else if (op == OR)
+		return ("||");
+	else if (op == COMMAND)
+		return ("COMMAND");
+	else
+		return ("UNKNOWN");
+}
