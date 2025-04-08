@@ -28,7 +28,6 @@ void	ft_check_executor(t_command *cmd, char **envp)
 		if (!cmd->args || !cmd->args[0])
 		{
 			cmd = cmd->next;
-			continue ;
 		}
 		builtin_id = get_builtin_cmd(cmd->args[0]);
 		if (builtin_id != -1 && cmd->operator != PIPE)
