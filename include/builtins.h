@@ -40,8 +40,6 @@ void    ft_exit_builtin(void);
 void    ft_echo(char **args);
 void    ft_export(char **args, char **envp);
 int     ft_unset(char **args, char **envp);
-static int      ft_unset_strcmp(char *s, char **envp);
-static int      ft_check_wrong_char(char *s);
 int get_next_quote(int start, char *str, char c);
 void    put_error(char *prefix, char *cmd, char *msg);
 

@@ -11,10 +11,10 @@
 /* ************************************************************************** */
 #include "../include/minishell.h"
 
-void	ft_export(char **args, char **envp)
+/*void	ft_export(char **args, char **envp)
 {
 	if (!args[1])
 	{
 
 	}
-}
+}*/
