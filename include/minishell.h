@@ -14,21 +14,20 @@
 
 // -- internal libs -- //
 # include "../src/libft/libft.h"
-# include "lexer.h"
-# include "parser.h"
 # include "builtins.h"
 # include "design.h"
 # include "executor.h"
-
+# include "lexer.h"
+# include "parser.h"
 # include "redirections.h"
 # include "signals.h"
 
 // -- system.h -- //
 
 // -- system libs -- //
+# include <dirent.h>
 # include <fcntl.h>
 # include <glob.h>
-# include <limits.h>
 # include <limits.h>
 # include <signal.h>
 # include <stdio.h>
@@ -54,7 +53,7 @@ t_minishell		*init_minishell(char **envp, t_token *tokens, t_command *cmd);
 
 // -- main loop -- //
 void			main_loop(char **envp);
-void ft_wildcards(char ***args);
+void			ft_wildcards(char ***args);
 
 // -- exit.h -- //
 void			ft_exit(char *msg);
