@@ -10,80 +10,113 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "../include/minishell.h"
+#include <dirent.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+int	match_pattern(const char *pattern, const char *str)
+{
+	if (!*pattern)
+		return (!*str);
+	if (*pattern == '*')
+	{
+		while (*pattern == '*')
+			pattern++;
+		if (!*pattern)
+			return (1);
+		while (*str)
+		{
+			if (match_pattern(pattern, str))
+				return (1);
+			str++;
+		}
+		return (0);
+	}
+	else if (*pattern == *str)
+		return (match_pattern(pattern + 1, str + 1));
+	else
+		return (0);
+}
+
+char	*extract_path(const char *pattern)
+{
+	char	*slash;
+	size_t	len;
+	char	*path;
+
+	slash = ft_strrchr(pattern, '/');
+	if (!slash)
+		return (ft_strdup("."));
+	len = slash - pattern;
+	path = malloc(len + 1);
+	if (!path)
+		return (NULL);
+	ft_strlcpy(path, pattern, len + 1);
+	return (path);
+}
+
+const char	*extract_pattern(const char *pattern)
+{
+	char	*slash;
+
+	slash = ft_strrchr(pattern, '/');
+	if (!slash)
+		return (pattern);
+	return (slash + 1);
+}
 
 void	ft_wildcards(char ***args)
 {
-	glob_t	glob_result;
-	size_t	i;
-	char	**new_args;
-	int		arg_count;
-	int		j;
+	char **new_args = NULL;
+	int arg_count = 0;
+	DIR *dir;
+	struct dirent *entry;
+	int j = 0;
 
-	new_args = NULL;
-	arg_count = 0;
-	j = 0;
-	while ((*args)[j] != NULL)
+	while ((*args)[j])
 	{
-		if (ft_strchr((*args)[j], '*') || ft_strchr((*args)[j], '/'))
+		if (ft_strchr((*args)[j], '*'))
 		{
-			if (glob((*args)[j], 0, NULL, &glob_result) == 0)
+			char *path = extract_path((*args)[j]);
+			const char *pat = extract_pattern((*args)[j]);
+			dir = opendir(path);
+			if (!dir)
 			{
-				new_args = ft_realloc(new_args, sizeof(char *) * (arg_count
-							+ glob_result.gl_pathc + 1));
-				if (new_args == NULL)
+				perror("opendir");
+				free(path);
+				exit(EXIT_FAILURE);
+			}
+			while ((entry = readdir(dir)))
+			{
+				if (match_pattern(pat, entry->d_name))
 				{
-					perror("Error allocating memory for expanded arguments");
-					exit(EXIT_FAILURE);
-				}
-				i = 0;
-				while (i < glob_result.gl_pathc)
-				{
-					new_args[arg_count++] = ft_strdup(glob_result.gl_pathv[i]);
-					if (new_args[arg_count - 1] == NULL)
-					{
-						perror("Error duplicating string");
+					size_t full_len = ft_strlen(path) + ft_strlen(entry->d_name)
+						+ 2;
+					char *full = malloc(full_len);
+					if (!full)
 						exit(EXIT_FAILURE);
-					}
-					i++;
-				}
-				globfree(&glob_result);
-			}
-			else
-			{
-				new_args = ft_realloc(new_args, sizeof(char *) * (arg_count + 2));
-				if (new_args == NULL)
-				{
-					perror("Error allocating memory for non-expanded arguments");
-					exit(EXIT_FAILURE);
-				}
-				new_args[arg_count++] = ft_strdup((*args)[j]);
-				if (new_args[arg_count - 1] == NULL)
-				{
-					perror("Error duplicating string");
-					exit(EXIT_FAILURE);
+					ft_strlcpy(full, path, full_len);
+					ft_strlcat(full, "/", full_len);
+					ft_strlcat(full, entry->d_name, full_len);
+
+					new_args = ft_realloc(new_args, sizeof(char *) * (arg_count
+								+ 2));
+					new_args[arg_count++] = full;
 				}
 			}
+			closedir(dir);
+			free(path);
 		}
 		else
 		{
 			new_args = ft_realloc(new_args, sizeof(char *) * (arg_count + 2));
-			if (new_args == NULL)
-			{
-				perror("Error allocating memory for arguments");
-				exit(EXIT_FAILURE);
-			}
 			new_args[arg_count++] = ft_strdup((*args)[j]);
-			if (new_args[arg_count - 1] == NULL)
-			{
-				perror("Error duplicating string");
-				exit(EXIT_FAILURE);
-			}
 		}
 		j++;
 	}
 	new_args[arg_count] = NULL;
-    j = 0;
-	while ((*args)[j] != NULL)
+	j = 0;
+	while ((*args)[j])
 		free((*args)[j++]);
 	free(*args);
 	*args = new_args;
