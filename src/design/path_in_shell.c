@@ -73,7 +73,7 @@ char	*path_terminal(void)
 			final = tmp;
 			if (dirs[j + 1])
 			{
-				tmp = ft_strjoin(final, " /");
+				tmp = ft_strjoin(final, "/");
 				free(final);
 				final = tmp;
 			}
