@@ -66,6 +66,26 @@ void	ft_env(t_env **env_list, char **envp)
 	}
 }
 
+// Agrega un nuevo par key=value a la lista de entorno
+void ft_env_add(t_env **env_list, const char *key, const char *value)
+{
+    t_env *new_node;
+    
+    new_node = ft_env_new(key, value);
+    if (!new_node)
+        return ;
+    if (!*env_list)
+    {
+        *env_list = new_node;
+        return ;
+    }
+    t_env *tmp = *env_list;
+    while (tmp->next)
+        tmp = tmp->next;
+    tmp->next = new_node;
+}
+
+
 void	print_env(t_myenv *myenv)
 {
 	t_env	*tmp;
