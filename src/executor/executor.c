@@ -24,6 +24,7 @@ void	ft_check_executor(t_command *cmd, char **envp)
 		if (cmd->limiter)
 		{
 			ft_here_doc(cmd->limiter);
+			cmd = cmd->next;
 		}
 		if (!cmd->args || !cmd->args[0])
 		{

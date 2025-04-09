@@ -19,11 +19,9 @@ void	ft_here_doc_child(char *delimiter, int *p_fd)
 	close(p_fd[0]);
 	while (1)
 	{
-		//write(1, "pipex> ", 7);
 		line = get_next_line(STDIN_FILENO);
 		if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)
 		{
-			//ft_printf("sale");
 			free(line);
 			break ;
 		}
@@ -50,13 +48,8 @@ void	ft_here_doc(char *delimiter)
 	else
 	{
 		close(p_fd[1]);
-		dup2(p_fd[0], STDIN_FILENO);
 		waitpid(pid, NULL, 0);
+		dup2(p_fd[0], STDIN_FILENO);
+		close(p_fd[0]);
 	}
 }
-/*
-void call_to_here(t_command *cmd, char **envp, char *delimiter)
-{
-    if (t_)
-}
-*/
