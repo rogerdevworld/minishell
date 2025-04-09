@@ -23,6 +23,7 @@ void	ft_cd(const char *path, char **envp)
 	if (chdir(path) != 0)
 	{
 		ft_printf("minishell: cd %s: ", path);
+		chdir(ft_getenv("HOME", envp));
 		perror("");
 	}
 }

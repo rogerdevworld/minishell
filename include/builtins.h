@@ -34,7 +34,7 @@ int		get_builtin_cmd(char *cmd);
 void	execute_builtin(int cmd, char *path, char **envp);
 
 // -- local commands -- //
-void	pwd(void);
+void	pwd(char **envp);
 void	clear(void);
 void	ft_cd(const char *path, char **envp);
 

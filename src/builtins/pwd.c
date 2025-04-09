@@ -12,12 +12,15 @@
 #include "../include/minishell.h"
 
 // -- char *getcwd(char *buf, size_t size); -- //
-void	pwd(void)
+void	pwd(char **envp)
 {
 	char	cwd[1024];
 
 	if (getcwd(cwd, sizeof(cwd)))
 		ft_printf("%s\n", cwd);
 	else
+	{
+		chdir(ft_getenv("HOME", envp));
 		perror("getcwd() error");
+	}
 }

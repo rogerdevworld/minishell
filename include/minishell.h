@@ -14,13 +14,14 @@
 
 // -- internal libs -- //
 # include "../src/libft/libft.h"
-# include "builtins.h"
-# include "design.h"
-# include "executor.h"
 # include "lexer.h"
 # include "parser.h"
+# include "design.h"
+# include "executor.h"
+
 # include "redirections.h"
 # include "signals.h"
+# include "builtins.h"
 
 // -- system.h -- //
 

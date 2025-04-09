@@ -58,7 +58,7 @@ void	execute_builtin(int cmd, char *path, char **envp)
 	else if (cmd == ECHO)
 		ft_printf("Ejecutando cd\n");
 	else if (cmd == PWD)
-		pwd();
+		pwd(envp);
 	else if (cmd == EXPORT)
 		ft_printf("Ejecutando export\n");
 	else if (cmd == UNSET)
