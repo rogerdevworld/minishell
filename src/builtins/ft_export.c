@@ -6,7 +6,7 @@
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 13:05:47 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/04/09 23:13:34 by xviladri         ###   ########.fr       */
+/*   Updated: 2025/04/09 23:45:57 by xviladri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../include/minishell.h"
@@ -44,14 +44,15 @@ t_env	*find_env_var(t_env *env, const char *key)
 	}
 	return (NULL);
 }
-/*
+
 void	export_add_or_update(t_env **env_list, char *arg)
 {
-	char	*sep = ft_strchr(arg, '=');
+	char	*sep;
 	char	*key;
 	char	*value;
 	t_env	*existing;
 
+	sep = ft_strchr(arg, '=');
 	if (!sep)
 	{
 		key = ft_strdup(arg);
@@ -62,28 +63,28 @@ void	export_add_or_update(t_env **env_list, char *arg)
 		key = ft_substr(arg, 0, sep - arg);
 		value = ft_strdup(sep + 1);
 	}
-
 	if (!is_valid_identifier(key))
 	{
-		ft_printf("export: `%s': not a valid identifier\n", key);
+		ft_printf("export: `%s': not a valid identifier\n", arg);
 		free(key);
 		free(value);
 		return ;
 	}
-
 	existing = find_env_var(*env_list, key);
 	if (existing)
 	{
-		free(existing->content);
-		existing->content = value;
+		if (sep)
+		{
+			free(existing->content);
+			existing->content = value;
+		}
+		else
+			free(value);
 	}
 	else
-	{
 		ft_env_add_back(env_list, ft_env_new(key, value));
-	}
-
 	free(key);
-}*/
+}
 
 void	print_export(t_env *env)
 {
@@ -95,11 +96,30 @@ void	print_export(t_env *env)
 			ft_printf("declare  x %s=\"%s\"\n", env->key, env->content);
 		else
 			ft_printf("declare -x %s\n", env->key);
-		env=env->next;
+		env = env->next;
 	}
 	free(env);
 }
+/*
+void	print_export(t_env *env)
+{
+	t_env	**array = env_to_array(env);
+	int		i = 0;
 
+	if (!array)
+		return ;
+	sort_env_array(array);
+	while (array[i])
+	{
+		if (array[i]->content)
+			ft_printf("declare -x %s=\"%s\"\n", array[i]->key, array[i]->content);
+		else
+			ft_printf("declare -x %s\n", array[i]->key);
+		i++;
+	}
+	free(array); // solo el array de punteros, no el contenido
+}
+*/
 void	ft_export(char **args, t_myenv *myenv)
 {
 	int	i;
