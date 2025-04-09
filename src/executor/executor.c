@@ -21,11 +21,11 @@ void	ft_check_executor(t_command *cmd, char **envp)
 	prev_fd = -1;
 	while (cmd)
 	{
-		if (cmd->limiter)
-		{
-			ft_here_doc(cmd->limiter);
+		//if (cmd->limiter)
+		//{
+			//ft_here_doc(cmd->limiter);
 			//cmd = cmd->next;
-		}
+		//}
 		if (!cmd->args || !cmd->args[0])
 		{
 			cmd = cmd->next;
@@ -82,7 +82,10 @@ pid_t	external_command(t_command *cmd, char **envp, int builtin_id,
 	if (pid == -1)
 		ft_exit("fork failed");
 	if (pid == 0)
-		child_process(cmd, envp, builtin_id, *prev_fd, p_fd);
+		if (cmd->limiter)
+			ft_here_doc_child(cmd->limiter, p_fd);
+		else
+			child_process(cmd, envp, builtin_id, *prev_fd, p_fd);
 	else
 		parent_process(cmd, prev_fd, p_fd);
 	return (pid);
@@ -90,8 +93,7 @@ pid_t	external_command(t_command *cmd, char **envp, int builtin_id,
 // -- hay muchos parametros pero las funciones solo se les pasara dos struct t_shell
 // y las struct de las pipes para esta parte aplicare esto mas adelante mini 2.0 --
 	//
-void	child_process(t_command *cmd, char **envp, int builtin_id, int prev_fd,
-		int p_fd[2])
+void	child_process(t_command *cmd, char **envp, int builtin_id, int prev_fd, int p_fd[2])
 {
 	if (cmd->input_file != -1)
 	{
