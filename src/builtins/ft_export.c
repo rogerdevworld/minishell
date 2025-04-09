@@ -6,7 +6,7 @@
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 13:05:47 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/04/09 23:45:57 by xviladri         ###   ########.fr       */
+/*   Updated: 2025/04/10 00:29:20 by xviladri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../include/minishell.h"
@@ -45,7 +45,7 @@ t_env	*find_env_var(t_env *env, const char *key)
 	return (NULL);
 }
 
-void	export_add_or_update(t_env **env_list, char *arg)
+void	export_add_or_update(t_env **env_list, char *arg)//la tengo que acortar
 {
 	char	*sep;
 	char	*key;
@@ -86,10 +86,15 @@ void	export_add_or_update(t_env **env_list, char *arg)
 	free(key);
 }
 
+/* PARA INTENTAELO CON LA FUNCION DE ROGER.
 void	print_export(t_env *env)
 {
 	if (!env)
 		return ;
+
+	ft_printf("antes");
+	ft_sort_export(env);
+	ft_printf("paso");
 	while (env)
 	{
 		if (env->content)
@@ -99,16 +104,17 @@ void	print_export(t_env *env)
 		env = env->next;
 	}
 	free(env);
-}
-/*
-void	print_export(t_env *env)
+}*/
+void	print_export(t_env *env)//LA FUNCION NUEVA
 {
-	t_env	**array = env_to_array(env);
-	int		i = 0;
-
+	t_env	**array;
+	int		i;
+	
+	array = env_to_array(env);
 	if (!array)
 		return ;
 	sort_env_array(array);
+	i = 0;
 	while (array[i])
 	{
 		if (array[i]->content)
@@ -117,13 +123,14 @@ void	print_export(t_env *env)
 			ft_printf("declare -x %s\n", array[i]->key);
 		i++;
 	}
-	free(array); // solo el array de punteros, no el contenido
+	free(array);
 }
-*/
+
 void	ft_export(char **args, t_myenv *myenv)
 {
 	int	i;
 
+	
 	if (!args[1])
 	{
 		print_export(myenv->list_env);

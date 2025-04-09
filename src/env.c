@@ -1,4 +1,3 @@
-/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
@@ -83,8 +82,7 @@ void ft_env_add(t_env **env_list, const char *key, const char *value)
     while (tmp->next)
         tmp = tmp->next;
     tmp->next = new_node;
-}
-*/
+}*/
 void	print_env(t_myenv *myenv)
 {
 	t_env	*tmp;
@@ -150,16 +148,21 @@ void	free_env_array(char **env_array)
 
 void	ft_sort_export(t_env *env)
 {
+	t_env *ini = env;
+
 	if (!env)
 		return ;
 	while (env)
 	{
-		if (ft_strcmp(env->key, env->next->key) > 0)
+		if (ft_strcmp(env->key, env->next->key) < 0)
 		{
 			char *tmp = env->key;
 			env->key = env->next->key;
 			env->next->key = tmp;
+			env = ini;
 		}
-		env = env->next;
+		else
+			env = env->next;
 	}
+	env = ini;
 }

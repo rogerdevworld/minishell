@@ -36,5 +36,6 @@ void				free_env_list(t_env *env);
 void				free_env_array(char **env_array);
 
 void				print_env(t_myenv *myenv);
+void	ft_sort_export(t_env *env);
 
 #endif
