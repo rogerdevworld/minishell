@@ -35,8 +35,6 @@ void	main_loop(char **envp)
 			rl_clear_history();
 			// break ;
 		}
-		if (ft_strncmp(line, "env", 3) == 0)
-			print_env(myenv);
 		tokens = lexer(line);
 		cmd = parse_tokens(tokens, envp);
 		// print_tokens(tokens);
