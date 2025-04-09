@@ -149,3 +149,19 @@ void	free_env_array(char **env_array)
 		free(env_array[i++]);
 	free(env_array);
 }
+
+void	ft_sort_export(t_env *env)
+{
+	if (!env)
+		return ;
+	while (env)
+	{
+		if (ft_strcmp(env->key) < ft_strcmp(env->next->key))
+		{
+			char *tmp = env->key;
+			env->key = env->next->key;
+			env->next->key = tmp;
+		}
+		env = env->next;
+	}
+}
