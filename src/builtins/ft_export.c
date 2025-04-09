@@ -44,7 +44,7 @@ t_env	*find_env_var(t_env *env, const char *key)
 	}
 	return (NULL);
 }
-/*
+
 void	export_add_or_update(t_env **env_list, char *arg)
 {
 	char	*sep = ft_strchr(arg, '=');
@@ -83,12 +83,16 @@ void	export_add_or_update(t_env **env_list, char *arg)
 	}
 
 	free(key);
-}*/
+}
 
 void	print_export(t_env *env)
 {
 	if (!env)
 		return ;
+
+	ft_printf("antes");
+	ft_sort_export(env);
+	ft_printf("paso");
 	while (env)
 	{
 		if (env->content)
@@ -104,6 +108,7 @@ void	ft_export(char **args, t_myenv *myenv)
 {
 	int	i;
 
+	
 	if (!args[1])
 	{
 		print_export(myenv->list_env);
