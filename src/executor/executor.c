@@ -6,12 +6,12 @@
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 13:05:47 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/04/01 13:05:50 by rmarrero         ###   ########.fr       */
+/*   Updated: 2025/04/09 22:11:07 by xviladri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-void	ft_check_executor(t_command *cmd, char **envp)
+void	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)
 {
 	int		p_fd[2];
 	int		prev_fd;
@@ -36,11 +36,11 @@ void	ft_check_executor(t_command *cmd, char **envp)
 			int saved_stdin = -1;
 			int saved_stdout = -1;
 			redirections(cmd, &saved_stdin, &saved_stdout);
-			execute_builtin(builtin_id, cmd->args, envp);
+			execute_builtin(builtin_id, cmd->args, envp, myenv);
 			restore_redirections(saved_stdin, saved_stdout);
 		}
 		else
-			pid = external_command(cmd, envp, builtin_id, &prev_fd, p_fd);
+			pid = external_command(cmd, envp, builtin_id, &prev_fd, p_fd, myenv);
 		if (cmd->operator!= PIPE)
 			waitpid(pid, NULL, 0);
 		cmd = cmd->next;
@@ -68,7 +68,7 @@ void	ft_exec_cmd(t_command *cmd, char **envp)
 }
 
 pid_t	external_command(t_command *cmd, char **envp, int builtin_id,
-		int *prev_fd, int p_fd[2])
+		int *prev_fd, int p_fd[2], t_myenv *myenv)
 {
 	pid_t	pid;
 
@@ -81,7 +81,7 @@ pid_t	external_command(t_command *cmd, char **envp, int builtin_id,
 	if (pid == -1)
 		ft_exit("fork failed");
 	if (pid == 0)
-		child_process(cmd, envp, builtin_id, *prev_fd, p_fd);
+		child_process(cmd, envp, builtin_id, *prev_fd, p_fd, myenv);
 	else
 		parent_process(cmd, prev_fd, p_fd);
 	return (pid);
@@ -90,7 +90,7 @@ pid_t	external_command(t_command *cmd, char **envp, int builtin_id,
 // y las struct de las pipes para esta parte aplicare esto mas adelante mini 2.0 --
 	//
 void	child_process(t_command *cmd, char **envp, int builtin_id, int prev_fd,
-		int p_fd[2])
+		int p_fd[2], t_myenv *myenv)
 {
 	if (cmd->input_file != -1)
 	{
@@ -119,7 +119,7 @@ void	child_process(t_command *cmd, char **envp, int builtin_id, int prev_fd,
 		close(cmd->output_file);
 	}
 	if (builtin_id != -1)
-		execute_builtin(builtin_id, cmd->args, envp);
+		execute_builtin(builtin_id, cmd->args, envp, myenv);
 	else
 		execve(get_path(cmd->args[0], envp), cmd->args, envp);
 	exit(0);
@@ -152,7 +152,7 @@ void	redirections(t_command *cmd, int *saved_stdin, int *saved_stdout)
 	{
 		*saved_stdout = dup(STDOUT_FILENO);
 		dup2(cmd->output_file, STDOUT_FILENO);
-		close(cmd->output_file);
+	close(cmd->output_file);
 	}
 }
 

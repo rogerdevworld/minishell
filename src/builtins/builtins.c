@@ -6,7 +6,7 @@
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 13:05:47 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/04/01 13:05:50 by rmarrero         ###   ########.fr       */
+/*   Updated: 2025/04/09 21:37:24 by xviladri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../../include/minishell.h"
@@ -51,7 +51,7 @@ int	get_builtin_cmd(char *cmd)
 }
 
 // -- design -- //
-void	execute_builtin(int cmd, char **args, char **envp)
+void	execute_builtin(int cmd, char **args, char **envp, t_myenv *myenv)
 {
 	if (cmd == CD)
 		ft_cd(args[1], envp);
@@ -60,9 +60,9 @@ void	execute_builtin(int cmd, char **args, char **envp)
 	else if (cmd == ECHO)
 		ft_echo(args);
 	else if (cmd == PWD)
-		pwd();
-/*	else if (cmd == EXPORT)
-		ft_export(args, envp);*/
+		pwd(envp);
+	else if (cmd == EXPORT)
+		ft_export(args, myenv);
 	else if (cmd == UNSET)
 		ft_unset(args, envp);
 /*	else if (cmd == ENV)

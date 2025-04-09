@@ -6,11 +6,13 @@
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:56:13 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/03/27 11:57:56 by rmarrero         ###   ########.fr       */
+/*   Updated: 2025/04/09 22:22:59 by xviladri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef ENV_H
 # define ENV_H
+
+// -- ROGER X 2!! se puede crear una variable o funcion global (por ej. get_myenv()), para poder acceder a t_myenv?? Y asi se la pasamos a la funcion ft_export(args, myenv) --> ft_export(args, get_myenv()); Y asi no tener que pasar tantos argumentos a las funciones de builtins.c --//
 
 typedef struct s_env
 {

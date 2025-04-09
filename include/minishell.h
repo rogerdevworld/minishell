@@ -6,7 +6,7 @@
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 17:36:11 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/03/27 17:36:15 by rmarrero         ###   ########.fr       */
+/*   Updated: 2025/04/09 22:22:45 by xviladri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -16,13 +16,13 @@
 # include "../src/libft/libft.h"
 # include "lexer.h"
 # include "parser.h"
+# include "env.h"
 # include "builtins.h"
 # include "design.h"
 # include "executor.h"
 # include "redirections.h"
 # include "signals.h"
 # include "design.h"
-# include "env.h"
 
 // -- system.h -- //
 

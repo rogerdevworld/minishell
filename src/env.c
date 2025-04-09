@@ -6,7 +6,7 @@
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 13:05:47 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/04/01 13:05:50 by rmarrero         ###   ########.fr       */
+/*   Updated: 2025/04/09 21:14:14 by xviladri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../include/minishell.h"
@@ -65,7 +65,7 @@ void	ft_env(t_env **env_list, char **envp)
 		i++;
 	}
 }
-
+/*
 // Agrega un nuevo par key=value a la lista de entorno
 void ft_env_add(t_env **env_list, const char *key, const char *value)
 {
@@ -84,8 +84,7 @@ void ft_env_add(t_env **env_list, const char *key, const char *value)
         tmp = tmp->next;
     tmp->next = new_node;
 }
-
-
+*/
 void	print_env(t_myenv *myenv)
 {
 	t_env	*tmp;

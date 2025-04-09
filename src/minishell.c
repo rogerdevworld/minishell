@@ -6,7 +6,7 @@
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 21:49:28 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/02/22 21:49:33 by rmarrero         ###   ########.fr       */
+/*   Updated: 2025/04/09 21:41:11 by xviladri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../include/minishell.h"
@@ -41,7 +41,7 @@ void	main_loop(char **envp)
 		cmd = parse_tokens(tokens, envp);
 		// print_tokens(tokens);
 		// print_command_list(cmd);
-		ft_check_executor(cmd, envp);
+		ft_check_executor(cmd, envp, myenv);
 		free(line);
 	}
 	exit(0);
