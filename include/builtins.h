@@ -36,7 +36,7 @@ void	pwd(char **envp);
 void	clear(void);
 void	ft_cd(const char *path, char **envp);
 void    ft_exit_builtin(void);
-void    ft_echo(char **args);
+void	ft_echo(char **args, t_env *env);
 void    ft_export(char **args, t_myenv *myenv);
 void	print_export(t_env *env);
 int		env_list_size(t_env *env);
@@ -48,5 +48,6 @@ int		is_valid_identifier(const char *str);
 int     ft_unset(char **args, char **envp);
 int get_next_quote(int start, char *str, char c);
 void    put_error(char *prefix, char *cmd, char *msg);
+char	*ft_echo_expand(char *str, t_env *env);
 
 #endif

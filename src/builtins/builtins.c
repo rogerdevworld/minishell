@@ -58,7 +58,7 @@ void	execute_builtin(int cmd, char **args, char **envp, t_myenv *myenv)
 	else if (cmd == EXIT)
 		ft_exit_builtin();
 	else if (cmd == ECHO)
-		ft_echo(args);
+		ft_echo(args, myenv->list_env);
 	else if (cmd == PWD)
 		pwd(envp);
 	else if (cmd == EXPORT)
