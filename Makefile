@@ -18,12 +18,16 @@ OBJ_DIR = ./obj
 OBJ_DIR_BUI = ./obj/builtins/
 OBJ_DIR_LEX = ./obj/lexer/
 
-SRCS =	$(SRC_DIR)minishell.c $(SRC_DIR)exit.c \
+SRCS =	$(SRC_DIR)minishell.c $(SRC_DIR)minishell/init.c $(SRC_DIR)exit.c \
 	$(SRC_DIR)lexer/lexer.c $(SRC_DIR)lexer/free_split.c $(SRC_DIR)lexer/ft_split_quotes.c $(SRC_DIR)lexer/print_lexer.c \
 	$(SRC_DIR_BUI)builtins.c $(SRC_DIR_BUI)pwd.c $(SRC_DIR_BUI)clear.c $(SRC_DIR_BUI)ft_cd.c $(SRC_DIR_BUI)ft_exit_builtin.c $(SRC_DIR_BUI)ft_unset.c $(SRC_DIR_BUI)ft_echo.c $(SRC_DIR_BUI)ft_export.c \
 	$(SRC_DIR)parser/parser.c $(SRC_DIR)parser/get_path.c \
 	$(SRC_DIR)executor/executor.c \
-	$(SRC_DIR)design/path_in_shell.c
+	$(SRC_DIR)signals/signals.c \
+	$(SRC_DIR)design/path_in_shell.c \
+	$(SRC_DIR)redirections/redirections.c $(SRC_DIR)redirections/ft_open.c \
+	$(SRC_DIR)here_doc.c \
+	$(SRC_DIR)env.c
 
 OBJS = $(SRCS:$(SRC_DIR)%.c=$(OBJ_DIR)/%.o)
 
@@ -68,11 +72,14 @@ libs:
 
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
+	mkdir -p ./obj/minishell
 	mkdir -p ./obj/lexer
 	mkdir -p ./obj/parser
 	mkdir -p ./obj/builtins
 	mkdir -p ./obj/executor
+	mkdir -p ./obj/signals
 	mkdir -p ./obj/design
+	mkdir -p ./obj/redirections
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)%.c $(HEADER) Makefile | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@

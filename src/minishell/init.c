@@ -1,22 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   desing.h                                           :+:      :+:    :+:   */
+/*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/27 11:56:13 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/03/27 11:57:56 by rmarrero         ###   ########.fr       */
+/*   Created: 2025/02/22 21:49:28 by rmarrero          #+#    #+#             */
+/*   Updated: 2025/02/22 21:49:33 by rmarrero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#ifndef DESING_H
-# define DESING_H
+#include "../../include/minishell.h"
 
-// -- lexer.h -- //
-char	*path_terminal(void);
-char	*get_git_branch(void);
-char	*meta_path(char **envp);
-char	*get_computer_name(void);
-char	*get_user(char **envp);
-
-#endif
+t_minishell	*init_minishell(char **envp, t_token *tokens, t_command *cmd)
+{
+	t_minishell *minishell = malloc(sizeof(t_minishell));
+	if (!minishell || !envp || !tokens || !cmd)
+	{
+		free(minishell);
+		return (NULL);
+	}
+	minishell->envp = envp;
+	minishell->tokens = tokens;
+	minishell->cmd = cmd;
+	return (minishell);
+}

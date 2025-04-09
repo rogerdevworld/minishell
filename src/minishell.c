@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "../include/minishell.h"
-#include "../include/parser.h"
 
 // -- main loop for minishell -- //
 void	main_loop(char **envp)
@@ -18,15 +17,15 @@ void	main_loop(char **envp)
 	char		*line;
 	t_token		*tokens;
 	t_command	*cmd;
+	t_myenv		*myenv;
 
 	tokens = NULL;
-	envp = envp;
+	myenv = ft_myenv(envp);
 	while (1)
 	{
-		line = readline(meta_path(envp));
+		line = readline(meta_path(envp)); //"text> "
 		if (!line)
 			break ;
-		
 		if (*line)
 			add_history(line);
 		if (ft_strncmp(line, "exit", 4) == 0)
@@ -34,18 +33,19 @@ void	main_loop(char **envp)
 			free(line);
 			rl_free_line_state();
 			rl_clear_history();
-			break ;
+			// break ;
 		}
+		if (ft_strncmp(line, "env", 3) == 0)
+			print_env(myenv);
 		tokens = lexer(line);
 		cmd = parse_tokens(tokens, envp);
-		//print_tokens(tokens);
-		//print_command_list(cmd);
+		// print_tokens(tokens);
+		// print_command_list(cmd);
 		ft_check_executor(cmd, envp);
 		free(line);
 	}
 	exit(0);
 }
-
 
 // -- structuracion del codigo para el main -- //
 /*
@@ -59,6 +59,11 @@ int	main(int argc, char **argv, char **envp)
 {
 	argc = argc;
 	argv = argv;
+	// -- inicializacion de las funciones -- //
+	// -- senales -- //
+	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, ft_sigquit);
+	// -- main loop -- //
 	main_loop(envp);
 	return (0);
 }
@@ -72,3 +77,26 @@ ls -la > text && cat -e text && echo "holo world" > new_text && cat text
 
 // valgrind --leak-check=full --show-leak-kinds=all ./minishell
 // valgrind --leak-check=full ./minishell
+
+// -- prompt inicial parser manejar "> < << | || &&"
+// -- pwd | cat -e | cat -e
+// -- ahora
+// -- t_cmd 1. pwd t_cmd 2. cat -e t_cmd 3. cat -e
+// -- flags | || &&
+
+// -- pipe
+// -- t_bonus 1. flag pipe
+// -- -- t_cmd 1. pwd
+// -- t_bonus 2. flag pipe
+// -- -- t_cmd 2. cat -e
+// -- t_bonus 3. flag pipe
+// -- -- t_cmd 3. cat -e
+
+// -- &&, || or (both)
+// -- pwd > text && cat -e text || pwd > text | cat -e text
+// -- t_bonus 1. && first element
+// -- -- t_cmd 1. pwd > text
+// -- t_bonus 2. rigth pwd, left cat -e
+// -- -- t_cmd 2. cat -e
+// -- t_bonus 3. rigth
+// -- -- t_cmd 3. cat -e

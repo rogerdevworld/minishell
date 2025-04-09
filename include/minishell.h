@@ -9,7 +9,6 @@
 /*   Updated: 2025/03/27 17:36:15 by rmarrero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -18,17 +17,23 @@
 # include "lexer.h"
 # include "parser.h"
 # include "builtins.h"
-# include "executor.h"
 # include "design.h"
+# include "executor.h"
+# include "redirections.h"
+# include "signals.h"
+# include "design.h"
+# include "env.h"
 
 // -- system.h -- //
 
 // -- system libs -- //
 # include <fcntl.h>
+# include <limits.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <sys/wait.h>
 # include <unistd.h>
+#include <signal.h>
 #include <limits.h>
 
 // -- readline -- //
@@ -38,10 +43,20 @@
 // -- minishell.h -- //
 
 // -- internal strcts -- //
+typedef struct s_minishell
+{
+	char		**envp;
+	t_token		*tokens;
+	t_command	*cmd;
+}				t_minishell;
 
-void	main_loop(char **envp);
+t_minishell	*init_minishell(char **envp, t_token *tokens, t_command *cmd);
+
+
+// -- main loop -- //
+void			main_loop(char **envp);
 
 // -- exit.h -- //
-void	ft_exit(char *msg);
+void			ft_exit(char *msg);
 
 #endif

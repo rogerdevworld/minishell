@@ -1,22 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   desing.h                                           :+:      :+:    :+:   */
+/*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/27 11:56:13 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/03/27 11:57:56 by rmarrero         ###   ########.fr       */
+/*   Created: 2025/04/01 13:05:47 by rmarrero          #+#    #+#             */
+/*   Updated: 2025/04/01 13:05:50 by rmarrero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#ifndef DESING_H
-# define DESING_H
+#include "../../include/minishell.h"
 
-// -- lexer.h -- //
-char	*path_terminal(void);
-char	*get_git_branch(void);
-char	*meta_path(char **envp);
-char	*get_computer_name(void);
-char	*get_user(char **envp);
+void	sigint_handler(int signum)
+{
+	(void)signum;
+    //char **user = NULL;
 
-#endif
+    //ft_printf("%s", meta_path(user));
+    write(1, "$\n", 2);
+}
+void	ft_sigquit(int sig)
+{
+    sig = sig;
+}

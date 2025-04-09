@@ -1,22 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   desing.h                                           :+:      :+:    :+:   */
+/*   ft_opne.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/27 11:56:13 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/03/27 11:57:56 by rmarrero         ###   ########.fr       */
+/*   Created: 2025/04/01 13:05:47 by rmarrero          #+#    #+#             */
+/*   Updated: 2025/04/01 13:05:50 by rmarrero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#ifndef DESING_H
-# define DESING_H
+#include "../../include/minishell.h"
 
-// -- lexer.h -- //
-char	*path_terminal(void);
-char	*get_git_branch(void);
-char	*meta_path(char **envp);
-char	*get_computer_name(void);
-char	*get_user(char **envp);
+int	ft_open(char *file, int mode)
+{
+	int	fd;
 
-#endif
+	if (mode == 0)
+		fd = open(file, O_RDONLY);
+	else if (mode == 1)
+		fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	else if (mode == 2)
+		fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (fd == -1)
+		ft_exit("Failed to open file");
+	return (fd);
+}
