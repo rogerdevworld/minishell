@@ -46,6 +46,7 @@ void	handle_redirect(t_command *cmd, t_token **tokens)
 		tmp = get_last_token(*tokens);
 		cmd->output_file = ft_open(tmp->value, 2);
 		cmd->limiter = ft_strdup((*tokens)->value);
+		cmd->operator = PIPE;
 	}
 	else if (ft_strncmp((*tokens)->value, "<", 1) == 0)
 	{
@@ -60,6 +61,7 @@ t_command	*parse_tokens(t_token *tokens, char **envp)
 	t_command	*cmds;
 	t_command	*current;
 	int			i;
+	int is_heredoc = 0;
 
 	envp = envp;
 	cmds = init_command();
@@ -80,12 +82,15 @@ t_command	*parse_tokens(t_token *tokens, char **envp)
 			i++;
 		}
 		else if (tokens->type == TOKEN_REDIRECTION)
-			handle_redirect(current, &tokens);
+			handle_redirect(current, &tokens), is_heredoc = 1;
 		else if (tokens->type == TOKEN_OPERATOR)
 		{
 			// -- estoy haciendo un arbol de ejecucion para ver grupo de comandso orden etc --
 				//
-			current->operator= resolve_operator(tokens->value);
+			if (is_heredoc)
+				current->operator = PIPE;
+			else
+				current->operator= PIPE;//resolve_operator(tokens->value);
 			current->next = init_command();
 			current = current->next;
 			i = 0;
