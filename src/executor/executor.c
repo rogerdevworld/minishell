@@ -23,7 +23,9 @@ void	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)
 	{
 		if (cmd->limiter)
 		{
+			ft_printf("here_doc");
 			ft_here_doc(cmd->limiter);
+			
 		}
 		if (!cmd->args || !cmd->args[0])
 		{
@@ -92,6 +94,7 @@ pid_t	external_command(t_command *cmd, char **envp, int builtin_id,
 void	child_process(t_command *cmd, char **envp, int builtin_id, int prev_fd,
 		int p_fd[2], t_myenv *myenv)
 {
+	here_doc(cmd->limiter, p_fd);
 	if (cmd->input_file != -1)
 	{
 		dup2(cmd->input_file, STDIN_FILENO);
@@ -168,4 +171,26 @@ void	restore_redirections(int saved_stdin, int saved_stdout)
 		dup2(saved_stdout, STDOUT_FILENO);
 		close(saved_stdout);
 	}
+}
+
+void	here_doc(char *delimiter, int *p_fd)
+{
+	char	*line;
+
+	close(p_fd[0]);
+	while (1)
+	{
+		//write(1, "pipex> ", 7);
+		line = get_next_line(STDIN_FILENO);
+		if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)
+		{
+			//ft_printf("sale");
+			free(line);
+			break ;
+		}
+		write(p_fd[1], line, ft_strlen(line));
+		free(line);
+	}
+	close(p_fd[1]);
+	exit(0);
 }

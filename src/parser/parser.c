@@ -30,22 +30,18 @@ t_command	*init_command(void)
 
 void	handle_redirect(t_command *cmd, t_token **tokens)
 {
-	t_token	*tmp;
-
-	if (ft_strncmp((*tokens)->value, ">", 1) == 0)
+	if (ft_strncmp((*tokens)->value, ">>", 2) == 0)
+		cmd->output_file = ft_open((*tokens)->next->value, 2);
+	else if (ft_strncmp((*tokens)->value, "<<", 2) == 0)
+	{
+		*tokens = (*tokens)->next;
+		cmd->limiter = ft_strdup((*tokens)->next->value);
+	}
+	else if (ft_strncmp((*tokens)->value, ">", 1) == 0)
 	{
 		*tokens = (*tokens)->next;
 		cmd->output_file = ft_open((*tokens)->value, 1);
 		// cmd->append = 0;
-	}
-	else if (ft_strncmp((*tokens)->value, ">>", 2) == 0
-		|| ft_strncmp((*tokens)->value, "<<", 2) == 0)
-	{
-		// -- tenemos que controlar el limitador del here_doc
-		*tokens = (*tokens)->next;
-		tmp = get_last_token(*tokens);
-		cmd->output_file = ft_open(tmp->value, 2);
-		cmd->limiter = ft_strdup((*tokens)->value);
 	}
 	else if (ft_strncmp((*tokens)->value, "<", 1) == 0)
 	{
