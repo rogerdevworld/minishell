@@ -6,7 +6,7 @@
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 21:49:28 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/02/22 21:49:33 by rmarrero         ###   ########.fr       */
+/*   Updated: 2025/04/09 21:41:11 by xviladri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../include/minishell.h"
@@ -17,9 +17,10 @@ void	main_loop(char **envp)
 	char		*line;
 	t_token		*tokens;
 	t_command	*cmd;
+	t_myenv		*myenv;
 
 	tokens = NULL;
-	envp = envp;
+	myenv = ft_myenv(envp);
 	while (1)
 	{
 		line = readline(meta_path(envp)); //"text> "
@@ -32,13 +33,13 @@ void	main_loop(char **envp)
 			free(line);
 			rl_free_line_state();
 			rl_clear_history();
-			//break ;
+			// break ;
 		}
 		tokens = lexer(line);
 		cmd = parse_tokens(tokens, envp);
 		// print_tokens(tokens);
 		// print_command_list(cmd);
-		ft_check_executor(cmd, envp);
+		ft_check_executor(cmd, envp, myenv);
 		free(line);
 	}
 	exit(0);
@@ -56,15 +57,11 @@ int	main(int argc, char **argv, char **envp)
 {
 	argc = argc;
 	argv = argv;
-	// -- signals -- //
-	// struct sigaction sa;
-	// sa.sa_handler = ignore_signal;
-	// sa.sa_flags = 0;
-	// sigemptyset(&sa.sa_mask);
-	// sigaction(SIGINT, &sa, NULL);
+	// -- inicializacion de las funciones -- //
+	// -- senales -- //
 	signal(SIGINT, sigint_handler);
 	signal(SIGQUIT, ft_sigquit);
-	// sigaction(SIGQUIT, &sa, NULL);
+	// -- main loop -- //
 	main_loop(envp);
 	return (0);
 }
