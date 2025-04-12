@@ -36,5 +36,6 @@ void	parent_process(t_command *cmd, t_executor *ex);
 
 void	redirections(t_command *cmd, int *saved_stdin, int *saved_stdout);
 void	restore_redirections(int saved_stdin, int saved_stdout);
+void print_args(char **args);
 
 #endif

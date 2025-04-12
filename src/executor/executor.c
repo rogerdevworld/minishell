@@ -20,6 +20,18 @@ void	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)
 	ex.myenv = myenv;
 	while (cmd)
 	{
+		
+		ft_printf("Before ft_wildcards:\n");
+		print_args(cmd->args);
+		ft_wildcards(&(cmd->args));
+		// Imprimimos los argumentos después de la expansión
+		ft_printf("\nAfter ft_wildcards:\n");
+		print_args(cmd->args);
+		
+		if (cmd->limiter)
+		{
+			ft_here_doc(cmd->limiter);
+		}
 		if (!cmd->args || !cmd->args[0])
 			cmd = cmd->next;
 		ex.builtin_id = get_builtin_cmd(cmd->args[0]);
@@ -140,4 +152,15 @@ void	restore_redirections(int saved_stdin, int saved_stdout)
 		dup2(saved_stdout, STDOUT_FILENO);
 		close(saved_stdout);
 	}
+}
+#include <stdio.h>
+
+void print_args(char **args)
+{
+    int i = 0;
+    while (args[i] != NULL)
+    {
+        printf("Argument %d: %s\n", i, args[i]);
+        i++;
+    }
 }
