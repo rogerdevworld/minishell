@@ -10,9 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "../include/minishell.h"
-#include <dirent.h>
-#include <stdio.h>
-#include <stdlib.h>
 
 int	match_pattern(const char *pattern, const char *str)
 {
@@ -79,6 +76,7 @@ void	ft_wildcards(char ***args)
 		{
 			char *path = extract_path((*args)[j]);
 			const char *pat = extract_pattern((*args)[j]);
+			// ft_printf("path: %s \npat: %s\n", path, pat);
 			dir = opendir(path);
 			if (!dir)
 			{
@@ -98,7 +96,6 @@ void	ft_wildcards(char ***args)
 					ft_strlcpy(full, path, full_len);
 					ft_strlcat(full, "/", full_len);
 					ft_strlcat(full, entry->d_name, full_len);
-
 					new_args = ft_realloc(new_args, sizeof(char *) * (arg_count
 								+ 2));
 					new_args[arg_count++] = full;

@@ -28,13 +28,13 @@
 // -- system libs -- //
 # include <dirent.h>
 # include <fcntl.h>
-# include <glob.h>
 # include <limits.h>
 # include <signal.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <sys/wait.h>
 # include <unistd.h>
+#include <dirent.h>
 
 // -- readline -- //
 # include <readline/history.h>
