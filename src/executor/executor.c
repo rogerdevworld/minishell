@@ -14,26 +14,27 @@
 void	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)
 {
 	t_executor	ex;
+	char		*path;
 
 	ex.prev_fd = -1;
 	ex.envp = envp;
 	ex.myenv = myenv;
 	while (cmd)
 	{
-		
-		ft_printf("Before ft_wildcards:\n");
-		print_args(cmd->args);
+		//ft_printf("Before ft_wildcards:\n");
+		//print_args(cmd->args);
 		ft_wildcards(&(cmd->args));
-		// Imprimimos los argumentos después de la expansión
-		ft_printf("\nAfter ft_wildcards:\n");
-		print_args(cmd->args);
-		
+		//ft_printf("\nAfter ft_wildcards:\n");
+		//print_args(cmd->args);
 		if (cmd->limiter)
 		{
 			ft_here_doc(cmd->limiter);
 		}
 		if (!cmd->args || !cmd->args[0])
+		{
 			cmd = cmd->next;
+			continue ;
+		}
 		ex.builtin_id = get_builtin_cmd(cmd->args[0]);
 		if (ex.builtin_id != -1 && cmd->operator!= PIPE)
 		{
@@ -44,9 +45,43 @@ void	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)
 			restore_redirections(ex.saved_stdin, ex.saved_stdout);
 		}
 		else
-			ex.pid = external_command(cmd, &ex);
-		if (cmd->operator!= PIPE)
-			waitpid(ex.pid, NULL, 0);
+		{
+			// Aquí verificamos si el comando tiene ruta absoluta
+			if (cmd->args[0][0] == '/' || cmd->args[0][0] == '.')
+			{
+				if (access(cmd->args[0], X_OK) != 0)
+				{
+					ft_printf("minishell: %s: command not found\n",
+						cmd->args[0]);
+				}
+				else
+				{
+					ex.pid = external_command(cmd, &ex);
+					if (cmd->operator!= PIPE)
+					{
+						waitpid(ex.pid, NULL, 0);
+					}
+				}
+			}
+			else
+			{
+				// Si no tiene ruta, buscamos en el PATH
+				path = get_path(cmd->args[0], ex.envp);
+				if (path == NULL || access(path, X_OK) != 0)
+				{
+					ft_printf("minishell: %s: command not found\n",
+						cmd->args[0]);
+				}
+				else
+				{
+					ex.pid = external_command(cmd, &ex);
+					if (cmd->operator!= PIPE)
+					{
+						waitpid(ex.pid, NULL, 0);
+					}
+				}
+			}
+		}
 		cmd = cmd->next;
 	}
 }
@@ -155,12 +190,14 @@ void	restore_redirections(int saved_stdin, int saved_stdout)
 }
 #include <stdio.h>
 
-void print_args(char **args)
+void	print_args(char **args)
 {
-    int i = 0;
-    while (args[i] != NULL)
-    {
-        printf("Argument %d: %s\n", i, args[i]);
-        i++;
-    }
+	int	i;
+
+	i = 0;
+	while (args[i] != NULL)
+	{
+		printf("Argument %d: %s\n", i, args[i]);
+		i++;
+	}
 }
