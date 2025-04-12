@@ -21,10 +21,7 @@ void	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)
 	while (cmd)
 	{
 		if (!cmd->args || !cmd->args[0])
-		{
 			cmd = cmd->next;
-			continue ;
-		}
 		ex.builtin_id = get_builtin_cmd(cmd->args[0]);
 		if (ex.builtin_id != -1 && cmd->operator!= PIPE)
 		{
@@ -77,7 +74,7 @@ void	child_process(t_command *cmd, t_executor *ex)
 		dup2(ex->prev_fd, STDIN_FILENO);
 		close(ex->prev_fd);
 	}
-	if (cmd->operator == PIPE)
+	if (cmd->operator== PIPE)
 	{
 		close(ex->p_fd[0]);
 		if (cmd->output_file != -1)
@@ -104,7 +101,7 @@ void	parent_process(t_command *cmd, t_executor *ex)
 {
 	if (ex->prev_fd != -1)
 		close(ex->prev_fd);
-	if (cmd->operator == PIPE)
+	if (cmd->operator== PIPE)
 	{
 		close(ex->p_fd[1]);
 		ex->prev_fd = ex->p_fd[0];
