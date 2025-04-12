@@ -54,9 +54,3 @@ void	ft_here_doc(char *delimiter)
 		waitpid(pid, NULL, 0);
 	}
 }
-/*
-void call_to_here(t_command *cmd, char **envp, char *delimiter)
-{
-    if (t_)
-}
-*/
