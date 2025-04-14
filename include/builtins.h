@@ -45,9 +45,9 @@ void	sort_env_array(t_env **array);
 void	export_add_or_update(t_env **env_list, char *arg);
 t_env	*find_env_var(t_env *env, const char *key);
 int		is_valid_identifier(const char *str);
-int     ft_unset(char **args, char **envp);
-int get_next_quote(int start, char *str, char c);
+void	ft_unset(char **args, t_myenv *myenv);
 void    put_error(char *prefix, char *cmd, char *msg);
+void	update_env_array(t_myenv *myenv);
 char	*ft_echo_expand(char *str, t_env *env);
 
 #endif

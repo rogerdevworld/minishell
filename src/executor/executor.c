@@ -13,14 +13,19 @@
 
 void	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)
 {
-	int		p_fd[2];
-	int		prev_fd;
-	pid_t	pid;
-	int		builtin_id;
+	t_executor	ex;
+	char		*path;
 
-	prev_fd = -1;
+	ex.prev_fd = -1;
+	ex.envp = envp;
+	ex.myenv = myenv;
 	while (cmd)
 	{
+		//ft_printf("Before ft_wildcards:\n");
+		//print_args(cmd->args);
+	//	ft_wildcards(&(cmd->args));
+		//ft_printf("\nAfter ft_wildcards:\n");
+		//print_args(cmd->args);
 		if (cmd->limiter)
 		{
 			ft_here_doc(cmd->limiter);
@@ -30,87 +35,101 @@ void	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)
 			cmd = cmd->next;
 			continue ;
 		}
-		builtin_id = get_builtin_cmd(cmd->args[0]);
-		if (builtin_id != -1 && cmd->operator != PIPE)
+		ex.builtin_id = get_builtin_cmd(cmd->args[0]);
+		if (ex.builtin_id != -1 && cmd->operator!= PIPE)
 		{
-			int saved_stdin = -1;
-			int saved_stdout = -1;
-			redirections(cmd, &saved_stdin, &saved_stdout);
-			execute_builtin(builtin_id, cmd->args, envp, myenv);
-			restore_redirections(saved_stdin, saved_stdout);
+			ex.saved_stdin = -1;
+			ex.saved_stdout = -1;
+			redirections(cmd, &ex.saved_stdin, &ex.saved_stdout);
+			execute_builtin(ex.builtin_id, cmd->args, ex.envp, ex.myenv);
+			restore_redirections(ex.saved_stdin, ex.saved_stdout);
 		}
 		else
-			pid = external_command(cmd, envp, builtin_id, &prev_fd, p_fd, myenv);
-		if (cmd->operator!= PIPE)
-			waitpid(pid, NULL, 0);
+		{
+			// Aquí verificamos si el comando tiene ruta absoluta
+			if (cmd->args[0][0] == '/' || cmd->args[0][0] == '.')
+			{
+				if (access(cmd->args[0], X_OK) != 0)
+				{
+					ft_printf("minishell: %s: command not found\n",
+						cmd->args[0]);
+				}
+				else
+				{
+					ex.pid = external_command(cmd, &ex);
+					if (cmd->operator!= PIPE)
+					{
+						waitpid(ex.pid, NULL, 0);
+					}
+				}
+			}
+			else
+			{
+				// Si no tiene ruta, buscamos en el PATH
+				path = get_path(cmd->args[0], ex.envp);
+				if (path == NULL || access(path, X_OK) != 0)
+				{
+					ft_printf("minishell: %s: command not found\n",
+						cmd->args[0]);
+				}
+				else
+				{
+					ex.pid = external_command(cmd, &ex);
+					if (cmd->operator!= PIPE)
+					{
+						waitpid(ex.pid, NULL, 0);
+					}
+				}
+			}
+		}
 		cmd = cmd->next;
 	}
 }
 
 // -- function to execute a command -- //
 // --  de momento esta funcion esta fuera pero la dejare para comandos unicos --
-	//
-void	ft_exec_cmd(t_command *cmd, char **envp)
+//
+pid_t	external_command(t_command *cmd, t_executor *ex)
 {
-	pid_t	pid;
-
-	pid = fork();
-	if (pid == -1)
-		ft_exit("Failed to fork");
-	if (pid == 0)
-	{
-		if (execve(get_path(cmd->args[0], envp), cmd->args, envp) == -1)
-			ft_exit("Command execution failed");
-		exit(0);
-	}
-	else if (pid > 0)
-		waitpid(pid, NULL, 0);
-}
-
-pid_t	external_command(t_command *cmd, char **envp, int builtin_id,
-		int *prev_fd, int p_fd[2], t_myenv *myenv)
-{
-	pid_t	pid;
-
 	if (cmd->operator== PIPE)
 	{
-		if (pipe(p_fd) == -1)
+		if (pipe(ex->p_fd) == -1)
 			ft_exit("pipe failed");
 	}
-	pid = fork();
-	if (pid == -1)
+	ex->pid = fork();
+	if (ex->pid == -1)
 		ft_exit("fork failed");
-	if (pid == 0)
-		child_process(cmd, envp, builtin_id, *prev_fd, p_fd, myenv);
+	if (ex->pid == 0)
+		child_process(cmd, ex);
 	else
-		parent_process(cmd, prev_fd, p_fd);
-	return (pid);
+		parent_process(cmd, ex);
+	return (ex->pid);
 }
+
 // -- hay muchos parametros pero las funciones solo se les pasara dos struct t_shell
 // y las struct de las pipes para esta parte aplicare esto mas adelante mini 2.0 --
-	//
-void	child_process(t_command *cmd, char **envp, int builtin_id, int prev_fd,
-		int p_fd[2], t_myenv *myenv)
+//
+void	child_process(t_command *cmd, t_executor *ex)
 {
 	if (cmd->input_file != -1)
 	{
 		dup2(cmd->input_file, STDIN_FILENO);
 		close(cmd->input_file);
 	}
-	else if (prev_fd != -1)
+	else if (ex->prev_fd != -1)
 	{
-		dup2(prev_fd, STDIN_FILENO);
-		close(prev_fd);
+		dup2(ex->prev_fd, STDIN_FILENO);
+		close(ex->prev_fd);
 	}
 	if (cmd->operator== PIPE)
 	{
-		close(p_fd[0]);
+		close(ex->p_fd[0]);
 		if (cmd->output_file != -1)
-			close(p_fd[1]);
+			close(ex->p_fd[1]);
 		else
 		{
-			dup2(p_fd[1], STDOUT_FILENO);
-			close(p_fd[1]);
+			dup2(ex->p_fd[1], STDOUT_FILENO);
+			close(ex->p_fd[1]);
 		}
 	}
 	if (cmd->output_file != -1)
@@ -118,25 +137,25 @@ void	child_process(t_command *cmd, char **envp, int builtin_id, int prev_fd,
 		dup2(cmd->output_file, STDOUT_FILENO);
 		close(cmd->output_file);
 	}
-	if (builtin_id != -1)
-		execute_builtin(builtin_id, cmd->args, envp, myenv);
+	if (ex->builtin_id != -1)
+		execute_builtin(ex->builtin_id, cmd->args, ex->envp, ex->myenv);
 	else
-		execve(get_path(cmd->args[0], envp), cmd->args, envp);
+		execve(get_path(cmd->args[0], ex->envp), cmd->args, ex->myenv->env);
 	exit(0);
 }
 
-void	parent_process(t_command *cmd, int *prev_fd, int p_fd[2])
+void	parent_process(t_command *cmd, t_executor *ex)
 {
-	if (*prev_fd != -1)
-		close(*prev_fd);
+	if (ex->prev_fd != -1)
+		close(ex->prev_fd);
 	if (cmd->operator== PIPE)
 	{
-		close(p_fd[1]);
-		*prev_fd = p_fd[0];
+		close(ex->p_fd[1]);
+		ex->prev_fd = ex->p_fd[0];
 	}
 	else
 	{
-		*prev_fd = -1;
+		ex->prev_fd = -1;
 	}
 }
 
@@ -152,7 +171,7 @@ void	redirections(t_command *cmd, int *saved_stdin, int *saved_stdout)
 	{
 		*saved_stdout = dup(STDOUT_FILENO);
 		dup2(cmd->output_file, STDOUT_FILENO);
-	close(cmd->output_file);
+		close(cmd->output_file);
 	}
 }
 

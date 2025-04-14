@@ -64,7 +64,10 @@ void	execute_builtin(int cmd, char **args, char **envp, t_myenv *myenv)
 	else if (cmd == EXPORT)
 		ft_export(args, myenv);
 	else if (cmd == UNSET)
-		ft_unset(args, envp);
+	{
+		ft_unset(args, myenv);
+		update_env_array(myenv);
+	}
 /*	else if (cmd == ENV)
 		ft_env(*envp);*/
 	else if (cmd == CLEAR)

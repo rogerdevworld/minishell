@@ -16,18 +16,19 @@ void	put_error(char *prefix, char *cmd, char *msg)
 	ft_printf("%s: %s: %s\n", prefix, cmd, msg);
 }
 
-// -- para comprobar q variable q intentamos eliminar no tenga caract. especiales -- //
 static int	ft_check_wrong_char(char *s)
 {
 	int	i;
 
 	i = 0;
+	if (!s || !s[0] || ft_isdigit(s[0]) || s[0] == '=')
+	{
+		put_error("bash: unset", s, "not a valid identifier");
+		return (1);
+	}
 	while (s[i])
 	{
-		if (s[i] == '=' || s[i] == '?' || s[i] == '!' || s[i] == '.' ||
-			s[i] == '+' || s[i] == '}' || s[i] == '{' || s[i] == '-' ||
-			s[i] == '\\' || s[i] == '[' || s[i] == ']' || s[i] == '@' ||
-			s[i] == '*' || s[i] == '#' || s[i] == '^' || s[i] == '~')
+		if (!ft_isalnum(s[i]) && s[i] != '_')
 		{
 			put_error("bash: unset", s, "not a valid identifier");
 			return (1);
@@ -37,61 +38,91 @@ static int	ft_check_wrong_char(char *s)
 	return (0);
 }
 
-int get_next_quote(int start, char *str, char c)
+static void	remove_env_node(t_env **env_list, const char *key)
 {
-    int i = start;
+	t_env	*curr;
+	t_env	*prev;
 
-    while (str[i])
-    {
-        if (str[i] == c)
-            return (i);
-        i++;
-    }
-    return (-1);
- }
-
-static int	ft_unset_strcmp(char *s, char **envp)
-{
-	int		i;
-	char	*var;
-	int		len;
-
-	i = 0;
-	if (ft_check_wrong_char(s))
-		return (1);
-	while (envp[i])//recorremos variables entorno y eliminamos la q coincida
+	curr = *env_list;
+	prev = NULL;
+	while (curr)
 	{
-		var = envp[i];
-		len = get_next_quote(0, var, '=');
-		if (ft_strncmp(s, var, len) == 0)//eliminamos y liberamos memory si coincide
+		if (ft_strcmp(curr->key, key) == 0)
 		{
-			free(envp[i]);
-			envp[i] = NULL;//asi se marca como eliminada.
-			while (envp[i + 1])//desplazamos todas las variables siguientes para compactar el array
-			{
-				envp[i] = envp[i + 1];
-				i++;
-			}
-			envp[i] = NULL;
-			break ;
+			if (prev)
+				prev->next = curr->next;
+			else
+				*env_list = curr->next;
+			free(curr->key);
+			free(curr->content);
+			free(curr);
+			return ;
 		}
-		i++;
+		prev = curr;
+		curr = curr->next;
 	}
-	return (0);
 }
 
-int	ft_unset(char **args, char **envp)
+static char	*ft_strjoin_3(char const *s1, char const *s2, char const *s3)
+{
+	char	*tmp;
+	char	*res;
+
+	if (!s1 || !s2 || !s3)
+		return (NULL);
+	tmp = ft_strjoin(s1, s2);
+	if (!tmp)
+		return (NULL);
+	res = ft_strjoin(tmp, s3);
+	free(tmp);
+	return (res);
+}
+
+void	update_env_array(t_myenv *myenv)
+{
+	t_env	*tmp;
+	int		count;
+	int		i;
+
+	count = 0;
+	tmp = myenv->list_env;
+	while (tmp)
+	{
+		if (tmp->key && tmp->content)
+			count++;
+		tmp = tmp->next;
+	}
+
+	if (myenv->env)
+		free_env_array(myenv->env);
+	myenv->env = malloc(sizeof(char *) * (count + 1));
+	if (!myenv->env)
+		return ;
+	i = 0;
+	tmp = myenv->list_env;
+	while (tmp)
+	{
+		if (tmp->key && tmp->content)
+		{
+			myenv->env[i] = ft_strjoin_3(tmp->key, "=", tmp->content);
+			i++;
+		}
+		tmp = tmp->next;
+	}
+	myenv->env[i] = NULL;
+}
+
+void	ft_unset(char **args, t_myenv *myenv)
 {
 	int	i;
 
-	i = 0;
+	i = 1;
 	if (!args || !args[0])
-		return (0);
+		return ;
 	while (args[i])
 	{
-		if (ft_unset_strcmp(args[i], envp) == 1)
-			return (1);
+		if (!ft_check_wrong_char(args[i]))
+			remove_env_node(&myenv->list_env, args[i]);
 		i++;
 	}
-	return (0);
 }
