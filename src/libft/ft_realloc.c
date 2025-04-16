@@ -1,23 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   redirections.h                                     :+:      :+:    :+:   */
+/*   ft_realloc.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/27 11:56:13 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/03/27 11:57:56 by rmarrero         ###   ########.fr       */
+/*   Created: 2024/09/13 06:14:58 by rmarrero          #+#    #+#             */
+/*   Updated: 2024/09/26 12:51:14 by rmarrero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#ifndef REDIRECTIONS_H
-# define REDIRECTIONS_H
+#include "libft.h"
 
-// -- redirections.h -- //
-int	ft_open(char *file, int mode);
+void	*ft_realloc(void *ptr, size_t new_size)
+{
+	void	*new_ptr;
 
-// -- here doc's -- //
-void	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv);
-void	ft_here_doc(char *delimiter);
-void	ft_here_doc_child(char *delimiter, int *p_fd);
-
-#endif
+	if (new_size == 0)
+	{
+		free(ptr);
+		return (NULL);
+	}
+	if (!ptr)
+		return (malloc(new_size));
+	new_ptr = malloc(new_size);
+	if (!new_ptr)
+		return (NULL);
+	ft_memcpy(new_ptr, ptr, new_size);
+	free(ptr);
+	return (new_ptr);
+}

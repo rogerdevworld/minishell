@@ -23,7 +23,7 @@ void	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)
 	{
 		//ft_printf("Before ft_wildcards:\n");
 		//print_args(cmd->args);
-	//	ft_wildcards(&(cmd->args));
+		//ft_wildcards(&(cmd->args));
 		//ft_printf("\nAfter ft_wildcards:\n");
 		//print_args(cmd->args);
 		if (cmd->limiter)
@@ -88,7 +88,7 @@ void	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)
 
 // -- function to execute a command -- //
 // --  de momento esta funcion esta fuera pero la dejare para comandos unicos --
-//
+
 pid_t	external_command(t_command *cmd, t_executor *ex)
 {
 	if (cmd->operator== PIPE)
@@ -186,5 +186,18 @@ void	restore_redirections(int saved_stdin, int saved_stdout)
 	{
 		dup2(saved_stdout, STDOUT_FILENO);
 		close(saved_stdout);
+	}
+}
+#include <stdio.h>
+
+void	print_args(char **args)
+{
+	int	i;
+
+	i = 0;
+	while (args[i] != NULL)
+	{
+		printf("Argument %d: %s\n", i, args[i]);
+		i++;
 	}
 }

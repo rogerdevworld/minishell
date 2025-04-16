@@ -31,7 +31,7 @@ void	ft_here_doc_child(char *delimiter, int *p_fd)
 		free(line);
 	}
 	close(p_fd[1]);
-	exit(0);
+	_exit(0);
 }
 
 // -- main function to handle here_doc -- //
@@ -54,9 +54,3 @@ void	ft_here_doc(char *delimiter)
 		waitpid(pid, NULL, 0);
 	}
 }
-/*
-void call_to_here(t_command *cmd, char **envp, char *delimiter)
-{
-    if (t_)
-}
-*/

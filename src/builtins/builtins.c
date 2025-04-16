@@ -45,8 +45,8 @@ int	get_builtin_cmd(char *cmd)
 		return (UNSET);
 	if (ft_strncmp(cmd, "clear", 5) == 0)
 		return (CLEAR);
-/*	if (ft_strncmp(cmd, "env", 3) == 0)
-		return (ENV);*/
+	if (ft_strncmp(cmd, "env", 3) == 0)
+		return (ENV);
 	return (-1);
 }
 
@@ -68,8 +68,8 @@ void	execute_builtin(int cmd, char **args, char **envp, t_myenv *myenv)
 		ft_unset(args, myenv);
 		update_env_array(myenv);
 	}
-/*	else if (cmd == ENV)
-		ft_env(*envp);*/
+	else if (cmd == ENV)
+		print_env(myenv);
 	else if (cmd == CLEAR)
 		clear();
 	else

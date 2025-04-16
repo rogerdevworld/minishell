@@ -24,6 +24,7 @@ typedef struct s_executor
 	char	**envp;
 }	t_executor;
 
+// executor.h o en minishell.h
 
 void	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv);
 void	ft_exec_cmd(t_command *cmd, char **envp);

@@ -30,30 +30,32 @@ t_command	*init_command(void)
 
 void	handle_redirect(t_command *cmd, t_token **tokens)
 {
-	t_token	*tmp;
+	if (!tokens || !*tokens || !(*tokens)->next)
+		return ;
 
-	if (ft_strncmp((*tokens)->value, ">", 1) == 0)
+	if (ft_strncmp((*tokens)->value, ">>", 2) == 0)
 	{
 		*tokens = (*tokens)->next;
-		cmd->output_file = ft_open((*tokens)->value, 1);
-		// cmd->append = 0;
+		cmd->output_file = ft_open((*tokens)->value, 2); // modo append
 	}
-	else if (ft_strncmp((*tokens)->value, ">>", 2) == 0
-		|| ft_strncmp((*tokens)->value, "<<", 2) == 0)
+	else if (ft_strncmp((*tokens)->value, "<<", 2) == 0)
 	{
-		// -- tenemos que controlar el limitador del here_doc
 		*tokens = (*tokens)->next;
-		tmp = get_last_token(*tokens);
-		cmd->output_file = ft_open(tmp->value, 2);
-		cmd->limiter = ft_strdup((*tokens)->value);
+		cmd->limiter = ft_strdup((*tokens)->value); // guardar el limitador
+		cmd->input_file = ft_open(cmd->limiter, 2); // simula heredoc
+	}
+	else if (ft_strncmp((*tokens)->value, ">", 1) == 0)
+	{
+		*tokens = (*tokens)->next;
+		cmd->output_file = ft_open((*tokens)->value, 1); // modo trunc
 	}
 	else if (ft_strncmp((*tokens)->value, "<", 1) == 0)
 	{
 		*tokens = (*tokens)->next;
-		cmd->input_file = ft_open((*tokens)->value, 0);
-		// cmd->append = 0;
+		cmd->input_file = ft_open((*tokens)->value, 0); // modo lectura
 	}
 }
+
 
 t_command	*parse_tokens(t_token *tokens, char **envp)
 {
