@@ -6,7 +6,7 @@
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 21:49:28 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/04/09 21:41:11 by xviladri         ###   ########.fr       */
+/*   Updated: 2025/04/22 12:40:48 by xviladri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../include/minishell.h"
@@ -55,12 +55,12 @@ void	main_loop(char **envp)
 */
 int	main(int argc, char **argv, char **envp)
 {
-	argc = argc;
-	argv = argv;
+	(void)argc;
+	(void)argv;
 	// -- inicializacion de las funciones -- //
 	// -- senales -- //
-	signal(SIGINT, sigint_handler);
-	signal(SIGQUIT, ft_sigquit);
+	//signal(SIGINT, sigint_handler);
+	//signal(SIGQUIT, ft_sigquit);
 	// -- main loop -- //
 	main_loop(envp);
 	return (0);

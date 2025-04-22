@@ -44,9 +44,11 @@ typedef struct s_command
 
 t_command				*init_command(void);
 void					handle_redirect(t_command *cmd, t_token **tokens);
+char					*remove_quotes(char *str);
 t_command				*parse_tokens(t_token *tokens, char **envp);
 void					print_command_list(t_command *cmds);
 t_operator				resolve_operator(char *operator);
 char					*get_path(char *cmd, char **env);
 const char				*operator_to_str(t_operator op);
+
 #endif

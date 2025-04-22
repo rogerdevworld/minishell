@@ -6,7 +6,7 @@
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 13:05:47 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/04/10 00:29:20 by xviladri         ###   ########.fr       */
+/*   Updated: 2025/04/22 13:28:40 by xviladri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../include/minishell.h"
@@ -61,7 +61,7 @@ void	export_add_or_update(t_env **env_list, char *arg)//la tengo que acortar
 	else
 	{
 		key = ft_substr(arg, 0, sep - arg);
-		value = ft_strdup(sep + 1);
+		value = remove_quotes(sep + 1);
 	}
 	if (!is_valid_identifier(key))
 	{
@@ -86,25 +86,6 @@ void	export_add_or_update(t_env **env_list, char *arg)//la tengo que acortar
 	free(key);
 }
 
-/* PARA INTENTAELO CON LA FUNCION DE ROGER.
-void	print_export(t_env *env)
-{
-	if (!env)
-		return ;
-
-	ft_printf("antes");
-	ft_sort_export(env);
-	ft_printf("paso");
-	while (env)
-	{
-		if (env->content)
-			ft_printf("declare  x %s=\"%s\"\n", env->key, env->content);
-		else
-			ft_printf("declare -x %s\n", env->key);
-		env = env->next;
-	}
-	free(env);
-}*/
 void	print_export(t_env *env)//LA FUNCION NUEVA
 {
 	t_env	**array;

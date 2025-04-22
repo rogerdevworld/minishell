@@ -39,3 +39,45 @@ char	*get_path(char *cmd, char **env)
 	free_split(s_cmd);
 	return (ft_strdup(cmd));
 }
+
+/*char	*remove_quotes(const char *str)
+{
+	int		i = 0;
+	int		j = 0;
+	char	quote = 0;
+	char	*res;
+
+	if (!str)
+		return (NULL);
+
+	res = malloc(ft_strlen(str) + 1);
+	if (!res)
+		return (NULL);
+
+	while (str[i])
+	{
+		if ((str[i] == '\'' || str[i] == '"') && !quote)
+			quote = str[i];
+		else if (str[i] == quote)
+			quote = 0;
+		else
+			res[j++] = str[i];
+		i++;
+	}
+	res[j] = '\0';
+	return (res);
+}*/
+char	*remove_quotes(char *str)
+{
+	size_t	len;
+
+	if (!str)
+		return (NULL);
+	len = ft_strlen(str);
+	if ((str[0] == '"' && str[len - 1] == '"') ||
+		(str[0] == '\'' && str[len - 1] == '\''))
+		return (ft_substr(str, 1, len - 2));
+	return (ft_strdup(str));
+}
+
+

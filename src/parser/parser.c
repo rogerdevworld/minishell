@@ -6,7 +6,7 @@
 /*   By: xviladri <xviladri@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 12:43:57 by xviladri          #+#    #+#             */
-/*   Updated: 2025/04/01 14:11:55 by xviladri         ###   ########.fr       */
+/*   Updated: 2025/04/22 12:41:23 by xviladri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../../include/minishell.h"
@@ -56,14 +56,14 @@ void	handle_redirect(t_command *cmd, t_token **tokens)
 	}
 }
 
-
 t_command	*parse_tokens(t_token *tokens, char **envp)
 {
 	t_command	*cmds;
 	t_command	*current;
 	int			i;
-
-	envp = envp;
+	char		*clean_arg;
+	
+	(void)envp;
 	cmds = init_command();
 	if (!cmds)
 		return (NULL);
@@ -75,9 +75,13 @@ t_command	*parse_tokens(t_token *tokens, char **envp)
 		//	NO TIENE QUE HACER \n --//
 		if ((tokens->type == TOKEN_COMMAND) || (tokens->type == TOKEN_ARGUMENT))
 		{
-			current->args[i] = ft_strdup(tokens->value);
+			//printf("TOKEN: %s (tipo %d)\n", tokens->value, tokens->type);
+			//printf("ARG[%d]: %s\n", i, current->args[i]);
+			clean_arg = remove_quotes(tokens->value);//para quitar las comillas.
+			current->args[i] = clean_arg;
 			// -- el path de args[0] simpre sera asi pero eso el 0 esta statico --
 				//
+			//free(clean_arg);
 			current->path = get_path(current->args[0], envp);
 			i++;
 		}
