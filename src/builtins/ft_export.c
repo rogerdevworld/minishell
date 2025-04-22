@@ -6,7 +6,7 @@
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 13:05:47 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/04/22 13:28:40 by xviladri         ###   ########.fr       */
+/*   Updated: 2025/04/22 20:32:08 by xviladri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../include/minishell.h"
@@ -90,7 +90,7 @@ void	print_export(t_env *env)//LA FUNCION NUEVA
 {
 	t_env	**array;
 	int		i;
-	
+
 	array = env_to_array(env);
 	if (!array)
 		return ;
@@ -99,7 +99,8 @@ void	print_export(t_env *env)//LA FUNCION NUEVA
 	while (array[i])
 	{
 		if (array[i]->content)
-			ft_printf("declare -x %s=\"%s\"\n", array[i]->key, array[i]->content);
+			ft_printf("declare -x %s=\"%s\"\n",
+				array[i]->key, array[i]->content);
 		else
 			ft_printf("declare -x %s\n", array[i]->key);
 		i++;
@@ -111,7 +112,6 @@ void	ft_export(char **args, t_myenv *myenv)
 {
 	int	i;
 
-	
 	if (!args[1])
 	{
 		print_export(myenv->list_env);

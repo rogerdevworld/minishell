@@ -57,7 +57,9 @@ t_minishell		*init_minishell(char **envp, t_token *tokens, t_command *cmd);
 // -- main loop -- //
 void			main_loop(char **envp);
 void			ft_wildcards(char ***args);
-
+// -- free -- //
+void	free_tokens(t_token *tokens);
+void	free_command_list(t_command *cmd);
 // -- exit.h -- //
 void			ft_exit(char *msg);
 

@@ -33,16 +33,60 @@ void	main_loop(char **envp)
 			free(line);
 			rl_free_line_state();
 			rl_clear_history();
-			// break ;
+			break ;
 		}
 		tokens = lexer(line);
 		cmd = parse_tokens(tokens, envp);
 		// print_tokens(tokens);
 		// print_command_list(cmd);
 		ft_check_executor(cmd, envp, myenv);
+		free_tokens(tokens);
+		free_command_list(cmd);
 		free(line);
 	}
 	exit(0);
+}
+
+void	free_command_list(t_command *cmd)
+{
+	int			i;
+	t_command	*tmp;
+
+	while (cmd)
+	{
+		tmp = cmd->next;
+		if (cmd->args)
+		{
+			i = 0;
+			while (cmd->args[i])
+			{
+				free(cmd->args[i]);
+				i++;
+			}
+			free(cmd->args);
+		}
+		if (cmd->path)
+			free(cmd->path);
+		if (cmd->limiter)
+			free(cmd->limiter);
+
+		free(cmd);
+		cmd = tmp;
+	}
+}
+
+void	free_tokens(t_token *tokens)
+{
+	t_token	*tmp;
+
+	while (tokens)
+	{
+		tmp = tokens->next;
+		if (tokens->value)
+			free(tokens->value);
+		free(tokens);
+		tokens = tmp;
+	}
 }
 
 // -- structuracion del codigo para el main -- //

@@ -6,7 +6,7 @@
 /*   By: xviladri <xviladri@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 12:43:57 by xviladri          #+#    #+#             */
-/*   Updated: 2025/04/22 12:41:23 by xviladri         ###   ########.fr       */
+/*   Updated: 2025/04/22 20:24:20 by xviladri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../../include/minishell.h"
@@ -62,18 +62,39 @@ t_command	*parse_tokens(t_token *tokens, char **envp)
 	t_command	*current;
 	int			i;
 	char		*clean_arg;
-	
+	t_token		*prev;
+
 	(void)envp;
+
+	if (!tokens)
+		return (NULL);
+	if (tokens->type == TOKEN_OPERATOR)//caso 1. si primer argum (token) es un operador (&& o ||).
+	{
+		ft_exit("syntax error near unexpected token");
+		return (NULL);
+	}
 	cmds = init_command();
 	if (!cmds)
 		return (NULL);
 	current = cmds;
 	i = 0;
+	prev = NULL;
+
 	while (tokens)
 	{
 		// -- falta agregar caso de si "argumento es el primer parametro no aceptar",
 		//	NO TIENE QUE HACER \n --//
-		if ((tokens->type == TOKEN_COMMAND) || (tokens->type == TOKEN_ARGUMENT))
+		if (tokens->type == TOKEN_OPERATOR && prev && prev->type == TOKEN_OPERATOR)
+		{
+			ft_exit("syntax error near unexpected token");
+			return (NULL);
+		}
+		else if (tokens->type == TOKEN_OPERATOR && !tokens->next)
+		{
+			ft_exit("syntax error near unexpected token");
+			return (NULL);
+		}
+		else if ((tokens->type == TOKEN_COMMAND) || (tokens->type == TOKEN_ARGUMENT))
 		{
 			//printf("TOKEN: %s (tipo %d)\n", tokens->value, tokens->type);
 			//printf("ARG[%d]: %s\n", i, current->args[i]);
@@ -86,16 +107,23 @@ t_command	*parse_tokens(t_token *tokens, char **envp)
 			i++;
 		}
 		else if (tokens->type == TOKEN_REDIRECTION)
+		{
 			handle_redirect(current, &tokens);
+			prev = tokens;
+			continue ;
+		}
 		else if (tokens->type == TOKEN_OPERATOR)
 		{
 			// -- estoy haciendo un arbol de ejecucion para ver grupo de comandso orden etc --
 				//
 			current->operator= resolve_operator(tokens->value);
 			current->next = init_command();
+			if (!current->next)
+				return (NULL);
 			current = current->next;
 			i = 0;
 		}
+		prev = tokens;
 		tokens = tokens->next;
 	}
 	return (cmds);

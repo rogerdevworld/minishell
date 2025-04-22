@@ -6,7 +6,7 @@
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 13:05:47 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/04/01 13:05:50 by rmarrero         ###   ########.fr       */
+/*   Updated: 2025/04/22 20:30:32 by xviladri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../include/minishell.h"
@@ -92,7 +92,6 @@ void	update_env_array(t_myenv *myenv)
 			count++;
 		tmp = tmp->next;
 	}
-
 	if (myenv->env)
 		free_env_array(myenv->env);
 	myenv->env = malloc(sizeof(char *) * (count + 1));
