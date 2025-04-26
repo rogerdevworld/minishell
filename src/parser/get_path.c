@@ -40,33 +40,6 @@ char	*get_path(char *cmd, char **env)
 	return (ft_strdup(cmd));
 }
 
-/*char	*remove_quotes(const char *str)
-{
-	int		i = 0;
-	int		j = 0;
-	char	quote = 0;
-	char	*res;
-
-	if (!str)
-		return (NULL);
-
-	res = malloc(ft_strlen(str) + 1);
-	if (!res)
-		return (NULL);
-
-	while (str[i])
-	{
-		if ((str[i] == '\'' || str[i] == '"') && !quote)
-			quote = str[i];
-		else if (str[i] == quote)
-			quote = 0;
-		else
-			res[j++] = str[i];
-		i++;
-	}
-	res[j] = '\0';
-	return (res);
-}*/
 char	*remove_quotes(char *str)
 {
 	size_t	len;

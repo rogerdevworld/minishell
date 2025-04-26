@@ -109,6 +109,8 @@ t_command	*parse_tokens(t_token *tokens, char **envp)
 		else if (tokens->type == TOKEN_REDIRECTION)
 		{
 			handle_redirect(current, &tokens);
+			if (tokens)
+				tokens = tokens->next;
 			prev = tokens;
 			continue ;
 		}
