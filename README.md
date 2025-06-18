@@ -59,6 +59,13 @@
 18. Ejecución de comandos internos (builtins)  
     **Explicación**: Los comandos internos como `cd`, `exit`, `echo`, `pwd`, etc., deben ejecutarse internamente sin buscar un ejecutable en el PATH.
 
+19. cat -e | cat -e | cat -e (builtins)  
+    **Explicación**: deberia ser 3 espaciso \n saltos de lineas
+    
+20. echo -e (builtins)  
+    **Explicación**: hay cosas que ver en el builtings cada "\" deberia ser una linea y los | cat -e igal deberian salir en nuevas lineas  
+
+
 ## 🔧 Organización del Proyecto
 
 ### 📂 Estructura de Archivos
