@@ -7,6 +7,8 @@
 
 ### 📂 Estructura de Archivos
 
+
+
 ```
 📁 minishell/
 │── 📄 Makefile
