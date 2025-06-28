@@ -103,8 +103,8 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	// -- inicializacion de las funciones -- //
 	// -- senales -- //
-	//signal(SIGINT, sigint_handler);
-	//signal(SIGQUIT, ft_sigquit);
+	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, ft_sigquit);
 	// -- main loop -- //
 	main_loop(envp);
 	return (0);
