@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "../../include/minishell.h"
-/*
+
 void	sigint_handler(int signum)
 {
 	(void)signum;
@@ -23,4 +23,5 @@ void	sigint_handler(int signum)
 void	ft_sigquit(int sig)
 {
     sig = sig;
-}*/
+    write(1, "Quit (core dumped)\n", 20);
+}

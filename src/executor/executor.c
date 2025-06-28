@@ -11,6 +11,122 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
+/**
+ * con este cambio(se ambio la funcion ft_check_executor) funciona para el caso de 
+ * cat -e | cat -e | cat -e | ls, el problema es que cuando se ejecuta lo siguiente
+ * cat -e | cfada | cat -e | ls deberia imprimir el ls y luego un command not found
+ * pero solo imprime el ls y salta los espacios que necesite 
+ * en cuanto al comportamiento de signals cuando se esta dentro del cat -e | cat -e | cat -e | ls,
+ * y se esta en blanco esperando el enter, si presionamos Ctrl + \ deberia solo salir
+ * pero en este caso sale e imprime el mensaje "quit core dunped" asi que pendiente a gestionar
+ */
+
+void	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)
+{
+	t_executor	ex;
+	int			pipefd[2];
+	pid_t		pids[1024]; // Máximo número de comandos
+	int			i = 0;
+
+	ex.prev_fd = -1;
+	ex.envp = envp;
+	ex.myenv = myenv;
+
+	while (cmd)
+	{
+		if (cmd->limiter)
+			ft_here_doc(cmd->limiter);
+
+		if (!cmd->args || !cmd->args[0])
+		{
+			cmd = cmd->next;
+			continue;
+		}
+
+		ex.builtin_id = get_builtin_cmd(cmd->args[0]);
+
+		// Crear pipe si el comando actual se conecta con otro por pipe
+		if (cmd->operator == PIPE)
+		{
+			if (pipe(pipefd) == -1)
+				ft_exit("pipe failed");
+		}
+
+		ex.pid = fork();
+		if (ex.pid == -1)
+			ft_exit("fork failed");
+
+		if (ex.pid == 0) // child
+		{
+			if (cmd->input_file != -1)
+			{
+				dup2(cmd->input_file, STDIN_FILENO);
+				close(cmd->input_file);
+			}
+			else if (ex.prev_fd != -1)
+			{
+				dup2(ex.prev_fd, STDIN_FILENO);
+				close(ex.prev_fd);
+			}
+
+			if (cmd->output_file != -1)
+			{
+				dup2(cmd->output_file, STDOUT_FILENO);
+				close(cmd->output_file);
+			}
+			else if (cmd->operator == PIPE)
+			{
+				close(pipefd[0]);
+				dup2(pipefd[1], STDOUT_FILENO);
+				close(pipefd[1]);
+			}
+
+			if (ex.prev_fd != -1)
+				close(ex.prev_fd);
+			if (cmd->operator == PIPE)
+				close(pipefd[0]);
+
+			if (ex.builtin_id != -1)
+				execute_builtin(ex.builtin_id, cmd->args, envp, myenv);
+			else
+			{
+				char *path = (cmd->args[0][0] == '/' || cmd->args[0][0] == '.')
+					? ft_strdup(cmd->args[0])
+					: get_path(cmd->args[0], envp);
+				if (!path || access(path, X_OK) != 0)
+				{
+					ft_printf("minishell: %s: command not found\n", cmd->args[0]);
+					exit(127);
+				}
+				execve(path, cmd->args, myenv->env);
+				perror("execve");
+				exit(1);
+			}
+			exit(0);
+		}
+		else // parent
+		{
+			pids[i++] = ex.pid;
+			if (ex.prev_fd != -1)
+				close(ex.prev_fd);
+			if (cmd->operator == PIPE)
+			{
+				close(pipefd[1]);
+				ex.prev_fd = pipefd[0];
+			}
+			else
+			{
+				ex.prev_fd = -1;
+			}
+		}
+		cmd = cmd->next;
+	}
+
+	// Esperamos todos los procesos
+	while (i--)
+		waitpid(pids[i], NULL, 0);
+}
+/*
 void	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)
 {
 	t_executor	ex;
@@ -85,7 +201,7 @@ void	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)
 		cmd = cmd->next;
 	}
 }
-
+*/
 // -- function to execute a command -- //
 // --  de momento esta funcion esta fuera pero la dejare para comandos unicos --
 
