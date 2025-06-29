@@ -6,7 +6,7 @@
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 17:36:11 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/06/29 17:42:48 by xviladri         ###   ########.fr       */
+/*   Updated: 2025/06/29 18:25:58 by xviladri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef MINISHELL_H
@@ -53,7 +53,7 @@ typedef struct s_minishell
 }				t_minishell;
 
 t_minishell		*init_minishell(char **envp, t_token *tokens, t_command *cmd);
-
+int				ft_open(char *file, int mode);
 // -- main loop -- //
 void			process_line(char *line, char **envp, t_myenv *myenv,
 					t_token *tokens);
