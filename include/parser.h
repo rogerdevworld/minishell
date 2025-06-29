@@ -6,7 +6,7 @@
 /*   By: xviladri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:56:13 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/06/28 18:36:00 by xviladri         ###   ########.fr       */
+/*   Updated: 2025/06/29 14:49:21 by xviladri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef PARSER_H
@@ -37,7 +37,8 @@ typedef struct s_command
 t_command				*init_command(void);
 void					handle_redirect(t_command *cmd, t_token **tokens);
 static int				check_syntax(t_token *tokens, t_token *prev);
-void					process_token(t_token **tokens, t_command *current, int *i, char **envp);
+void					process_token(t_token **tokens, t_command *current,
+							int *i, char **envp);
 t_command				*parse_tokens(t_token *tokens, char **envp);
 // -- get_path.c -- //
 char					*remove_quotes(char *str);
