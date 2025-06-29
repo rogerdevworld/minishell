@@ -45,19 +45,47 @@ void	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)
 
 		ex.builtin_id = get_builtin_cmd(cmd->args[0]);
 
+		// Ejecutar built-in directamente si no está en un pipeline
+		if (ex.builtin_id != -1 && cmd->operator != PIPE && ex.prev_fd == -1)
+		{
+			int saved_stdin = dup(STDIN_FILENO);
+			int saved_stdout = dup(STDOUT_FILENO);
+
+			if (cmd->input_file != -1)
+			{
+				dup2(cmd->input_file, STDIN_FILENO);
+				close(cmd->input_file);
+			}
+			if (cmd->output_file != -1)
+			{
+				dup2(cmd->output_file, STDOUT_FILENO);
+				close(cmd->output_file);
+			}
+
+			execute_builtin(ex.builtin_id, cmd->args, envp, myenv);
+
+			dup2(saved_stdin, STDIN_FILENO);
+			dup2(saved_stdout, STDOUT_FILENO);
+			close(saved_stdin);
+			close(saved_stdout);
+
+			cmd = cmd->next;
+			continue;
+		}
+
 		// Crear pipe si el comando actual se conecta con otro por pipe
 		if (cmd->operator == PIPE)
 		{
 			if (pipe(pipefd) == -1)
 				ft_exit("pipe failed");
 		}
-
+		
 		ex.pid = fork();
 		if (ex.pid == -1)
 			ft_exit("fork failed");
-
 		if (ex.pid == 0) // child
 		{
+			//entradas
 			if (cmd->input_file != -1)
 			{
 				dup2(cmd->input_file, STDIN_FILENO);
@@ -68,7 +96,7 @@ void	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)
 				dup2(ex.prev_fd, STDIN_FILENO);
 				close(ex.prev_fd);
 			}
-
+			//salidas
 			if (cmd->output_file != -1)
 			{
 				dup2(cmd->output_file, STDOUT_FILENO);
@@ -80,29 +108,37 @@ void	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)
 				dup2(pipefd[1], STDOUT_FILENO);
 				close(pipefd[1]);
 			}
-
+			//cierre de fds heredados
 			if (ex.prev_fd != -1)
 				close(ex.prev_fd);
 			if (cmd->operator == PIPE)
 				close(pipefd[0]);
 
 			if (ex.builtin_id != -1)
+			{
 				execute_builtin(ex.builtin_id, cmd->args, envp, myenv);
+				exit (0);
+			}
 			else
 			{
-				char *path = (cmd->args[0][0] == '/' || cmd->args[0][0] == '.')
-					? ft_strdup(cmd->args[0])
-					: get_path(cmd->args[0], envp);
+				char *path = NULL;
+
+				if (cmd->args[0][0] == '/' || cmd->args[0][0] == '.')
+					path = ft_strdup(cmd->args[0]);
+				else
+					path = get_path(cmd->args[0], envp);
 				if (!path || access(path, X_OK) != 0)
 				{
-					ft_printf("minishell: %s: command not found\n", cmd->args[0]);
+					//ft_printf("minishell: %s: command not found\n", cmd->args[0]);
+					write(2, "minishell: command not found\n", 30);
+					if (path)
+						free(path);
 					exit(127);
 				}
 				execve(path, cmd->args, myenv->env);
 				perror("execve");
-				exit(1);
+				exit(127);
 			}
-			exit(0);
 		}
 		else // parent
 		{
@@ -115,9 +151,7 @@ void	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)
 				ex.prev_fd = pipefd[0];
 			}
 			else
-			{
 				ex.prev_fd = -1;
-			}
 		}
 		cmd = cmd->next;
 	}
@@ -126,6 +160,7 @@ void	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)
 	while (i--)
 		waitpid(pids[i], NULL, 0);
 }
+
 /*
 void	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)
 {
