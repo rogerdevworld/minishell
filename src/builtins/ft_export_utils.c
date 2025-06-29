@@ -6,7 +6,7 @@
 /*   By: xviladri <xviladri@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 00:25:36 by xviladri          #+#    #+#             */
-/*   Updated: 2025/04/10 00:27:52 by xviladri         ###   ########.fr       */
+/*   Updated: 2025/06/29 17:57:02 by xviladri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../include/minishell.h"
@@ -67,4 +67,37 @@ void	sort_env_array(t_env **array)
 		}
 		i++;
 	}
+}
+
+t_env	*find_env_var(t_env *env, const char *key)
+{
+	while (env)
+	{
+		if (ft_strcmp(env->key, key) == 0)
+			return (env);
+		env = env->next;
+	}
+	return (NULL);
+}
+
+void	print_export(t_env *env)
+{
+	t_env	**array;
+	int		i;
+
+	array = env_to_array(env);
+	if (!array)
+		return ;
+	sort_env_array(array);
+	i = 0;
+	while (array[i])
+	{
+		if (array[i]->content)
+			ft_printf("declare -x %s=\"%s\"\n",
+				array[i]->key, array[i]->content);
+		else
+			ft_printf("declare -x %s\n", array[i]->key);
+		i++;
+	}
+	free(array);
 }
