@@ -6,7 +6,7 @@
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 13:05:47 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/04/03 13:37:25 by rmarrero         ###   ########.fr       */
+/*   Updated: 2025/06/29 18:33:04 by xviladri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../../include/minishell.h"
@@ -63,7 +63,6 @@ char	*path_terminal(void)
 		i++;
 	if (i <= 2)
 	{
-		// reconstruir el path original con /
 		j = 0;
 		final = ft_strdup(" /");
 		while (dirs[j])
@@ -82,7 +81,6 @@ char	*path_terminal(void)
 	}
 	else
 	{
-		// mostrar solo los dos últimos directorios
 		tmp = ft_strjoin("/", dirs[i - 2]);
 		last = ft_strjoin(tmp, "/");
 		free(tmp);
@@ -114,7 +112,9 @@ char	*get_user(char **envp)
 char	*get_computer_name(void)
 {
 	static char	hostname[1024];
-	char *str = malloc(8);
+	char		*str;
+
+	str = malloc(8);
 	if (gethostname(hostname, sizeof(hostname)) != 0)
 	{
 		return ("Desconocido");
