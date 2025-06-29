@@ -6,16 +6,32 @@
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 13:05:47 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/04/01 13:05:50 by rmarrero         ###   ########.fr       */
+/*   Updated: 2025/06/29 17:28:44 by xviladri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../include/minishell.h"
+
+void	print_argument(char *arg, t_env *env)
+{
+	char	*expanded;
+
+	if (arg[0] == '$')
+	{
+		expanded = ft_echo_expand(arg + 1, env);
+		if (expanded)
+		{
+			ft_printf("%s", expanded);
+			free(expanded);
+		}
+	}
+	else
+		ft_printf("%s", arg);
+}
 
 void	ft_echo(char **args, t_env *env)
 {
 	int		i;
 	int		newline;
-	char	*expanded;
 
 	i = 1;
 	newline = 1;
@@ -26,17 +42,7 @@ void	ft_echo(char **args, t_env *env)
 	}
 	while (args[i])
 	{
-		if (args[i][0] == '$') // variable a expandir
-		{
-			expanded = ft_echo_expand(args[i] + 1, env); // quitar el '$'
-			if (expanded)
-			{
-				ft_printf("%s", expanded);
-				free(expanded);
-			}
-		}
-		else
-			ft_printf("%s", args[i]);
+		print_argument(args[i], env);
 		if (args[i + 1])
 			write(1, " ", 1);
 		i++;

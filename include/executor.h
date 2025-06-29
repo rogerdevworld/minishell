@@ -6,7 +6,7 @@
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:56:13 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/04/09 21:47:24 by xviladri         ###   ########.fr       */
+/*   Updated: 2025/06/29 17:17:11 by xviladri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef EXECUTOR_H
@@ -34,6 +34,6 @@ void	child_process(t_command *cmd, t_executor *ex);
 void	parent_process(t_command *cmd, t_executor *ex);
 void	redirections(t_command *cmd, int *saved_stdin, int *saved_stdout);
 void	restore_redirections(int saved_stdin, int saved_stdout);
-void print_args(char **args);
+void	print_args(char **args);
 
 #endif

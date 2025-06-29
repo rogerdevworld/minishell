@@ -6,28 +6,10 @@
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 13:05:47 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/04/09 21:37:24 by xviladri         ###   ########.fr       */
+/*   Updated: 2025/06/29 17:27:36 by xviladri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../../include/minishell.h"
-
-// --- this functions is internal execve() -- xenia: para q sirve esta funcion?? No es como la de ft_check_executor??//
-/*void	built(t_command *cmd, char **envp)
-{
-	int	i;
-
-	envp = envp;
-	while (cmd)
-	{
-		i = 0;
-		if (get_builtin_cmd(cmd->args[i]))
-		{
-			execute_builtin(get_builtin_cmd(cmd->args[i]), cmd->args[i + 1], envp);
-			i++;
-		}
-		cmd = cmd->next;
-	}
-}*/
 
 int	get_builtin_cmd(char *cmd)
 {

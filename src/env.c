@@ -1,11 +1,12 @@
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: xviladri <xviladri@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/01 13:05:47 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/04/09 23:48:01 by xviladri         ###   ########.fr       */
+/*   Created: 2025/06/29 16:07:44 by xviladri          #+#    #+#             */
+/*   Updated: 2025/06/29 16:57:14 by xviladri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../include/minishell.h"
@@ -64,25 +65,7 @@ void	ft_env(t_env **env_list, char **envp)
 		i++;
 	}
 }
-/*
-// Agrega un nuevo par key=value a la lista de entorno
-void ft_env_add(t_env **env_list, const char *key, const char *value)
-{
-    t_env *new_node;
-    
-    new_node = ft_env_new(key, value);
-    if (!new_node)
-        return ;
-    if (!*env_list)
-    {
-        *env_list = new_node;
-        return ;
-    }
-    t_env *tmp = *env_list;
-    while (tmp->next)
-        tmp = tmp->next;
-    tmp->next = new_node;
-}*/
+
 void	print_env(t_myenv *myenv)
 {
 	t_env	*tmp;
@@ -90,7 +73,7 @@ void	print_env(t_myenv *myenv)
 	if (!myenv || !myenv->list_env)
 		return ;
 	tmp = myenv->list_env;
-    ft_printf("local env\n");
+	ft_printf("local env\n");
 	while (tmp)
 	{
 		if (tmp->content)
@@ -99,64 +82,19 @@ void	print_env(t_myenv *myenv)
 	}
 }
 
-t_myenv	*ft_myenv(char **envp)
-{
-	t_myenv	*myenv;
-
-	myenv = malloc(sizeof(t_myenv));
-	if (!myenv)
-		return (NULL);
-	myenv->env = NULL;
-	myenv->env = NULL;
-	ft_env(&myenv->list_env, envp);
-	return (myenv);
-}
-
-void	free_myenv(t_myenv *myenv)
-{
-	if (!myenv)
-		return ;
-	free_env_list(myenv->list_env);
-	free_env_array(myenv->env);
-	free(myenv);
-}
-
-
-void	free_env_list(t_env *env)
-{
-	t_env	*tmp;
-
-	while (env)
-	{
-		tmp = env->next;
-		free(env->key);
-		free(env->content);
-		free(env);
-		env = tmp;
-	}
-}
-void	free_env_array(char **env_array)
-{
-	int	i = 0;
-
-	if (!env_array)
-		return ;
-	while (env_array[i])
-		free(env_array[i++]);
-	free(env_array);
-}
-
 void	ft_sort_export(t_env *env)
 {
-	t_env *ini = env;
+	t_env		*ini;
+	char		*tmp;
 
+	ini = env;
 	if (!env)
 		return ;
 	while (env)
 	{
 		if (ft_strcmp(env->key, env->next->key) < 0)
 		{
-			char *tmp = env->key;
+			tmp = env->key;
 			env->key = env->next->key;
 			env->next->key = tmp;
 			env = ini;

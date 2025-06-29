@@ -6,24 +6,35 @@
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 21:49:28 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/04/22 12:40:48 by xviladri         ###   ########.fr       */
+/*   Updated: 2025/06/29 17:35:00 by xviladri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../include/minishell.h"
+
+void	process_line(char *line, char **envp, t_myenv *myenv, t_token *tokens)
+{
+	t_command	*cmd;	
+
+	tokens = lexer(line);
+	cmd = parse_tokens(tokens, envp);
+	ft_check_executor(cmd, envp, myenv);
+	free_tokens(tokens);
+	free_command_list(cmd);
+	free(line);
+}
 
 // -- main loop for minishell -- //
 void	main_loop(char **envp)
 {
 	char		*line;
-	t_token		*tokens;
-	t_command	*cmd;
 	t_myenv		*myenv;
+	t_token		*tokens;
 
 	tokens = NULL;
 	myenv = ft_myenv(envp);
 	while (1)
 	{
-		line = readline(meta_path(envp)); //"text> "
+		line = readline(meta_path(envp));
 		if (!line)
 			break ;
 		if (*line)
@@ -35,14 +46,7 @@ void	main_loop(char **envp)
 			rl_clear_history();
 			break ;
 		}
-		tokens = lexer(line);
-		cmd = parse_tokens(tokens, envp);
-		// print_tokens(tokens);
-		// print_command_list(cmd);
-		ft_check_executor(cmd, envp, myenv);
-		free_tokens(tokens);
-		free_command_list(cmd);
-		free(line);
+		process_line(line, envp, myenv, tokens);
 	}
 	exit(0);
 }
@@ -69,7 +73,6 @@ void	free_command_list(t_command *cmd)
 			free(cmd->path);
 		if (cmd->limiter)
 			free(cmd->limiter);
-
 		free(cmd);
 		cmd = tmp;
 	}
@@ -88,7 +91,6 @@ void	free_tokens(t_token *tokens)
 		tokens = tmp;
 	}
 }
-
 // -- structuracion del codigo para el main -- //
 /*
 	1. inicializacion de las structs para el shell
@@ -97,21 +99,15 @@ void	free_tokens(t_token *tokens)
 	3. bucle main
 	4. free
 */
+
 int	main(int argc, char **argv, char **envp)
 {
 	(void)argc;
 	(void)argv;
-	// -- inicializacion de las funciones -- //
-	// -- senales -- //
-	//signal(SIGINT, sigint_handler);
-	//signal(SIGQUIT, ft_sigquit);
-	// -- main loop -- //
 	main_loop(envp);
 	return (0);
 }
-
-// -- commad for test -- //
-/*
+/*// -- commad for test -- //
 ls -la > text && cat -e text && echo "holo world" > new_text && cat text
 && echo hola && cat < new_text || ls -la > text && wc - l text > text_c
 && cat text*
@@ -141,4 +137,4 @@ ls -la > text && cat -e text && echo "holo world" > new_text && cat text
 // -- t_bonus 2. rigth pwd, left cat -e
 // -- -- t_cmd 2. cat -e
 // -- t_bonus 3. rigth
-// -- -- t_cmd 3. cat -e
+// -- -- t_cmd 3. cat -e*/

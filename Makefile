@@ -6,7 +6,7 @@
 #    By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 12:58:52 by rmarrero          #+#    #+#              #
-#    Updated: 2025/06/28 19:28:45 by xviladri         ###   ########.fr        #
+#    Updated: 2025/06/29 17:40:25 by xviladri         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 # --- Mandatory --- #
@@ -26,7 +26,7 @@ SRCS =	$(SRC_DIR)minishell.c $(SRC_DIR)minishell/init.c $(SRC_DIR)exit.c \
 	$(SRC_DIR)signals/signals.c \
 	$(SRC_DIR)design/path_in_shell.c \
 	$(SRC_DIR)here_doc.c \
-	$(SRC_DIR)env.c \
+	$(SRC_DIR)env.c $(SRC_DIR)env_free.c \
 	$(SRC_DIR)wildcards.c
 
 OBJS = $(SRCS:$(SRC_DIR)%.c=$(OBJ_DIR)/%.o)
