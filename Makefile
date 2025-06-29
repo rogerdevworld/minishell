@@ -25,7 +25,7 @@ SRCS =	$(SRC_DIR)minishell.c $(SRC_DIR)minishell/init.c $(SRC_DIR)exit.c \
 	$(SRC_DIR)executor/executor.c \
 	$(SRC_DIR)signals/signals.c \
 	$(SRC_DIR)design/path_in_shell.c \
-	$(SRC_DIR)redirections/redirections.c $(SRC_DIR)redirections/ft_open.c \
+	$(SRC_DIR)redirections/ft_open.c \
 	$(SRC_DIR)here_doc.c \
 	$(SRC_DIR)env.c \
 	$(SRC_DIR)wildcards.c
