@@ -144,8 +144,4 @@ int					ft_strcmp(const char *s1, const char *s2);
 
 // -- gets environment variable value -- //
 char				*ft_getenv(char *name, char **env);
-
-// --  ft_realloc -- // 
-void	*ft_realloc(void *ptr, size_t new_size);
-
 #endif
