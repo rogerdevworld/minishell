@@ -12,9 +12,6 @@
 #ifndef REDIRECTIONS_H
 # define REDIRECTIONS_H
 
-// -- redirections.h -- //
-int	ft_open(char *file, int mode);
-
 // -- here doc's -- //
 void	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv);
 void	ft_here_doc(char *delimiter);

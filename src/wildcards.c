@@ -6,7 +6,7 @@
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 21:49:28 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/02/22 21:49:33 by rmarrero         ###   ########.fr       */
+/*   Updated: 2025/06/28 17:53:54 by xviladri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../include/minishell.h"
@@ -64,11 +64,11 @@ const char	*extract_pattern(const char *pattern)
 
 void	ft_wildcards(char ***args)
 {
-	char **new_args = NULL;
-	int arg_count = 0;
-	DIR *dir;
-	struct dirent *entry;
-	int j = 0;
+	char	**new_args = NULL;
+	int		arg_count = 0;
+	DIR		*dir;
+	struct	dirent *entry;
+	int		j = 0;
 
 	while ((*args)[j])
 	{
@@ -76,7 +76,6 @@ void	ft_wildcards(char ***args)
 		{
 			char *path = extract_path((*args)[j]);
 			const char *pat = extract_pattern((*args)[j]);
-			// ft_printf("path: %s \npat: %s\n", path, pat);
 			dir = opendir(path);
 			if (!dir)
 			{
