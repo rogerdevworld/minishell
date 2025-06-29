@@ -19,6 +19,6 @@ void	sigint_handler(int signum)
 
 void	ft_sigquit(int sig)
 {
-	sig = sig;
+	(void)sig;
 	write(1, "Quit (core dumped)\n", 20);
 }

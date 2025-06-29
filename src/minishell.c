@@ -34,7 +34,7 @@ void	main_loop(char **envp)
 	myenv = ft_myenv(envp);
 	while (1)
 	{
-		line = readline(meta_path(envp));
+		line = readline("minishell >");
 		if (!line)
 			break ;
 		if (*line)

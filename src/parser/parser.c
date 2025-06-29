@@ -93,9 +93,9 @@ t_command	*parse_tokens(t_token *tokens, char **envp)
 	t_token		*prev;
 
 	(void)envp;
+	cmds = init_command();
 	if (!tokens || tokens-> type == TOKEN_OPERATOR || !cmds)
 		return (ft_exit("syntax error near unexpected token"), NULL);
-	cmds = init_command();
 	current = cmds;
 	i = 0;
 	prev = NULL;

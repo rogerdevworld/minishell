@@ -22,18 +22,23 @@ typedef struct s_executor
 	int		saved_stdout;
 	t_myenv	*myenv;
 	char	**envp;
-}	t_executor;
+}			t_executor;
 
 // executor.h o en minishell.h
 
-void	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv);
-void	ft_exec_cmd(t_command *cmd, char **envp);
-void	ft_pipe_and_fork(t_command *cmd, char **env);
-pid_t	external_command(t_command *cmd, t_executor *ex);
-void	child_process(t_command *cmd, t_executor *ex);
-void	parent_process(t_command *cmd, t_executor *ex);
-void	redirections(t_command *cmd, int *saved_stdin, int *saved_stdout);
-void	restore_redirections(int saved_stdin, int saved_stdout);
-void	print_args(char **args);
+void		execute_command(t_command *cmd, t_executor *ex, pid_t *pids,
+				int *i);
+void		ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv);
+int			handle_builtin(t_command *cmd, t_executor *ex, char **envp,
+				t_myenv *myenv);
+void		execute_builtin_command(t_command *cmd, t_executor *ex, char **envp,
+				t_myenv *myenv);
+pid_t		external_command(t_command *cmd, t_executor *ex);
+void		child_process(t_command *cmd, t_executor *ex, int pipefd[2]);
+void		execute_external_command(t_command *cmd, t_executor *ex);
+void		ft_exec_cmd(t_command *cmd, char **envp);
+void		ft_pipe_and_fork(t_command *cmd, char **env);
+void		parent_process(t_command *cmd, t_executor *ex);
+void		print_args(char **args);
 
 #endif
