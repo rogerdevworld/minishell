@@ -23,7 +23,7 @@ void	main_loop(char **envp)
 	myenv = ft_myenv(envp);
 	while (1)
 	{
-		line = readline(meta_path(envp)); //"text> "
+		line = readline(meta_path(envp));
 		if (!line)
 			break ;
 		if (*line)
@@ -37,8 +37,6 @@ void	main_loop(char **envp)
 		}
 		tokens = lexer(line);
 		cmd = parse_tokens(tokens, envp);
-		// print_tokens(tokens);
-		// print_command_list(cmd);
 		ft_check_executor(cmd, envp, myenv);
 		free_tokens(tokens);
 		free_command_list(cmd);
@@ -69,7 +67,6 @@ void	free_command_list(t_command *cmd)
 			free(cmd->path);
 		if (cmd->limiter)
 			free(cmd->limiter);
-
 		free(cmd);
 		cmd = tmp;
 	}
@@ -90,55 +87,12 @@ void	free_tokens(t_token *tokens)
 }
 
 // -- structuracion del codigo para el main -- //
-/*
-	1. inicializacion de las structs para el shell
-		1.1 t_shell
-	2. prompt para el path in input
-	3. bucle main
-	4. free
-*/
 int	main(int argc, char **argv, char **envp)
 {
 	(void)argc;
 	(void)argv;
-	// -- inicializacion de las funciones -- //
-	// -- senales -- //
-	//signal(SIGINT, sigint_handler);
-	//signal(SIGQUIT, ft_sigquit);
-	// -- main loop -- //
+	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, ft_sigquit);
 	main_loop(envp);
 	return (0);
 }
-
-// -- commad for test -- //
-/*
-ls -la > text && cat -e text && echo "holo world" > new_text && cat text
-&& echo hola && cat < new_text || ls -la > text && wc - l text > text_c
-&& cat text*
-*/
-
-// valgrind --leak-check=full --show-leak-kinds=all ./minishell
-// valgrind --leak-check=full ./minishell
-
-// -- prompt inicial parser manejar "> < << | || &&"
-// -- pwd | cat -e | cat -e
-// -- ahora
-// -- t_cmd 1. pwd t_cmd 2. cat -e t_cmd 3. cat -e
-// -- flags | || &&
-
-// -- pipe
-// -- t_bonus 1. flag pipe
-// -- -- t_cmd 1. pwd
-// -- t_bonus 2. flag pipe
-// -- -- t_cmd 2. cat -e
-// -- t_bonus 3. flag pipe
-// -- -- t_cmd 3. cat -e
-
-// -- &&, || or (both)
-// -- pwd > text && cat -e text || pwd > text | cat -e text
-// -- t_bonus 1. && first element
-// -- -- t_cmd 1. pwd > text
-// -- t_bonus 2. rigth pwd, left cat -e
-// -- -- t_cmd 2. cat -e
-// -- t_bonus 3. rigth
-// -- -- t_cmd 3. cat -e
