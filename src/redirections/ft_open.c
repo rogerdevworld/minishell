@@ -24,4 +24,4 @@ int	ft_open(char *file, int mode)
 	else if (fd == -1)
 		ft_exit("Failed to open file");
 	return (fd);
-	}
+}
