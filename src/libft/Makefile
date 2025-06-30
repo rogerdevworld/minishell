@@ -6,7 +6,7 @@
 #    By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 12:58:52 by rmarrero          #+#    #+#              #
-#    Updated: 2025/02/19 16:29:30 by rmarrero         ###   ########.fr        #
+#    Updated: 2025/06/30 15:53:55 by rmarrero         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,7 @@ BOBJS = $(BSRC:.c=.o)
 # --- ft_printf functions --- #
 # --- get_next_line functions --- #
 # --- additional functions --- #
-ADDSRC = ft_sqrt.c ft_atol.c ft_fabs.c ft_atof.c ft_strcmp.c ft_getenv.c
+ADDSRC = ft_sqrt.c ft_atol.c ft_fabs.c ft_atof.c ft_strcmp.c ft_getenv.c ft_realloc.c
 ADDOBJS = $(ADDSRC:.c=.o)
 
 NAME = libft.a

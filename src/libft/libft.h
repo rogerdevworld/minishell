@@ -6,7 +6,7 @@
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 18:01:25 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/02/19 16:33:05 by rmarrero         ###   ########.fr       */
+/*   Updated: 2025/06/30 15:54:14 by rmarrero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef LIBFT_H
@@ -144,4 +144,6 @@ int					ft_strcmp(const char *s1, const char *s2);
 
 // -- gets environment variable value -- //
 char				*ft_getenv(char *name, char **env);
+void				*ft_realloc(void *ptr, size_t new_size);
+
 #endif
