@@ -34,11 +34,44 @@ void	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)
 
 	while (cmd)
 	{
-		if (cmd->limiter)
+		/*if (cmd->limiter)
 			ft_here_doc(cmd->limiter);
-
+		*/
+		/*if (!cmd->args || !cmd->args[0])
+		{
+			cmd = cmd->next;
+			continue;
+		}*/
+		//para el caso en el que comience << eof
+		/*
 		if (!cmd->args || !cmd->args[0])
 		{
+			if (cmd->limiter)
+			{
+				int tmp_fd = ft_here_doc(cmd->limiter);
+				close(tmp_fd);
+			}
+			cmd = cmd->next;
+			continue;
+		}*/
+		/*if ((!cmd->args || !cmd->args[0]) && cmd->limiter)
+		{
+			int tmp_fd = ft_here_doc(cmd->limiter);
+			close(tmp_fd);
+			cmd = cmd->next;
+			continue;
+		}*/
+		if (!cmd->args || !cmd->args[0])
+		{
+			/*write(2, "DEBUG: command sin args\n", 24);
+			if (cmd->limiter)
+			{
+				write(2, "DEBUG: heredoc en un command sin args\n", 38);
+				int tmp_fd = ft_here_doc(cmd->limiter);
+				close(tmp_fd);
+			}
+			cmd = cmd->next;
+			continue;*/
 			cmd = cmd->next;
 			continue;
 		}
@@ -91,6 +124,17 @@ void	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)
 				dup2(cmd->input_file, STDIN_FILENO);
 				close(cmd->input_file);
 			}
+			else if (cmd->limiter)
+			{
+				/*int heredoc_fd = ft_here_doc(cmd->limiter);
+				if (heredoc_fd < 0)
+				exit(1);
+				dup2(heredoc_fd, STDIN_FILENO);*/
+				//close(heredoc_fd);
+				int	heredoc_fd = ft_here_doc(cmd->limiter);
+				dup2(heredoc_fd, STDIN_FILENO);
+				close(heredoc_fd);
+			}
 			else if (ex.prev_fd != -1)
 			{
 				dup2(ex.prev_fd, STDIN_FILENO);
@@ -135,6 +179,9 @@ void	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)
 						free(path);
 					exit(127);
 				}
+				char dbg[64];
+				snprintf(dbg, sizeof(dbg), "DEBUG: stdin dup=%d\n", dup(STDIN_FILENO));
+				write(2, dbg, strlen(dbg));
 				execve(path, cmd->args, myenv->env);
 				perror("execve");
 				exit(127);

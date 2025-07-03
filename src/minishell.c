@@ -23,7 +23,8 @@ void	main_loop(char **envp)
 	myenv = ft_myenv(envp);
 	while (1)
 	{
-		line = readline(meta_path(envp)); //"text> "
+		//line = readline(meta_path(envp)); //el que te lee con rutas y todo
+		line = readline("minishell> "); //"text> "
 		if (!line)
 			break ;
 		if (*line)
@@ -37,8 +38,8 @@ void	main_loop(char **envp)
 		}
 		tokens = lexer(line);
 		cmd = parse_tokens(tokens, envp);
-		// print_tokens(tokens);
-		// print_command_list(cmd);
+		print_tokens(tokens);
+		print_command_list(cmd);
 		ft_check_executor(cmd, envp, myenv);
 		free_tokens(tokens);
 		free_command_list(cmd);

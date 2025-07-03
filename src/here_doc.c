@@ -11,6 +11,202 @@
 /* ************************************************************************** */
 #include "../include/minishell.h"
 
+/**
+ * Nuevo codigo respeteando las estructuras de t_command y reutilizando las funciones 
+ * pero con algunos cambios
+ */
+
+ int ft_here_doc(char *delimiter)
+{
+	int p_fd[2];
+	pid_t pid;
+
+	if (pipe(p_fd) == -1)
+	{
+		perror("pipe");
+		return (-1);
+	}
+
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork");
+		return (-1);
+	}
+
+	if (pid == 0)
+	{
+		// CHILD: write to p_fd[1]
+		close(p_fd[0]);
+		while (1)
+		{
+			write(1, "heredoc> ", 9);
+			char *line = get_next_line(STDIN_FILENO);
+			if (!line)
+				break;
+			if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0
+				&& (line[ft_strlen(delimiter)] == '\n' || line[ft_strlen(delimiter)] == '\0'))
+			{
+				free(line);
+				break;
+			}
+			write(p_fd[1], line, ft_strlen(line));
+			free(line);
+		}
+		close(p_fd[1]);
+		_exit(0);
+	}
+	else
+	{
+		// PARENT: read end
+		close(p_fd[1]);
+		waitpid(pid, NULL, 0);
+		return p_fd[0];
+	}
+}
+
+
+/*
+int ft_here_doc(char *delimiter)
+{
+	int p_fd[2];
+	pid_t pid;
+
+	if (pipe(p_fd) == -1)
+		ft_exit("Pipe creation failed");
+
+	pid = fork();
+	if (pid == -1)
+		ft_exit("Fork failed");
+
+	if (pid == 0)
+	{
+		// CHILD: write to p_fd[1]
+		close(p_fd[0]);
+		while (1)
+		{
+			write(1, "heredoc> ", 9);
+			char *line = get_next_line(STDIN_FILENO);
+			if (!line)
+				break;
+			// compare stripping newline
+			if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0
+				&& (line[ft_strlen(delimiter)] == '\n' || line[ft_strlen(delimiter)] == '\0'))
+			{
+				free(line);
+				break;
+			}
+			write(p_fd[1], line, ft_strlen(line));
+			free(line);
+		}
+		close(p_fd[1]);
+		_exit(0);
+	}
+	else
+	{
+		// PARENT: read end
+		close(p_fd[1]);
+		waitpid(pid, NULL, 0);
+		return p_fd[0];
+	}
+}
+
+*/
+
+/*
+int ft_here_doc(char *delimiter)
+{
+    int     p_fd[2];
+    pid_t   pid;
+
+    if (pipe(p_fd) == -1)
+        ft_exit("Pipe creation failed");
+    pid = fork();
+    if (pid == -1)
+        ft_exit("Fork failed");
+    if (pid == 0)
+    {
+        // child
+        char *line;
+        close(p_fd[0]);
+        while (1)
+        {
+            // Optional prompt:
+            // write(1, "heredoc> ", 9);
+            line = get_next_line(STDIN_FILENO);
+            if (!line)
+                break;
+            if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0 &&
+                line[ft_strlen(delimiter)] == '\n')
+            {
+                free(line);
+                break;
+            }
+            write(p_fd[1], line, ft_strlen(line));
+            free(line);
+        }
+        close(p_fd[1]);
+        _exit(0);
+    }
+    else
+    {
+        // parent
+        close(p_fd[1]);
+        waitpid(pid, NULL, 0);
+        return p_fd[0];
+    }
+}
+*/
+/*
+ void	ft_here_doc_child(char *delimiter, int *p_fd)
+{
+	char	*line;
+
+	close(p_fd[0]);
+	while (1)
+	{
+		//write(1, "pipex> ", 7);
+		line = get_next_line(STDIN_FILENO);
+		if (!line)
+			break;
+		if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0
+			&& line[ft_strlen(delimiter)] == '\n')
+		{
+			//ft_printf("sale");
+			free(line);
+			break ;
+		}
+		write(p_fd[1], line, ft_strlen(line));
+		free(line);
+	}
+	close(p_fd[1]);
+	_exit(0);
+}
+
+// -- main function to handle here_doc -- //
+int	ft_here_doc(char *delimiter)
+{
+	int		p_fd[2];
+	pid_t	pid;
+
+	if (pipe(p_fd) == -1)
+		ft_exit("Pipe creation failed");
+	pid = fork();
+	if (pid == -1)
+		ft_exit("Fork failed");
+	if (pid == 0)
+		ft_here_doc_child(delimiter, p_fd);
+	else
+	{
+		close(p_fd[1]);
+		//dup2(p_fd[0], STDIN_FILENO);
+		waitpid(pid, NULL, 0);
+		return p_fd[0];
+	}
+}*/
+/**
+ * Codigo anterior
+
 // -- aun hay problemas con las entras y salidas de los comandos -- /
 void	ft_here_doc_child(char *delimiter, int *p_fd)
 {
@@ -54,3 +250,4 @@ void	ft_here_doc(char *delimiter)
 		waitpid(pid, NULL, 0);
 	}
 }
+*/
