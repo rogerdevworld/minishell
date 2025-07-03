@@ -12,6 +12,10 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+
+// -- variable global signal -- //
+extern	int		g_signal;
+
 // -- internal libs -- //
 # include "../src/libft/libft.h"
 # include "env.h"
@@ -34,6 +38,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <sys/wait.h>
+# include <sys/ioctl.h>
 # include <unistd.h>
 
 // -- readline -- //

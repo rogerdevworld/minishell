@@ -69,6 +69,7 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 			if (pipe(pipefd) == -1)
 				ft_exit("pipe failed");
 		}
+		g_signal = S_CMD;
 		exec->pid = fork();
 		if (exec->pid == -1)
 			ft_exit("fork failed");
@@ -141,6 +142,7 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 		waitpid(pids[i], &(exec->status), 0);
 	if (i == 0)
 		return (last_builtin_result);
+	/*ASI FUNCIONA*/ 
 	if (WIFEXITED(exec->status))
 	{
 		if (minishell)
@@ -149,7 +151,24 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 			return (WEXITSTATUS(exec->status));
 	}
 	else
-		return (1);
+		return (0);
+
+	/**
+	 * cambio para integrar senales 
+	 
+	if (WIFEXITED(exec->status))
+	{
+		if (minishell)
+			return (minishell->exit = WEXITSTATUS(exec->status));
+		else 
+			return (WEXITSTATUS(exec->status));
+	}
+	else if (g_signal == S_SIGINT_CMD)
+		exit(130);
+	else
+		g_signal == S_BASE;
+		//return (1);*/
+
 }
 
 /*

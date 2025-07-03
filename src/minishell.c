@@ -26,10 +26,12 @@ void	main_loop(char **envp)
 	myenv = ft_myenv(envp);
 	while (1)
 	{
+		if (g_signal == S_SIGINT)
+			minishell->exit = 1;
 		line = readline(meta_path(envp)); //"text> "
 		if (!line)
 			break ;
-		if (*line)
+		if (*line)	
 			add_history(line);
 		if (ft_strncmp(line, "exit", 4) == 0)
 		{
@@ -49,16 +51,18 @@ void	main_loop(char **envp)
 		exec = init_exec(myenv);
 		minishell = init_minishell(myenv, ast_root, tokens, cmd, exec);
 		// Ejecutar con el AST o con cmd según cómo tengas implementado
-		int status  = ft_check_executor(minishell, exec, cmd, envp, myenv);
-		minishell->exit = status;
-		ft_printf("status executor: %i & estatus struct: %i\n", status, minishell->exit);
-
+		if (g_signal != S_CANCEL_EXEC)
+		{
+			int status  = ft_check_executor(minishell, exec, cmd, envp, myenv);
+			minishell->exit = status;
+			ft_printf("status executor: %i & estatus struct: %i\n", status, minishell->exit);
+		}
 		free_tokens(tokens);
 		free_command_list(cmd);
 		free_ast(ast_root);
 		free(line);
 	}
-	exit(0);
+	g_signal = S_BASE;
 }
 
 
@@ -119,9 +123,11 @@ int	main(int argc, char **argv, char **envp)
 
 	// -- inicializacion de las funciones -- //
 	// -- senales -- //
+	signal_init();
+	/*
 	signal(SIGINT, ft_sigint);
 	signal(SIGQUIT, ft_sigquit);
-
+	*/
 	// -- main loop -- //
 	main_loop(envp);
 	return (0);
