@@ -51,16 +51,17 @@ int	get_builtin_cmd(char *cmd)
 }
 
 // -- design -- //
-void	execute_builtin(int cmd, char **args, char **envp, t_myenv *myenv)
+int	execute_builtin(int cmd, char **args, char **envp, t_myenv *myenv)
 {
+	int status = 0;
 	if (cmd == CD)
-		ft_cd(args[1], envp);
+		status = ft_cd(args[1], envp);
 	else if (cmd == EXIT)
 		ft_exit_builtin();
 	else if (cmd == ECHO)
 		ft_echo(args, myenv->list_env);
 	else if (cmd == PWD)
-		pwd(envp);
+		status = pwd(envp);
 	else if (cmd == EXPORT)
 		ft_export(args, myenv);
 	else if (cmd == UNSET)
@@ -72,6 +73,6 @@ void	execute_builtin(int cmd, char **args, char **envp, t_myenv *myenv)
 		print_env(myenv);
 	else if (cmd == CLEAR)
 		clear();
-	else
-		ft_printf("not");
+	//ft_printf("buitings status: %i", status);
+	return (status);
 }

@@ -63,7 +63,8 @@ int	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)
 				close(cmd->output_file);
 			}
 
-			execute_builtin(ex.builtin_id, cmd->args, envp, myenv);
+			return (execute_builtin(ex.builtin_id, cmd->args, envp, myenv));
+			///ft_printf("paso\n");
 
 			dup2(saved_stdin, STDIN_FILENO);
 			dup2(saved_stdout, STDOUT_FILENO);
@@ -117,8 +118,7 @@ int	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)
 
 			if (ex.builtin_id != -1)
 			{
-				execute_builtin(ex.builtin_id, cmd->args, envp, myenv);
-				ft_printf("paso\n");
+				return (execute_builtin(ex.builtin_id, cmd->args, envp, myenv));
 				exit (ex.status);
 			}
 			else

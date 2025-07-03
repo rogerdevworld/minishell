@@ -14,21 +14,20 @@
 
 // -- internal libs -- //
 # include "../src/libft/libft.h"
+# include "env.h"
 # include "lexer.h"
 # include "parser.h"
-# include "syntax.h"
-# include "env.h"
 # include "builtins.h"
 # include "design.h"
 # include "executor.h"
-
 # include "redirections.h"
 # include "signals.h"
-# include "builtins.h"
+# include "syntax.h"
 
 // -- system.h -- //
 
 // -- system libs -- //
+# include <dirent.h>
 # include <dirent.h>
 # include <fcntl.h>
 # include <limits.h>
@@ -37,7 +36,6 @@
 # include <stdlib.h>
 # include <sys/wait.h>
 # include <unistd.h>
-#include <dirent.h>
 
 // -- readline -- //
 # include <readline/history.h>
@@ -48,19 +46,21 @@
 // -- internal strcts -- //
 typedef struct s_minishell
 {
-	char		**envp;
 	t_token		*tokens;
 	t_command	*cmd;
+	t_myenv		*env;
+	t_executor	*executor;
 }				t_minishell;
 
-t_minishell		*init_minishell(char **envp, t_token *tokens, t_command *cmd);
+t_minishell	*init_minishell(t_myenv *env, t_token *tokens, t_command *cmd,
+	t_executor *executor);
 
 // -- main loop -- //
 void			main_loop(char **envp);
 void			ft_wildcards(char ***args);
 // -- free -- //
-void	free_tokens(t_token *tokens);
-void	free_command_list(t_command *cmd);
+void			free_tokens(t_token *tokens);
+void			free_command_list(t_command *cmd);
 // -- exit.h -- //
 void			ft_exit(char *msg);
 

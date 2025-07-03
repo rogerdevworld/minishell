@@ -11,16 +11,19 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-t_minishell	*init_minishell(char **envp, t_token *tokens, t_command *cmd)
+t_minishell	*init_minishell(t_myenv *env, t_token *tokens, t_command *cmd,
+		t_executor *executor)
 {
 	t_minishell *minishell = malloc(sizeof(t_minishell));
-	if (!minishell || !envp || !tokens || !cmd)
+	if (!minishell || !env || !tokens || !cmd || !executor)
 	{
 		free(minishell);
 		return (NULL);
 	}
-	minishell->envp = envp;
+	minishell->env = env;
 	minishell->tokens = tokens;
 	minishell->cmd = cmd;
+	minishell->executor = executor;
 	return (minishell);
 }
+
