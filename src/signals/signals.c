@@ -11,10 +11,10 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-void	sigint_handler(int signum)
+void	ft_sigint(int signum)
 {
 	(void)signum;
-	write(1, "$\n", 2);
+	write(1, "minishell> \n", 2);
 }
 
 void	ft_sigquit(int sig)

@@ -27,6 +27,8 @@ enum
 	ENV
 };
 
+typedef struct s_minishell t_minishell;
+
 // -- internal to execve() -- //
 void	built(t_command *cmd, char **envp);
 int		get_builtin_cmd(char *cmd);
@@ -37,7 +39,11 @@ int	pwd(char **envp);
 void	clear(void);
 int		ft_cd(char *path, char **envp);
 void	ft_exit_builtin(void);
+
+// -- local cmd echo -- // 
 void	ft_echo(char **args, t_env *env);
+void	ft_exit_code(t_minishell *minishell);
+
 void	ft_export(char **args, t_myenv *myenv);
 
 void	print_export(t_env *env);

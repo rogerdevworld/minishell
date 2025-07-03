@@ -11,37 +11,37 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd, char **envp, t_myenv *myenv)
+int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
+		char **envp, t_myenv *myenv)
 {
-	int			pipefd[2];
-	int			i = 0;
-	int			saved_stdin;
-	int			saved_stdout;
-	char		*path;
-	pid_t		pids[1024]; // Máximo número de comandos
-	int			last_builtin_result = 0;
+	int		pipefd[2];
+	int		i;
+	int		saved_stdin;
+	int		saved_stdout;
+	char	*path;
+	int		last_builtin_result;
 
+	i = 0;
+	pid_t pids[1024]; // Máximo número de comandos
+	last_builtin_result = 0;
 	// Inicializar la estructura exec si no está inicializada
 	if (!exec)
 		exec = init_exec(myenv);
 	if (!exec)
 		return (1);
-
 	while (cmd)
 	{
 		if (cmd->limiter)
 			ft_here_doc(cmd->limiter);
-
 		if (!cmd->args || !cmd->args[0])
 		{
 			cmd = cmd->next;
 			continue ;
 		}
-
 		exec->builtin_id = get_builtin_cmd(cmd->args[0]);
-
 		// Ejecutar built-in directamente si no hay pipe
-		if (exec->builtin_id != -1 && cmd->operator != PIPE && exec->prev_fd == -1)
+		if (exec->builtin_id != -1 && cmd->operator!= PIPE && exec->prev_fd ==
+			- 1)
 		{
 			saved_stdin = dup(STDIN_FILENO);
 			saved_stdout = dup(STDOUT_FILENO);
@@ -55,7 +55,8 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd, 
 				dup2(cmd->output_file, STDOUT_FILENO);
 				close(cmd->output_file);
 			}
-			last_builtin_result = execute_builtin(exec->builtin_id, cmd->args, envp, myenv);
+			last_builtin_result = execute_builtin(exec->builtin_id, cmd->args,
+					envp, myenv);
 			dup2(saved_stdin, STDIN_FILENO);
 			dup2(saved_stdout, STDOUT_FILENO);
 			close(saved_stdin);
@@ -63,17 +64,14 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd, 
 			cmd = cmd->next;
 			continue ;
 		}
-
-		if (cmd->operator == PIPE)
+		if (cmd->operator== PIPE)
 		{
 			if (pipe(pipefd) == -1)
 				ft_exit("pipe failed");
 		}
-
 		exec->pid = fork();
 		if (exec->pid == -1)
 			ft_exit("fork failed");
-
 		if (exec->pid == 0) // Child
 		{
 			if (cmd->input_file != -1)
@@ -91,7 +89,7 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd, 
 				dup2(cmd->output_file, STDOUT_FILENO);
 				close(cmd->output_file);
 			}
-			else if (cmd->operator == PIPE)
+			else if (cmd->operator== PIPE)
 			{
 				close(pipefd[0]);
 				dup2(pipefd[1], STDOUT_FILENO);
@@ -99,11 +97,10 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd, 
 			}
 			if (exec->prev_fd != -1)
 				close(exec->prev_fd);
-			if (cmd->operator == PIPE)
+			if (cmd->operator== PIPE)
 				close(pipefd[0]);
 			if (exec->builtin_id != -1)
 				exit(execute_builtin(exec->builtin_id, cmd->args, envp, myenv));
-
 			path = NULL;
 			if (cmd->args[0][0] == '/' || cmd->args[0][0] == '.')
 				path = ft_strdup(cmd->args[0]);
@@ -113,18 +110,18 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd, 
 			{
 				write(2, "minishell: command not found\n", 30);
 				free(path);
-				exit(127);
+				exit(EXIT_CMD_NOT_FOUND);
 			}
 			execve(path, cmd->args, myenv->env);
 			perror("execve");
-			exit(127);
+			exit(EXIT_CMD_NOT_FOUND);
 		}
 		else // Parent
 		{
 			pids[i++] = exec->pid;
 			if (exec->prev_fd != -1)
 				close(exec->prev_fd);
-			if (cmd->operator == PIPE)
+			if (cmd->operator== PIPE)
 			{
 				close(pipefd[1]);
 				exec->prev_fd = pipefd[0];
@@ -134,17 +131,20 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd, 
 		}
 		cmd = cmd->next;
 	}
-
 	while (i--)
 		waitpid(pids[i], &(exec->status), 0);
 	if (i == 0)
 		return (last_builtin_result);
 	if (WIFEXITED(exec->status))
-		return (minishell->exit = WEXITSTATUS(exec->status), minishell->exit);
+	{
+		if (minishell)
+			return (minishell->exit = WEXITSTATUS(exec->status));
+		else
+			return (WEXITSTATUS(exec->status));
+	}
 	else
 		return (1);
 }
-
 
 /*
 void	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)

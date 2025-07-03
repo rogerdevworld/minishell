@@ -119,7 +119,7 @@ int	main(int argc, char **argv, char **envp)
 
 	// -- inicializacion de las funciones -- //
 	// -- senales -- //
-	signal(SIGINT, sigint_handler);
+	signal(SIGINT, ft_sigint);
 	signal(SIGQUIT, ft_sigquit);
 
 	// -- main loop -- //

@@ -23,7 +23,6 @@
 # include "redirections.h"
 # include "signals.h"
 # include "syntax.h"
-
 // -- system.h -- //
 
 // -- system libs -- //
@@ -41,8 +40,24 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 
-// -- minishell.h -- //
+// -- minishell exit code -- // 
+// Comando ejecutado con éxito
+#define EXIT_SUCCESS          0   
 
+// Errores comunes
+#define EXIT_GENERAL_ERROR    1    // Error genérico
+#define EXIT_MISUSE_BUILTIN   2    // Uso incorrecto de un comando builtin
+#define EXIT_CMD_NOT_FOUND    127  // Comando no encontrado
+#define EXIT_CMD_NOT_EXEC     126  // Comando no ejecutable
+
+// Señales comunes
+#define EXIT_SIGINT           130  // Ctrl+C
+#define EXIT_SIGQUIT          131  // Ctrl+\ (quit)
+
+// Código especial al usar 'exit' incorrectamente
+#define EXIT_INVALID_EXIT     128
+
+// -- minishell.h -- //
 // -- internal strcts -- //
 typedef struct s_minishell
 {
