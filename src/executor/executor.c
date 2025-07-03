@@ -97,10 +97,10 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 			}
 			if (exec->prev_fd != -1)
 				close(exec->prev_fd);
-			if (minishell->ast_tree->op == AND && minishell->exit == 0)
-			{
-				ft_printf("segundo comando");
-			}
+			//if (minishell->ast_tree->op == AND && minishell->exit == 0)
+			//{
+			//	ft_printf("segundo comando");
+			//}
 			else
 				exit(127);
 			if (cmd->operator== PIPE)
@@ -152,82 +152,6 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 		return (1);
 }
 
-/*
-void	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)
-{
-	t_executor	ex;
-	char		*path;
-
-	ex.prev_fd = -1;
-	ex.envp = envp;
-	ex.myenv = myenv;
-	while (cmd)
-	{
-		//ft_printf("Before ft_wildcards:\n");
-		//print_args(cmd->args);
-		//ft_wildcards(&(cmd->args));
-		//ft_printf("\nAfter ft_wildcards:\n");
-		//print_args(cmd->args);
-		if (cmd->limiter)
-		{
-			ft_here_doc(cmd->limiter);
-		}
-		if (!cmd->args || !cmd->args[0])
-		{
-			cmd = cmd->next;
-			continue ;
-		}
-		ex.builtin_id = get_builtin_cmd(cmd->args[0]);
-		if (ex.builtin_id != -1 && cmd->operator!= PIPE)
-		{
-			ex.saved_stdin = -1;
-			ex.saved_stdout = -1;
-			redirections(cmd, &ex.saved_stdin, &ex.saved_stdout);
-			execute_builtin(ex.builtin_id, cmd->args, ex.envp, ex.myenv);
-			restore_redirections(ex.saved_stdin, ex.saved_stdout);
-		}
-		else
-		{
-			// Aquí verificamos si el comando tiene ruta absoluta
-			if (cmd->args[0][0] == '/' || cmd->args[0][0] == '.')
-			{
-				if (access(cmd->args[0], X_OK) != 0)
-				{
-					ft_printf("minishell: %s: command not found\n",
-						cmd->args[0]);
-				}
-				else
-				{
-					ex.pid = external_command(cmd, &ex);
-					if (cmd->operator!= PIPE)
-					{
-						waitpid(ex.pid, NULL, 0);
-					}
-				}
-			}
-			else
-			{
-				// Si no tiene ruta, buscamos en el PATH
-				path = get_path(cmd->args[0], ex.envp);
-				if (path == NULL || access(path, X_OK) != 0)
-				{
-					ft_printf("minishell: %s: command not found\n",
-						cmd->args[0]);
-				}
-				else
-				{
-					ex.pid = external_command(cmd, &ex);
-					if (cmd->operator!= PIPE)
-					{
-						waitpid(ex.pid, NULL, 0);
-					}
-				}
-			}
-		}
-		cmd = cmd->next;
-	}
-}
-*/
 // -- function to execute a command -- //
 // --  de momento esta funcion esta fuera pero la dejare para comandos unicos --
 
