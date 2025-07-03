@@ -40,7 +40,7 @@ void	main_loop(char **envp)
 		tokens = lexer(line);
 		cmd = parse_tokens(tokens, envp);
 		// print_tokens(tokens);
-		//print_command_list(cmd);
+		// print_command_list(cmd);
 
 		// Construir el AST a partir de la lista de comandos
 		ast_root = build_ast(cmd);
