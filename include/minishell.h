@@ -17,12 +17,12 @@
 # include "env.h"
 # include "lexer.h"
 # include "parser.h"
+# include "syntax.h"
 # include "builtins.h"
 # include "design.h"
 # include "executor.h"
 # include "redirections.h"
 # include "signals.h"
-# include "syntax.h"
 // -- system.h -- //
 
 // -- system libs -- //
