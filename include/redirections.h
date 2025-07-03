@@ -16,7 +16,6 @@
 int	ft_open(char *file, int mode);
 
 // -- here doc's -- //
-int	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv);
 void	ft_here_doc(char *delimiter);
 void	ft_here_doc_child(char *delimiter, int *p_fd);
 

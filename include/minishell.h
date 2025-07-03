@@ -50,6 +50,7 @@ typedef struct s_minishell
 	t_command	*cmd;
 	t_myenv		*env;
 	t_executor	*executor;
+	int exit;
 }				t_minishell;
 
 t_minishell	*init_minishell(t_myenv *env, t_token *tokens, t_command *cmd,
@@ -57,6 +58,7 @@ t_minishell	*init_minishell(t_myenv *env, t_token *tokens, t_command *cmd,
 
 // -- main loop -- //
 void			main_loop(char **envp);
+
 void			ft_wildcards(char ***args);
 // -- free -- //
 void			free_tokens(t_token *tokens);
