@@ -37,7 +37,7 @@ int	get_builtin_cmd(char *cmd)
 		return (EXIT);
 	if (ft_strncmp(cmd, "echo", 4) == 0)
 		return (ECHO);
-	if (ft_strncmp(cmd, "pwd", 3) == 0)
+	if (ft_strcmp(cmd, "pwd") == 0)
 		return (PWD);
 	if (ft_strncmp(cmd, "export", 5) == 0)
 		return (EXPORT);

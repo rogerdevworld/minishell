@@ -82,8 +82,6 @@ t_command	*parse_tokens(t_token *tokens, char **envp)
 
 	while (tokens)
 	{
-		// -- falta agregar caso de si "argumento es el primer parametro no aceptar",
-		//	NO TIENE QUE HACER \n --//
 		if (tokens->type == TOKEN_OPERATOR && prev && prev->type == TOKEN_OPERATOR)
 		{
 			ft_exit("syntax error near unexpected token");
