@@ -47,7 +47,7 @@ void	main_loop(char **envp)
 		ast_root = build_ast(cmd);
 		print_ast(ast_root, 0);
 		exec = init_exec(myenv);
-		minishell = init_minishell(myenv, tokens, cmd, exec);
+		minishell = init_minishell(myenv, ast_root, tokens, cmd, exec);
 		// Ejecutar con el AST o con cmd según cómo tengas implementado
 		int status  = ft_check_executor(minishell, exec, cmd, envp, myenv);
 		minishell->exit = status;

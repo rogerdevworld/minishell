@@ -97,6 +97,12 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 			}
 			if (exec->prev_fd != -1)
 				close(exec->prev_fd);
+			if (minishell->ast_tree->op == AND && minishell->exit == 0)
+			{
+				ft_printf("segundo comando");
+			}
+			else
+				exit(127);
 			if (cmd->operator== PIPE)
 				close(pipefd[0]);
 			if (exec->builtin_id != -1)
