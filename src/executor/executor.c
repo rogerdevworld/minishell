@@ -105,7 +105,7 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 				dup2(pipefd[1], STDOUT_FILENO);
 				close(pipefd[1]);
 			}
-			if (exec->prev_fd != -1)
+			if (ex->prev_fd != -1)
 				close(exec->prev_fd);
 			if (cmd->operator== PIPE)
 				close(pipefd[0]);
