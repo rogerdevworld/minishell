@@ -6,7 +6,7 @@
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:56:13 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/04/10 00:02:28 by xviladri         ###   ########.fr       */
+/*   Updated: 2025/07/03 14:35:34 by rmarrero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef BUILTINS_H
@@ -34,7 +34,7 @@ void	execute_builtin(int cmd, char **args, char **envp, t_myenv *myenv);
 // -- local commands -- //
 void	pwd(char **envp);
 void	clear(void);
-void	ft_cd(const char *path, char **envp);
+int	ft_cd(char *path, char **envp);
 void    ft_exit_builtin(void);
 void	ft_echo(char **args, t_env *env);
 void    ft_export(char **args, t_myenv *myenv);

@@ -6,7 +6,7 @@
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 13:05:47 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/04/09 22:11:07 by xviladri         ###   ########.fr       */
+/*   Updated: 2025/07/03 14:43:09 by rmarrero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../../include/minishell.h"
@@ -21,7 +21,7 @@
  * pero en este caso sale e imprime el mensaje "quit core dunped" asi que pendiente a gestionar
  */
 
-void	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)
+int	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)
 {
 	t_executor	ex;
 	int			pipefd[2];
@@ -31,6 +31,7 @@ void	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)
 	ex.prev_fd = -1;
 	ex.envp = envp;
 	ex.myenv = myenv;
+	ex.status = 0;
 
 	while (cmd)
 	{
@@ -117,7 +118,8 @@ void	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)
 			if (ex.builtin_id != -1)
 			{
 				execute_builtin(ex.builtin_id, cmd->args, envp, myenv);
-				exit (0);
+				ft_printf("paso\n");
+				exit (ex.status);
 			}
 			else
 			{
@@ -158,7 +160,8 @@ void	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)
 
 	// Esperamos todos los procesos
 	while (i--)
-		waitpid(pids[i], NULL, 0);
+		waitpid(pids[i], &(ex.status), 0);
+	return (WIFEXITED(ex.status) && WEXITSTATUS(ex.status));
 }
 
 /*

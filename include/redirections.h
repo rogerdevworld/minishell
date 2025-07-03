@@ -6,7 +6,7 @@
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:56:13 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/03/27 11:57:56 by rmarrero         ###   ########.fr       */
+/*   Updated: 2025/07/03 14:26:42 by rmarrero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef REDIRECTIONS_H
@@ -16,7 +16,7 @@
 int	ft_open(char *file, int mode);
 
 // -- here doc's -- //
-void	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv);
+int	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv);
 void	ft_here_doc(char *delimiter);
 void	ft_here_doc_child(char *delimiter, int *p_fd);
 
