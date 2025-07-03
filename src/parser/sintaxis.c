@@ -67,4 +67,6 @@
 
    18. Ejecución de comandos internos (builtins)
        Explicación: Los comandos internos como `cd`, `exit`, `echo`, `pwd`, etc., deben ejecutarse internamente sin buscar un ejecutable en el PATH.
+    19. exit 42 -- recoger el codigo de salida del mini al general
+
 */

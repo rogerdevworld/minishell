@@ -11,57 +11,29 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-/**
- * con este cambio(se ambio la funcion ft_check_executor) funciona para el caso de 
- * cat -e | cat -e | cat -e | ls, el problema es que cuando se ejecuta lo siguiente
- * cat -e | cfada | cat -e | ls deberia imprimir el ls y luego un command not found
- * pero solo imprime el ls y salta los espacios que necesite 
- * en cuanto al comportamiento de signals cuando se esta dentro del cat -e | cat -e | cat -e | ls,
- * y se esta en blanco esperando el enter, si presionamos Ctrl + \ deberia solo salir
- * pero en este caso sale e imprime el mensaje "quit core dunped" asi que pendiente a gestionar
- */
-
-int	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)
+int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
+		char **envp, t_myenv *myenv)
 {
-	t_executor	ex;
-	int			pipefd[2];
-	pid_t		pids[1024]; // Máximo número de comandos
-	int			i = 0;
+	int		pipefd[2];
+	int		i;
+	int		saved_stdin;
+	int		saved_stdout;
+	char	*path;
+	int		last_builtin_result;
 
-	ex.prev_fd = -1;
-	ex.envp = envp;
-	ex.myenv = myenv;
-	ex.status = 0;
-
+	i = 0;
+	pid_t pids[1024]; // Máximo número de comandos
+	last_builtin_result = 0;
+	// Inicializar la estructura exec si no está inicializada
+	if (!exec)
+		exec = init_exec(myenv);
+	if (!exec)
+		return (1);
 	while (cmd)
 	{
 		/*if (cmd->limiter)
 			ft_here_doc(cmd->limiter);
-		*/
-		/*if (!cmd->args || !cmd->args[0])
-		{
-			cmd = cmd->next;
-			continue;
-		}*/
-		//para el caso en el que comience << eof
-		/*
-		if (!cmd->args || !cmd->args[0])
-		{
-			if (cmd->limiter)
-			{
-				int tmp_fd = ft_here_doc(cmd->limiter);
-				close(tmp_fd);
-			}
-			cmd = cmd->next;
-			continue;
-		}*/
-		/*if ((!cmd->args || !cmd->args[0]) && cmd->limiter)
-		{
-			int tmp_fd = ft_here_doc(cmd->limiter);
-			close(tmp_fd);
-			cmd = cmd->next;
-			continue;
-		}*/
+
 		if (!cmd->args || !cmd->args[0])
 		{
 			/*write(2, "DEBUG: command sin args\n", 24);
@@ -74,17 +46,15 @@ int	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)
 			cmd = cmd->next;
 			continue;*/
 			cmd = cmd->next;
-			continue;
+			continue ;
 		}
-
-		ex.builtin_id = get_builtin_cmd(cmd->args[0]);
-
-		// Ejecutar built-in directamente si no está en un pipeline
-		if (ex.builtin_id != -1 && cmd->operator != PIPE && ex.prev_fd == -1)
+		exec->builtin_id = get_builtin_cmd(cmd->args[0]);
+		// Ejecutar built-in directamente si no hay pipe
+		if (exec->builtin_id != -1 && cmd->operator!= PIPE && exec->prev_fd ==
+			- 1)
 		{
-			int saved_stdin = dup(STDIN_FILENO);
-			int saved_stdout = dup(STDOUT_FILENO);
-
+			saved_stdin = dup(STDIN_FILENO);
+			saved_stdout = dup(STDOUT_FILENO);
 			if (cmd->input_file != -1)
 			{
 				dup2(cmd->input_file, STDIN_FILENO);
@@ -95,74 +65,55 @@ int	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)
 				dup2(cmd->output_file, STDOUT_FILENO);
 				close(cmd->output_file);
 			}
-
-			execute_builtin(ex.builtin_id, cmd->args, envp, myenv);
-
+			last_builtin_result = execute_builtin(exec->builtin_id, cmd->args,
+					envp, myenv);
 			dup2(saved_stdin, STDIN_FILENO);
 			dup2(saved_stdout, STDOUT_FILENO);
 			close(saved_stdin);
 			close(saved_stdout);
-
 			cmd = cmd->next;
-			continue;
+			continue ;
 		}
-
-		// Crear pipe si el comando actual se conecta con otro por pipe
-		if (cmd->operator == PIPE)
+		if (cmd->operator== PIPE)
 		{
 			if (pipe(pipefd) == -1)
 				ft_exit("pipe failed");
 		}
-		
-		ex.pid = fork();
-		if (ex.pid == -1)
+		exec->pid = fork();
+		if (exec->pid == -1)
 			ft_exit("fork failed");
-		if (ex.pid == 0) // child
+		if (exec->pid == 0) // Child
 		{
-			//entradas
 			if (cmd->input_file != -1)
 			{
 				dup2(cmd->input_file, STDIN_FILENO);
 				close(cmd->input_file);
 			}
-			else if (cmd->limiter)
-			{
-				/*int heredoc_fd = ft_here_doc(cmd->limiter);
-				if (heredoc_fd < 0)
-				exit(1);
-				dup2(heredoc_fd, STDIN_FILENO);*/
-				//close(heredoc_fd);
-				int	heredoc_fd = ft_here_doc(cmd->limiter);
-				dup2(heredoc_fd, STDIN_FILENO);
-				close(heredoc_fd);
-			}
 			else if (ex.prev_fd != -1)
 			{
-				dup2(ex.prev_fd, STDIN_FILENO);
-				close(ex.prev_fd);
+				dup2(exec->prev_fd, STDIN_FILENO);
+				close(exec->prev_fd);
 			}
-			//salidas
 			if (cmd->output_file != -1)
 			{
 				dup2(cmd->output_file, STDOUT_FILENO);
 				close(cmd->output_file);
 			}
-			else if (cmd->operator == PIPE)
+			else if (cmd->operator== PIPE)
 			{
 				close(pipefd[0]);
 				dup2(pipefd[1], STDOUT_FILENO);
 				close(pipefd[1]);
 			}
-			//cierre de fds heredados
-			if (ex.prev_fd != -1)
-				close(ex.prev_fd);
-			if (cmd->operator == PIPE)
+			if (exec->prev_fd != -1)
+				close(exec->prev_fd);
+			if (cmd->operator== PIPE)
 				close(pipefd[0]);
 
 			if (ex.builtin_id != -1)
 			{
 				execute_builtin(ex.builtin_id, cmd->args, envp, myenv);
-				//ft_printf("paso\n");
+				ft_printf("paso\n");
 				exit (ex.status);
 			}
 			else
@@ -186,26 +137,34 @@ int	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv)
 				exit(127);
 			}
 		}
-		else // parent
+		else // Parent
 		{
-			pids[i++] = ex.pid;
-			if (ex.prev_fd != -1)
-				close(ex.prev_fd);
-			if (cmd->operator == PIPE)
+			pids[i++] = exec->pid;
+			if (exec->prev_fd != -1)
+				close(exec->prev_fd);
+			if (cmd->operator== PIPE)
 			{
 				close(pipefd[1]);
-				ex.prev_fd = pipefd[0];
+				exec->prev_fd = pipefd[0];
 			}
 			else
-				ex.prev_fd = -1;
+				exec->prev_fd = -1;
 		}
 		cmd = cmd->next;
 	}
-
-	// Esperamos todos los procesos
 	while (i--)
-		waitpid(pids[i], &(ex.status), 0);
-	return (WIFEXITED(ex.status) && WEXITSTATUS(ex.status));
+		waitpid(pids[i], &(exec->status), 0);
+	if (i == 0)
+		return (last_builtin_result);
+	if (WIFEXITED(exec->status))
+	{
+		if (minishell)
+			return (minishell->exit = WEXITSTATUS(exec->status));
+		else
+			return (WEXITSTATUS(exec->status));
+	}
+	else
+		return (1);
 }
 
 /*

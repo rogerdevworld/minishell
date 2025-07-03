@@ -15,10 +15,12 @@
 void	main_loop(char **envp)
 {
 	char		*line;
-	t_token		*tokens;
-	t_command	*cmd;
-	t_myenv		*myenv;
-	t_ast_node	*ast_root;
+	t_token		*tokens; // tokens first
+	t_command	*cmd; // cmd secound
+	t_myenv		*myenv; // env three
+	t_ast_node	*ast_root; //bonus
+	t_executor	*exec; //executor
+	t_minishell	*minishell; //mini final
 
 	tokens = NULL;
 	myenv = ft_myenv(envp);
@@ -45,10 +47,12 @@ void	main_loop(char **envp)
 		// Construir el AST a partir de la lista de comandos
 		ast_root = build_ast(cmd);
 		print_ast(ast_root, 0);
-
+		exec = init_exec(myenv);
+		minishell = init_minishell(myenv, tokens, cmd, exec);
 		// Ejecutar con el AST o con cmd según cómo tengas implementado
-		int status  = ft_check_executor(cmd, envp, myenv);
-		//ft_printf("status: %i\n", status);
+		int status  = ft_check_executor(minishell, exec, cmd, envp, myenv);
+		minishell->exit = status;
+		ft_printf("status executor: %i & estatus struct: %i\n", status, minishell->exit);
 
 		free_tokens(tokens);
 		free_command_list(cmd);
@@ -113,44 +117,13 @@ int	main(int argc, char **argv, char **envp)
 {
 	(void)argc;
 	(void)argv;
+
 	// -- inicializacion de las funciones -- //
 	// -- senales -- //
-	signal(SIGINT, sigint_handler);
+	signal(SIGINT, ft_sigint);
 	signal(SIGQUIT, ft_sigquit);
+
 	// -- main loop -- //
 	main_loop(envp);
 	return (0);
 }
-
-// -- commad for test -- //
-/*
-ls -la > text && cat -e text && echo "holo world" > new_text && cat text
-&& echo hola && cat < new_text || ls -la > text && wc - l text > text_c
-&& cat text*
-*/
-
-// valgrind --leak-check=full --show-leak-kinds=all ./minishell
-// valgrind --leak-check=full ./minishell
-
-// -- prompt inicial parser manejar "> < << | || &&"
-// -- pwd | cat -e | cat -e
-// -- ahora
-// -- t_cmd 1. pwd t_cmd 2. cat -e t_cmd 3. cat -e
-// -- flags | || &&
-
-// -- pipe
-// -- t_bonus 1. flag pipe
-// -- -- t_cmd 1. pwd
-// -- t_bonus 2. flag pipe
-// -- -- t_cmd 2. cat -e
-// -- t_bonus 3. flag pipe
-// -- -- t_cmd 3. cat -e
-
-// -- &&, || or (both)
-// -- pwd > text && cat -e text || pwd > text | cat -e text
-// -- t_bonus 1. && first element
-// -- -- t_cmd 1. pwd > text
-// -- t_bonus 2. rigth pwd, left cat -e
-// -- -- t_cmd 2. cat -e
-// -- t_bonus 3. rigth
-// -- -- t_cmd 3. cat -e
