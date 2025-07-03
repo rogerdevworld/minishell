@@ -17,7 +17,7 @@
 4. `> |cat`  
    **Explicación**: Una redirección `>` o `>>` seguida de un pipe (`|`) no tiene sentido. Debe ser seguida por un archivo válido o un comando.
 
-5. `>` o `>>` mal formados  
+5. FIXED `>` o `>>` mal formados  fixed
    **Explicación**: Las redirecciones deben ser seguidas de un archivo o un comando válido. No se deben permitir secuencias como `>|` o `>>|`.
 
 6. Comandos vacíos después de operadores  

@@ -14,14 +14,11 @@
 void	sigint_handler(int signum)
 {
 	(void)signum;
-    //char **user = NULL;
-
-    //ft_printf("%s", meta_path(user));
-    write(1, "$\n", 2);
+	write(1, "$\n", 2);
 }
 
 void	ft_sigquit(int sig)
 {
-    sig = sig;
-    write(1, "Quit (core dumped)\n", 20);
+	sig = sig;
+	write(1, "Quit (core dumped)\n", 20);
 }

@@ -16,6 +16,7 @@
 # include "../src/libft/libft.h"
 # include "lexer.h"
 # include "parser.h"
+# include "syntax.h"
 # include "env.h"
 # include "builtins.h"
 # include "design.h"

@@ -6,7 +6,7 @@
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 11:56:13 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/04/09 21:47:24 by xviladri         ###   ########.fr       */
+/*   Updated: 2025/07/03 14:25:59 by rmarrero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef EXECUTOR_H
@@ -14,6 +14,7 @@
 
 typedef struct s_executor
 {
+	int	status;
 	int		p_fd[2];
 	int		prev_fd;
 	pid_t	pid;
@@ -26,7 +27,7 @@ typedef struct s_executor
 
 // executor.h o en minishell.h
 
-void	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv);
+int	ft_check_executor(t_command *cmd, char **envp, t_myenv *myenv);
 void	ft_exec_cmd(t_command *cmd, char **envp);
 void	ft_pipe_and_fork(t_command *cmd, char **env);
 pid_t	external_command(t_command *cmd, t_executor *ex);

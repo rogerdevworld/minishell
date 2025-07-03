@@ -6,16 +6,8 @@
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 13:05:47 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/04/01 13:05:50 by rmarrero         ###   ########.fr       */
+/*   Updated: 2025/04/22 20:16:44 by xviladri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../../include/minishell.h"
-
-
-// -- functions for the infile -- //
-
-
-
-// -- functions for the outfile -- // 
-
+#include "../include/minishell.h"
 

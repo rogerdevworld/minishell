@@ -6,7 +6,7 @@
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/22 21:49:28 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/04/22 12:40:48 by xviladri         ###   ########.fr       */
+/*   Updated: 2025/07/03 14:28:07 by rmarrero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../include/minishell.h"
@@ -18,6 +18,7 @@ void	main_loop(char **envp)
 	t_token		*tokens;
 	t_command	*cmd;
 	t_myenv		*myenv;
+	t_ast_node	*ast_root;
 
 	tokens = NULL;
 	myenv = ft_myenv(envp);
@@ -38,15 +39,25 @@ void	main_loop(char **envp)
 		}
 		tokens = lexer(line);
 		cmd = parse_tokens(tokens, envp);
-		print_tokens(tokens);
-		print_command_list(cmd);
-		ft_check_executor(cmd, envp, myenv);
+		// print_tokens(tokens);
+		//print_command_list(cmd);
+
+		// Construir el AST a partir de la lista de comandos
+		ast_root = build_ast(cmd);
+		print_ast(ast_root, 0);
+
+		// Ejecutar con el AST o con cmd según cómo tengas implementado
+		int status  = ft_check_executor(cmd, envp, myenv);
+		//ft_printf("status: %i\n", status);
+
 		free_tokens(tokens);
 		free_command_list(cmd);
+		free_ast(ast_root);
 		free(line);
 	}
 	exit(0);
 }
+
 
 void	free_command_list(t_command *cmd)
 {
