@@ -72,18 +72,18 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 
 		if (!cmd->args || !cmd->args[0])
 		{
-			/*write(2, "DEBUG: command sin args\n", 24);
-			if (cmd->limiter)
-			{
-				write(2, "DEBUG: heredoc en un command sin args\n", 38);
-				int tmp_fd = ft_here_doc(cmd->limiter);
-				close(tmp_fd);
-			}
+			//write(2, "DEBUG: command sin args\n", 24);
+			//if (cmd->limiter)
+			//{
+			//	write(2, "DEBUG: heredoc en un command sin args\n", 38);
+			//	int tmp_fd = ft_here_doc(cmd->limiter);
+			//	close(tmp_fd);
+			//}
+			//cmd = cmd->next;
+			//continue;
 			cmd = cmd->next;
-			continue;*/
-		//	cmd = cmd->next;
-		//	continue ;
-		//}
+			continue ;
+		}*/
 		exec->builtin_id = get_builtin_cmd(cmd->args[0]);
 		// Ejecutar built-in directamente si no hay pipe
 		if (exec->builtin_id != -1 && cmd->operator!= PIPE && exec->prev_fd ==
