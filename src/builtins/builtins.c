@@ -57,7 +57,7 @@ int	execute_builtin(int cmd, char **args, char **envp, t_myenv *myenv)
 	if (cmd == CD)
 		status = ft_cd(args[1], envp);
 	else if (cmd == EXIT)
-		ft_exit_builtin();
+		ft_exit_builtin(args);
 	else if (cmd == ECHO)
 		ft_echo(args, myenv->list_env);
 	else if (cmd == PWD)
