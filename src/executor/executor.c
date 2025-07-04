@@ -230,8 +230,7 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 			int signo = WTERMSIG(exec->status);
 			if (signo == SIGPIPE)
 			{
-				// Puedes decidir qué hacer:
-				// Por ejemplo: setear exit_status = 141 (128+13)
+				//gestionar el SIGPIPE para que en vez de 141 salga 0
 				if (minishell)
 					minishell->exit = 0;
 				else
