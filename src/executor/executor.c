@@ -79,11 +79,14 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 			if (pipe(pipefd) == -1)
 				ft_exit("pipe failed");
 		}
+		g_signal = S_CMD;
 		exec->pid = fork();
 		if (exec->pid == -1)
 			ft_exit("fork failed");
 		if (exec->pid == 0) // Child
 		{
+			signal(SIGINT, SIG_DFL);
+			signal(SIGQUIT, SIG_DFL);
 			if (cmd->input_file != -1)
 			{
 				dup2(cmd->input_file, STDIN_FILENO);
@@ -107,6 +110,12 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 			}
 			if (ex->prev_fd != -1)
 				close(exec->prev_fd);
+			/*if (minishell->ast_tree->op == AND && minishell->exit == 0)
+			{
+				ft_printf("segundo comando");
+			}
+			else
+				exit(127);*/
 			if (cmd->operator== PIPE)
 				close(pipefd[0]);
 
@@ -156,6 +165,8 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 		waitpid(pids[i], &(exec->status), 0);
 	if (i == 0)
 		return (last_builtin_result);
+	/*ASI FUNCIONA*/ 
+	/*
 	if (WIFEXITED(exec->status))
 	{
 		if (minishell)
@@ -165,6 +176,72 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 	}
 	else
 		return (1);
+*/
+	/**
+	 * cambio para integrar senales 
+	 */
+	if (WIFEXITED(exec->status))
+	{
+		// Actualiza el minishell->exit_status
+		if (minishell)
+			minishell->exit = WEXITSTATUS(exec->status);
+		else
+			minishell->exit = WEXITSTATUS(exec->status);
+	}
+	else if (WIFSIGNALED(exec->status))
+	{
+		// Si el proceso terminó por una señal, puedes asignar un código especial
+		/*if (minishell)
+			minishell->exit = 128 + WTERMSIG(exec->status);*/
+			int signo = WTERMSIG(exec->status);
+			if (signo == SIGPIPE)
+			{
+				// Puedes decidir qué hacer:
+				// Por ejemplo: setear exit_status = 141 (128+13)
+				if (minishell)
+					minishell->exit = 0;
+				else
+					minishell->exit = 0;
+
+				// Opcional: No imprimir nada
+			}
+			else if (signo == SIGINT)
+			{
+				if (minishell)
+					minishell->exit = 130;
+				write(1, "\n", 1);
+			}
+			else if (signo == SIGQUIT)
+			{
+				if (minishell)
+					minishell->exit = 131;
+				write(1, "Quit (core dumped)\n", 19);
+			}
+			else
+			{
+				if (minishell)
+					minishell->exit = 128 + signo;
+			}
+	}
+
+	/*if (minishell && minishell->exit == 127)
+	{
+		if (cmd && cmd->args && cmd->args[0])
+			ft_printf("%s: %s\n", cmd->args[0], "Command not found");
+		else
+			ft_printf("minishell: %s\n", "Command not found");
+	}*/
+
+	if (g_signal == S_SIGINT_CMD)
+	{
+		if (minishell)
+			minishell->exit = 130;
+	}
+
+	g_signal = S_BASE;
+
+	return (minishell ? minishell->exit : 0);
+
 }
 
 /*
