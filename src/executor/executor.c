@@ -45,9 +45,9 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 			}
 			cmd = cmd->next;
 			continue;*/
-			cmd = cmd->next;
-			continue ;
-		}
+		//	cmd = cmd->next;
+		//	continue ;
+		//}
 		exec->builtin_id = get_builtin_cmd(cmd->args[0]);
 		// Ejecutar built-in directamente si no hay pipe
 		if (exec->builtin_id != -1 && cmd->operator!= PIPE && exec->prev_fd ==
@@ -92,7 +92,7 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 				dup2(cmd->input_file, STDIN_FILENO);
 				close(cmd->input_file);
 			}
-			else if (ex.prev_fd != -1)
+			else if (exec->prev_fd != -1)
 			{
 				dup2(exec->prev_fd, STDIN_FILENO);
 				close(exec->prev_fd);
@@ -108,7 +108,7 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 				dup2(pipefd[1], STDOUT_FILENO);
 				close(pipefd[1]);
 			}
-			if (ex->prev_fd != -1)
+			if (exec->prev_fd != -1)
 				close(exec->prev_fd);
 			/*if (minishell->ast_tree->op == AND && minishell->exit == 0)
 			{
@@ -119,11 +119,11 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 			if (cmd->operator== PIPE)
 				close(pipefd[0]);
 
-			if (ex.builtin_id != -1)
+			if (exec->builtin_id != -1)
 			{
-				execute_builtin(ex.builtin_id, cmd->args, envp, myenv);
+				execute_builtin(exec->builtin_id, cmd->args, envp, myenv);
 				ft_printf("paso\n");
-				exit (ex.status);
+				exit (exec->status);
 			}
 			else
 			{

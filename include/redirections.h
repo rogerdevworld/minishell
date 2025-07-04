@@ -16,7 +16,7 @@
 int	ft_open(char *file, int mode);
 
 // -- here doc's -- //
-void	ft_here_doc(char *delimiter);
+int	ft_here_doc(char *delimiter);
 void	ft_here_doc_child(char *delimiter, int *p_fd);
 
 #endif
