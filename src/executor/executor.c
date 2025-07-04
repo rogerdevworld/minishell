@@ -164,6 +164,8 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 		// Actualiza el minishell->exit_status
 		if (minishell)
 			minishell->exit = WEXITSTATUS(exec->status);
+		else
+			minishell->exit = WEXITSTATUS(exec->status);
 	}
 	else if (WIFSIGNALED(exec->status))
 	{
@@ -171,7 +173,18 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 		/*if (minishell)
 			minishell->exit = 128 + WTERMSIG(exec->status);*/
 			int signo = WTERMSIG(exec->status);
-			if (signo == SIGINT)
+			if (signo == SIGPIPE)
+			{
+				// Puedes decidir qué hacer:
+				// Por ejemplo: setear exit_status = 141 (128+13)
+				if (minishell)
+					minishell->exit = 0;
+				else
+					minishell->exit = 0;
+
+				// Opcional: No imprimir nada
+			}
+			else if (signo == SIGINT)
 			{
 				if (minishell)
 					minishell->exit = 130;

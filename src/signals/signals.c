@@ -38,8 +38,8 @@ static void	sigint_handler(int sig)
     }
     else if (g_signal == S_CMD)
     {
-        g_signal == S_SIGINT_CMD;
-        ft_putchar_fd("\n", 1);
+        g_signal = S_SIGINT_CMD;
+        ft_putstr_fd("\n", 1);
         rl_on_new_line();
     }
     else if (g_signal == S_HEREDOC)
