@@ -53,7 +53,7 @@ static void	sigint_handler(int sig)
 void	signal_init(void)
 {
 	g_signal = S_BASE;
-	signal(SIGINT, sigint_handler);//TD--Done
+	signal(SIGINT, sigint_handler);
 	signal(SIGQUIT, SIG_IGN);
 }
 /*
