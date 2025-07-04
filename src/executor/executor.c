@@ -11,6 +11,42 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
+// -- ast bonus all --//
+int	execute_ast(t_ast_node *node, t_minishell *minishell, t_executor *exec)
+{
+	int	status;
+
+	if (!node)
+		return (1);
+	if (node->op == COMMAND)
+	{
+		status = ft_check_executor(minishell, exec, node->cmd,
+				minishell->env->env, minishell->env);
+		minishell->exit = status;
+		return (status);
+	}
+	else if (node->op == AND)
+	{
+		status = execute_ast(node->left, minishell, exec);
+		if (status == 0) // éxito
+			return (execute_ast(node->right, minishell, exec));
+		else
+			return (status);
+	}
+	else if (node->op == OR)
+	{
+		status = execute_ast(node->left, minishell, exec);
+		if (status != 0) // falló
+			return (execute_ast(node->right, minishell, exec));
+		else
+			return (status);
+	}
+	else if (node->op == PIPE)
+		return (ft_check_executor(minishell, exec, node->cmd,
+				minishell->env->env, minishell->env));
+	return (1);
+}
+
 int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 		char **envp, t_myenv *myenv)
 {
@@ -97,12 +133,10 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 			}
 			if (exec->prev_fd != -1)
 				close(exec->prev_fd);
-			//if (minishell->ast_tree->op == AND && minishell->exit == 0)
-			//{
-			//	ft_printf("segundo comando");
-			//}
-			else
-				exit(127);
+			if (minishell->ast_tree->op == AND && minishell->exit == 0)
+			{
+				ft_printf("segundo comando");
+			}
 			if (cmd->operator== PIPE)
 				close(pipefd[0]);
 			if (exec->builtin_id != -1)

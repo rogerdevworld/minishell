@@ -49,7 +49,8 @@ void	main_loop(char **envp)
 		exec = init_exec(myenv);
 		minishell = init_minishell(myenv, ast_root, tokens, cmd, exec);
 		// Ejecutar con el AST o con cmd según cómo tengas implementado
-		int status  = ft_check_executor(minishell, exec, cmd, envp, myenv);
+		//int status  = ft_check_executor(minishell, exec, cmd, envp, myenv);
+		int status  = execute_ast(ast_root, minishell, exec);
 		minishell->exit = status;
 		ft_printf("status executor: %i & estatus struct: %i\n", status, minishell->exit);
 
