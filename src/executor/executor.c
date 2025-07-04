@@ -75,6 +75,8 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 			ft_exit("fork failed");
 		if (exec->pid == 0) // Child
 		{
+			signal(SIGINT, SIG_DFL);
+			signal(SIGQUIT, SIG_DFL);
 			if (cmd->input_file != -1)
 			{
 				dup2(cmd->input_file, STDIN_FILENO);
@@ -98,12 +100,12 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 			}
 			if (exec->prev_fd != -1)
 				close(exec->prev_fd);
-			if (minishell->ast_tree->op == AND && minishell->exit == 0)
+			/*if (minishell->ast_tree->op == AND && minishell->exit == 0)
 			{
 				ft_printf("segundo comando");
 			}
 			else
-				exit(127);
+				exit(127);*/
 			if (cmd->operator== PIPE)
 				close(pipefd[0]);
 			if (exec->builtin_id != -1)
@@ -143,6 +145,7 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 	if (i == 0)
 		return (last_builtin_result);
 	/*ASI FUNCIONA*/ 
+	/*
 	if (WIFEXITED(exec->status))
 	{
 		if (minishell)
@@ -151,23 +154,59 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 			return (WEXITSTATUS(exec->status));
 	}
 	else
-		return (0);
-
+		return (1);
+*/
 	/**
 	 * cambio para integrar senales 
-	 
+	 */
 	if (WIFEXITED(exec->status))
 	{
+		// Actualiza el minishell->exit_status
 		if (minishell)
-			return (minishell->exit = WEXITSTATUS(exec->status));
-		else 
-			return (WEXITSTATUS(exec->status));
+			minishell->exit = WEXITSTATUS(exec->status);
 	}
-	else if (g_signal == S_SIGINT_CMD)
-		exit(130);
-	else
-		g_signal == S_BASE;
-		//return (1);*/
+	else if (WIFSIGNALED(exec->status))
+	{
+		// Si el proceso terminó por una señal, puedes asignar un código especial
+		/*if (minishell)
+			minishell->exit = 128 + WTERMSIG(exec->status);*/
+			int signo = WTERMSIG(exec->status);
+			if (signo == SIGINT)
+			{
+				if (minishell)
+					minishell->exit = 130;
+				write(1, "\n", 1);
+			}
+			else if (signo == SIGQUIT)
+			{
+				if (minishell)
+					minishell->exit = 131;
+				write(1, "Quit (core dumped)\n", 19);
+			}
+			else
+			{
+				if (minishell)
+					minishell->exit = 128 + signo;
+			}
+	}
+
+	/*if (minishell && minishell->exit == 127)
+	{
+		if (cmd && cmd->args && cmd->args[0])
+			ft_printf("%s: %s\n", cmd->args[0], "Command not found");
+		else
+			ft_printf("minishell: %s\n", "Command not found");
+	}*/
+
+	if (g_signal == S_SIGINT_CMD)
+	{
+		if (minishell)
+			minishell->exit = 130;
+	}
+
+	g_signal = S_BASE;
+
+	return (minishell ? minishell->exit : 0);
 
 }
 
