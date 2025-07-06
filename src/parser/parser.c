@@ -116,7 +116,12 @@ t_command	*parse_tokens(t_token *tokens, char **envp)
 		{
 			// -- estoy haciendo un arbol de ejecucion para ver grupo de comandso orden etc --
 				//
-			current->operator= resolve_operator(tokens->value);
+			current->next = init_command();
+			if (!current->next)
+				return (NULL);
+			current = current->next;
+			current->args[0] = ft_strdup(operator_to_str(resolve_operator(tokens->value)));
+			current->operator = resolve_operator(tokens->value);
 			current->next = init_command();
 			if (!current->next)
 				return (NULL);
@@ -179,20 +184,20 @@ t_operator	resolve_operator(char *operator)
 		return (OR);
 	if (ft_strcmp(operator, "&&") == 0)
 		return (AND);
-	if (ft_strcmp(operator, "|") == 0)
+	if (ft_strncmp(operator, "|", 1) == 0)
 		return (PIPE);
 	return (COMMAND);
 }
-const char	*operator_to_str(t_operator op)
+
+const char* operator_to_str(t_operator op)
 {
-	if (op == PIPE)
-		return ("|");
-	else if (op == AND)
-		return ("&&");
-	else if (op == OR)
-		return ("||");
-	else if (op == COMMAND)
-		return ("COMMAND");
-	else
-		return ("UNKNOWN");
+    if (op == PIPE)
+        return "|";
+    else if (op == AND)
+        return "&&";
+    else if (op == OR)
+        return "||";
+    else if (op == COMMAND)
+        return "COMMAND";
+    return "UNKNOWN";
 }

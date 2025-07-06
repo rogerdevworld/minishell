@@ -12,39 +12,39 @@
 #include "../../include/minishell.h"
 
 // -- ast bonus all --//
-int	execute_ast(t_ast_node *node, t_minishell *minishell, t_executor *exec)
+
+int	execute_astint(t_minishell *minishell, t_executor *exec, t_command *cmd,
+	char **envp, t_myenv *myenv)
 {
 	int	status;
 
-	if (!node)
-		return (1);
-	if (node->op == COMMAND)
+
+	while (cmd)
 	{
-		status = ft_check_executor(minishell, exec, node->cmd,
-				minishell->env->env, minishell->env);
-		minishell->exit = status;
-		return (status);
+		if (minishell->exit == 0)
+			ft_check_executor(minishell, exec, cmd, envp, myenv);
+		else if (ft_strcmp(cmd->args[0], "&&") == 0 && minishell->exit == 0)
+		{
+			ft_printf("AND: %s\n", cmd->args[0]);
+			cmd = cmd->next;
+			ft_printf("AND: %s\n", cmd->args[0]);
+			if (cmd)
+				ft_check_executor(minishell, exec, cmd, envp, myenv);
+			cmd = cmd->next;
+		}
+		else if (ft_strcmp(cmd->args[0], "||") == 0 && minishell->exit != 0)
+		{
+			ft_printf("OR: %s\n", cmd->args[0]);
+			cmd = cmd->next;
+			ft_printf("OR: %s\n", cmd->args[0]);
+			if (cmd)
+				ft_check_executor(minishell, exec, cmd, envp, myenv);
+			cmd = cmd->next;
+		}
+
+		cmd = cmd->next;
 	}
-	else if (node->op == AND)
-	{
-		status = execute_ast(node->left, minishell, exec);
-		if (status == 0) // éxito
-			return (execute_ast(node->right, minishell, exec));
-		else
-			return (status);
-	}
-	else if (node->op == OR)
-	{
-		status = execute_ast(node->left, minishell, exec);
-		if (status != 0) // falló
-			return (execute_ast(node->right, minishell, exec));
-		else
-			return (status);
-	}
-	else if (node->op == PIPE)
-		return (ft_check_executor(minishell, exec, node->cmd,
-				minishell->env->env, minishell->env));
-	return (1);
+	return (minishell->exit);
 }
 
 int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
@@ -153,12 +153,13 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 				path = get_path(cmd->args[0], envp);
 			if (!path || access(path, X_OK) != 0)
 			{
-				write(2, "minishell: command not found\n", 30);
+				ft_putstr_fd(cmd->args[0], 2);
+				write(2, ": command not found\n", 30);
 				free(path);
 				exit(EXIT_CMD_NOT_FOUND);
 			}
 			execve(path, cmd->args, myenv->env);
-			perror("execve");
+			///perror("execve");
 			exit(EXIT_CMD_NOT_FOUND);
 		}
 		else // Parent

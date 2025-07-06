@@ -42,6 +42,7 @@ void		parent_process(t_command *cmd, t_executor *ex);
 void		redirections(t_command *cmd, int *saved_stdin, int *saved_stdout);
 void		restore_redirections(int saved_stdin, int saved_stdout);
 void		print_args(char **args);
-int	execute_ast(t_ast_node *node, t_minishell *minishell, t_executor *exec);
+int	execute_astint(t_minishell *minishell, t_executor *exec, t_command *cmd,
+	char **envp, t_myenv *myenv);
 
 #endif
