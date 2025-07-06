@@ -34,6 +34,8 @@ typedef struct s_command
 	struct s_command	*next;
 }						t_command;
 
+typedef struct s_minishell t_minishell;
+
 // guardamos comandos (["echo", "hola"])
 // path del comando
 // archivo entrada por si hay "<"
@@ -50,5 +52,6 @@ void					print_command_list(t_command *cmds);
 t_operator				resolve_operator(char *operator);
 char					*get_path(char *cmd, char **env);
 const char				*operator_to_str(t_operator op);
+void	ft_syntax_check(t_minishell *minishell);
 
 #endif

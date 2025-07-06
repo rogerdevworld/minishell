@@ -64,25 +64,6 @@ void	ft_env(t_env **env_list, char **envp)
 		i++;
 	}
 }
-/*
-// Agrega un nuevo par key=value a la lista de entorno
-void ft_env_add(t_env **env_list, const char *key, const char *value)
-{
-    t_env *new_node;
-    
-    new_node = ft_env_new(key, value);
-    if (!new_node)
-        return ;
-    if (!*env_list)
-    {
-        *env_list = new_node;
-        return ;
-    }
-    t_env *tmp = *env_list;
-    while (tmp->next)
-        tmp = tmp->next;
-    tmp->next = new_node;
-}*/
 void	print_env(t_myenv *myenv)
 {
 	t_env	*tmp;
@@ -90,7 +71,7 @@ void	print_env(t_myenv *myenv)
 	if (!myenv || !myenv->list_env)
 		return ;
 	tmp = myenv->list_env;
-    ft_printf("local env\n");
+	ft_printf("local env\n");
 	while (tmp)
 	{
 		if (tmp->content)
@@ -121,7 +102,6 @@ void	free_myenv(t_myenv *myenv)
 	free(myenv);
 }
 
-
 void	free_env_list(t_env *env)
 {
 	t_env	*tmp;
@@ -137,8 +117,9 @@ void	free_env_list(t_env *env)
 }
 void	free_env_array(char **env_array)
 {
-	int	i = 0;
+	int	i;
 
+	i = 0;
 	if (!env_array)
 		return ;
 	while (env_array[i])
@@ -148,15 +129,17 @@ void	free_env_array(char **env_array)
 
 void	ft_sort_export(t_env *env)
 {
-	t_env *ini = env;
+	t_env	*ini;
+	char	*tmp;
 
+	ini = env;
 	if (!env)
 		return ;
 	while (env)
 	{
 		if (ft_strcmp(env->key, env->next->key) < 0)
 		{
-			char *tmp = env->key;
+			tmp = env->key;
 			env->key = env->next->key;
 			env->next->key = tmp;
 			env = ini;

@@ -201,3 +201,10 @@ const char* operator_to_str(t_operator op)
         return "COMMAND";
     return "UNKNOWN";
 }
+
+void	ft_syntax_check(t_minishell *minishell)
+{
+	// -- caso shlvl -- //
+	if (ft_strcmp(minishell->cmd->args[0], "./minishell"))
+		ft_shlvl(minishell);
+}

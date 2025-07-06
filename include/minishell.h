@@ -27,6 +27,7 @@ extern	int		g_signal;
 # include "executor.h"
 # include "redirections.h"
 # include "signals.h"
+# include "utils.h"
 // -- system.h -- //
 
 // -- system libs -- //
