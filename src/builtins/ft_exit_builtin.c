@@ -41,7 +41,7 @@ static int	check_exit(char **args)
 	return (0);
 }
 
-void	ft_exit_builtin(char **args)
+int	ft_exit_builtin(char **args)
 {
 	int	status;
 
