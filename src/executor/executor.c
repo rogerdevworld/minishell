@@ -13,40 +13,6 @@
 
 // -- ast bonus all --//
 
-int	execute_astint(t_minishell *minishell, t_executor *exec, t_command *cmd,
-	char **envp, t_myenv *myenv)
-{
-	int	status;
-
-
-	while (cmd)
-	{
-		if (minishell->exit == 0)
-			ft_check_executor(minishell, exec, cmd, envp, myenv);
-		else if (ft_strcmp(cmd->args[0], "&&") == 0 && minishell->exit == 0)
-		{
-			ft_printf("AND: %s\n", cmd->args[0]);
-			cmd = cmd->next;
-			ft_printf("AND: %s\n", cmd->args[0]);
-			if (cmd)
-				ft_check_executor(minishell, exec, cmd, envp, myenv);
-			cmd = cmd->next;
-		}
-		else if (ft_strcmp(cmd->args[0], "||") == 0 && minishell->exit != 0)
-		{
-			ft_printf("OR: %s\n", cmd->args[0]);
-			cmd = cmd->next;
-			ft_printf("OR: %s\n", cmd->args[0]);
-			if (cmd)
-				ft_check_executor(minishell, exec, cmd, envp, myenv);
-			cmd = cmd->next;
-		}
-
-		cmd = cmd->next;
-	}
-	return (minishell->exit);
-}
-
 int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 		char **envp, t_myenv *myenv)
 {

@@ -53,8 +53,8 @@ void	main_loop(char **envp)
 		// Ejecutar con el AST o con cmd según cómo tengas implementado
 		if (g_signal != S_CANCEL_EXEC)
 		{
-			//int status  = ft_check_executor(minishell, exec, cmd, envp, myenv);
-			int status  = execute_astint(minishell, exec, cmd, envp, myenv);
+			int status  = ft_check_executor(minishell, exec, cmd, envp, myenv);
+			//int status  = execute_astint(minishell, exec, cmd, envp, myenv);
 			//minishell->exit = status;
 			ft_printf("status executor: %i\n", status);
 		}
