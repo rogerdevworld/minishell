@@ -31,15 +31,26 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 		exec = init_exec(myenv);
 	if (!exec)
 		return (1);
+	//ft_printf("entra");
 	while (cmd)
 	{
-		if (cmd->limiter)
+		/*if (cmd->limiter)
 			ft_here_doc(cmd->limiter);
+
 		if (!cmd->args || !cmd->args[0])
 		{
+			//write(2, "DEBUG: command sin args\n", 24);
+			//if (cmd->limiter)
+			//{
+			//	write(2, "DEBUG: heredoc en un command sin args\n", 38);
+			//	int tmp_fd = ft_here_doc(cmd->limiter);
+			//	close(tmp_fd);
+			//}
+			//cmd = cmd->next;
+			//continue;
 			cmd = cmd->next;
 			continue ;
-		}
+		}*/
 		exec->builtin_id = get_builtin_cmd(cmd->args[0]);
 		// Ejecutar built-in directamente si no hay pipe
 		if (exec->builtin_id != -1 && cmd->operator!= PIPE && exec->prev_fd ==
@@ -59,6 +70,7 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 			}
 			last_builtin_result = execute_builtin(exec->builtin_id, cmd->args,
 					envp, myenv);
+			ft_printf("\nlast_builtin_result es: %i \n", last_builtin_result);
 			dup2(saved_stdin, STDIN_FILENO);
 			dup2(saved_stdout, STDOUT_FILENO);
 			close(saved_stdin);
@@ -102,31 +114,39 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 			}
 			if (exec->prev_fd != -1)
 				close(exec->prev_fd);
-			//if (minishell->ast_tree->op == AND && minishell->exit == 0)
-			//{
-			//	ft_printf("segundo comando");
-			//}
-			//else
-			//	exit(127);
+			if (minishell->ast_tree->op == AND && minishell->exit == 0)
+			{
+				ft_printf("segundo comando");
+			}
 			if (cmd->operator== PIPE)
 				close(pipefd[0]);
+
 			if (exec->builtin_id != -1)
-				exit(execute_builtin(exec->builtin_id, cmd->args, envp, myenv));
-			path = NULL;
-			if (cmd->args[0][0] == '/' || cmd->args[0][0] == '.')
-				path = ft_strdup(cmd->args[0]);
-			else
-				path = get_path(cmd->args[0], envp);
-			if (!path || access(path, X_OK) != 0)
 			{
-				ft_putstr_fd(cmd->args[0], 2);
-				write(2, ": command not found\n", 30);
-				free(path);
-				exit(EXIT_CMD_NOT_FOUND);
+				execute_builtin(exec->builtin_id, cmd->args, envp, myenv);
+				ft_printf("paso\n");
+				exit (exec->status);
 			}
-			execve(path, cmd->args, myenv->env);
-			///perror("execve");
-			exit(EXIT_CMD_NOT_FOUND);
+			else
+			{
+				char *path = NULL;
+
+				if (cmd->args[0][0] == '/' || cmd->args[0][0] == '.')
+					path = ft_strdup(cmd->args[0]);
+				else
+					path = get_path(cmd->args[0], envp);
+				if (!path || access(path, X_OK) != 0)
+				{
+					//ft_printf("minishell: %s: command not found\n", cmd->args[0]);
+					write(2, "minishell: command not found\n", 30);
+					if (path)
+						free(path);
+					exit(127);
+				}
+				execve(path, cmd->args, myenv->env);
+				perror("execve");
+				exit(127);
+			}
 		}
 		else // Parent
 		{
@@ -178,8 +198,7 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 			int signo = WTERMSIG(exec->status);
 			if (signo == SIGPIPE)
 			{
-				// Puedes decidir qué hacer:
-				// Por ejemplo: setear exit_status = 141 (128+13)
+				//gestionar el SIGPIPE para que en vez de 141 salga 0
 				if (minishell)
 					minishell->exit = 0;
 				else
@@ -225,6 +244,7 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 	return (minishell ? minishell->exit : 0);
 
 }
+
 
 // -- function to execute a command -- //
 // --  de momento esta funcion esta fuera pero la dejare para comandos unicos --

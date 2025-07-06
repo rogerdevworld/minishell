@@ -21,29 +21,30 @@ void	main_loop(char **envp)
 	t_ast_node	*ast_root; //bonus
 	t_executor	*exec; //executor
 	t_minishell	*minishell; //mini final
+	int		last_builtin_result;
 
 	tokens = NULL;
 	myenv = ft_myenv(envp);
 	while (1)
 	{
-		if (g_signal == S_SIGINT)
-			minishell->exit = 1;
 		line = readline(ft_agnoster(envp)); //"text> "
 		if (!line)
 			break ;
 		if (*line)	
 			add_history(line);
-		if (ft_strncmp(line, "exit", 4) == 0)
+		/*if (ft_strncmp(line, "exit", 4) == 0)
 		{
+			last_builtin_result = execute_builtin(exec->builtin_id, cmd->args,
+				envp, myenv);
 			free(line);
 			rl_free_line_state();
 			rl_clear_history();
 			break ;
-		}
+		}*/
 		tokens = lexer(line);
 		cmd = parse_tokens(tokens, envp);
 		// print_tokens(tokens);
-		print_command_list(cmd);
+		// print_command_list(cmd);
 
 		// Construir el AST a partir de la lista de comandos
 		ast_root = build_ast(cmd);
