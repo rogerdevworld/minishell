@@ -25,7 +25,7 @@ t_minishell	*init_minishell(t_myenv *env, t_ast_node *ast_tree, t_token *tokens,
 	minishell->cmd = cmd;
 	minishell->executor = executor;
 	minishell->ast_tree = ast_tree;
-	minishell->exit = executor->status;
+	minishell->exit = 0;
 	return (minishell);
 }
 

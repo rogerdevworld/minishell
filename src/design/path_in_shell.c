@@ -114,7 +114,9 @@ char	*get_user(char **envp)
 char	*get_computer_name(void)
 {
 	static char	hostname[1024];
-	char *str = malloc(8);
+	char		*str;
+
+	str = malloc(8);
 	if (gethostname(hostname, sizeof(hostname)) != 0)
 	{
 		return ("Desconocido");
@@ -123,7 +125,7 @@ char	*get_computer_name(void)
 	return (str);
 }
 
-char	*meta_path(char **envp)
+char	*ft_agnoster(char **envp)
 {
 	char	*prompt[11];
 	char	*result;
@@ -158,4 +160,13 @@ char	*meta_path(char **envp)
 	free(prompt[6]);
 	free(prompt[9]);
 	return (result);
+}
+
+char	*ft_desing(char **envp)
+{
+	//char	*user = get_user(envp);
+	//char	*computer = get_computer_name();
+	char	*path = path_terminal();
+
+	return (ft_strjoin(path, " >"));
 }
