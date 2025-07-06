@@ -65,6 +65,7 @@ int	ft_exit_builtin(char **args)
 	}
 	else
 		exit(status);
+	return (status);
 	//ft_printf("\nel estatus de salida es: %i \n", status);
 }
 
