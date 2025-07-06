@@ -56,8 +56,42 @@ int	execute_builtin(int cmd, char **args, char **envp, t_myenv *myenv)
 	int status = 0;
 	if (cmd == CD)
 		status = ft_cd(args[1], envp);
+	if (cmd == EXIT)
+	{
+		//ft_printf("\n PASO \n");
+		status = ft_exit_builtin(args);
+		ft_printf("\nel estatus de salida es: %i \n", status);
+	}
+	if (cmd == ECHO)
+		ft_echo(args, myenv->list_env);
+	if (cmd == PWD)
+		status = pwd(envp);
+	if (cmd == EXPORT)
+		ft_export(args, myenv);
+	if (cmd == UNSET)
+	{
+		ft_unset(args, myenv);
+		update_env_array(myenv);
+	}
+	if (cmd == ENV)
+		print_env(myenv);
+	if (cmd == CLEAR)
+		clear();
+	//ft_printf("buitings status: %i", status);
+	return (status);
+}
+/*
+int	execute_builtin(int cmd, char **args, char **envp, t_myenv *myenv)
+{
+	int status = 0;
+	if (cmd == CD)
+		status = ft_cd(args[1], envp);
 	else if (cmd == EXIT)
-		ft_exit_builtin(args);
+	{
+		ft_printf("\n PASO \n");
+		status = ft_exit_builtin(args);
+		ft_printf("\nel estatus de salida es: %i \n", status);
+	}
 	else if (cmd == ECHO)
 		ft_echo(args, myenv->list_env);
 	else if (cmd == PWD)
@@ -76,3 +110,4 @@ int	execute_builtin(int cmd, char **args, char **envp, t_myenv *myenv)
 	//ft_printf("buitings status: %i", status);
 	return (status);
 }
+*/

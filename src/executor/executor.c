@@ -65,6 +65,7 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 		exec = init_exec(myenv);
 	if (!exec)
 		return (1);
+	//ft_printf("entra");
 	while (cmd)
 	{
 		/*if (cmd->limiter)
@@ -103,6 +104,7 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 			}
 			last_builtin_result = execute_builtin(exec->builtin_id, cmd->args,
 					envp, myenv);
+			ft_printf("\nlast_builtin_result es: %i \n", last_builtin_result);
 			dup2(saved_stdin, STDIN_FILENO);
 			dup2(saved_stdout, STDOUT_FILENO);
 			close(saved_stdin);

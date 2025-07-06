@@ -38,7 +38,7 @@ int		execute_builtin(int cmd, char **args, char **envp, t_myenv *myenv);
 int	pwd(char **envp);
 void	clear(void);
 int		ft_cd(char *path, char **envp);
-void	ft_exit_builtin(char **args);
+int	ft_exit_builtin(char **args);
 
 // -- local cmd echo -- // 
 void	ft_echo(char **args, t_env *env);

@@ -23,15 +23,16 @@ static int	check_exit(char **args)
 
 	i = 0;
 	count_args = 0;
-	while (args)
+	while (args[count_args])
 		count_args++;
+	//ft_printf("\n args son: %i\n", count_args);
 	if (count_args > 2)
 		return (-1);
 	if (count_args == 2)
 	{
 		while (args[1][i])
 		{
-			if (ft_isdigit(args[1][i]))
+			if (!ft_isdigit(args[1][i]))
 				return (-2);
 			i++;
 		}
@@ -45,25 +46,53 @@ void	ft_exit_builtin(char **args)
 	int	status;
 
 	status = check_exit(args);
-	ft_putstr_fd("exit", 2);
+	//ft_putstr_fd("exit\n", 2);
+	//ft_printf("exit");
 	if (status == -1)
 	{
-		ft_putstr_fd("exit: too many arguments", 2);
-		return ;
+		ft_putstr_fd("exit: too many arguments\n", 2);
+		
+		status = 1;
+		//ft_printf("\nel estatus de salida es: %i \n", status);
 	}
 	else if (status == -2)
 	{
-		ft_putstr_fd("exit", 2);
+		ft_putstr_fd("exit: ", 2);
 		ft_putstr_fd(args[1], 2);
-		ft_putstr_fd(": numeric argument required", 2);
-		exit(2);
+		ft_putstr_fd(": numeric argument required\n", 2);
+		//exit(2);
+		//return (2);
 	}
 	else
 		exit(status);
-	/*ft_putstr_fd("exit", 2);
-	minishell->exit = check_exit(minishell);
-	if (minishell->exit != 1)
-		exit(minishell->exit);
-		ft_putstr_fd("exit: too many arguments", 2);
-		*/
+	//ft_printf("\nel estatus de salida es: %i \n", status);
 }
+
+/*
+int	ft_exit_builtin(char **args)
+{
+	int	status;
+
+	status = check_exit(args);
+	//ft_putstr_fd("exit\n", 2);
+	//ft_printf("exit");
+	if (status == -1)
+	{
+		ft_putstr_fd("exit: too many arguments\n", 2);
+		
+		status = 1;
+		//ft_printf("\nel estatus de salida es: %i \n", status);
+	}
+	else if (status == -2)
+	{
+		ft_putstr_fd("exit: ", 2);
+		ft_putstr_fd(args[1], 2);
+		ft_putstr_fd(": numeric argument required\n", 2);
+		//exit(2);
+		//return (2);
+	}
+	else
+		exit(status);
+	//ft_printf("\nel estatus de salida es: %i \n", status);
+}
+*/
