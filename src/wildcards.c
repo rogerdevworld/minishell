@@ -76,7 +76,6 @@ void	ft_wildcards(char ***args)
 		{
 			char *path = extract_path((*args)[j]);
 			const char *pat = extract_pattern((*args)[j]);
-			// ft_printf("path: %s \npat: %s\n", path, pat);
 			dir = opendir(path);
 			if (!dir)
 			{
