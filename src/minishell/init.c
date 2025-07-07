@@ -11,10 +11,34 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-t_minishell	*init_minishell(t_myenv *env, t_ast_node *ast_tree, t_token *tokens, t_command *cmd,
+/* t_minishell	*init_minishell(t_ast_node *ast, t_token *tokens, t_command *cmd,
+		t_executor *exec)
+{
+	t_minishell	*minishell;
+
+	minishell = malloc(sizeof(t_minishell));
+	if (!minishell)
+		return (NULL);
+	minishell->tokens = tokens;
+	minishell->cmd = cmd;
+	minishell->ast_tree = ast;
+	minishell->executor = exec;
+	minishell->env = exec->myenv;
+	minishell->exit = 0;
+	return (minishell);
+}
+ */
+/**
+ * aantiguo init_minishell usado para inicializar la estructura t_minishell
+ */
+
+t_minishell	*init_minishell(t_myenv *env, t_ast_node *ast_tree, t_token *tokens,
+		t_command *cmd,
 		t_executor *executor)
 {
-	t_minishell *minishell = malloc(sizeof(t_minishell));
+	t_minishell	*minishell;
+
+	minishell = malloc(sizeof(t_minishell));
 	if (!minishell || !env || !tokens || !cmd || !executor)
 	{
 		free(minishell);

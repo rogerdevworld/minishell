@@ -44,6 +44,8 @@ void		restore_redirections(int saved_stdin, int saved_stdout);
 void		print_args(char **args);
 void		ft_check_executor_single(t_minishell *minishell, t_executor *exec, t_command *cmd, char **envp, t_myenv *myenv);
 int			execute_command_list(t_minishell *minishell, t_executor *exec, t_command *cmd, char **envp, t_myenv *myenv);
+//void		ft_check_executor_single(t_minishell *minishell, t_command *cmd);
+//int			execute_command_list(t_minishell *minishell);
 int	execute_astint(t_minishell *minishell, t_executor *exec, t_command *cmd,
 	char **envp, t_myenv *myenv);
 
