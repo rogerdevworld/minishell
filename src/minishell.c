@@ -59,7 +59,7 @@ void	main_loop(char **envp)
 			ft_syntax_check(minishell);
 			int status = execute_command_list(minishell, exec, cmd, envp, myenv);
 			//minishell->exit = status;
-			//ft_printf("status executor: %i\n", status);
+			ft_printf("status executor: %i\n", status);
 		}
 		free_tokens(tokens);
 		free_command_list(cmd);
