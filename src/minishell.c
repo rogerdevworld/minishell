@@ -14,53 +14,38 @@
 // -- main loop for minishell -- //
 void	main_loop(char **envp)
 {
-	char		*line;
-	t_token		*tokens; // tokens first
-	t_command	*cmd; // cmd secound
-	t_myenv		*myenv; // env three
-	t_ast_node	*ast_root; //bonus
-	t_executor	*exec; //executor
-	t_minishell	*minishell; //mini final
+	char	*line;
 	int		last_builtin_result;
+	int		status;
 
+	t_token *tokens;        // tokens first
+	t_command *cmd;         // cmd secound
+	t_myenv *myenv;         // env three
+	t_ast_node *ast_root;   // bonus
+	t_executor *exec;       // executor
+	t_minishell *minishell; // mini final
 	tokens = NULL;
 	myenv = ft_myenv(envp);
-	int status = 0;
+	status = 0;
 	while (1)
 	{
-		line = readline(ft_agnoster(envp, status)); //ft_agnoster(envp, status)"text> "ft_agnoster(envp)
+		line = readline(ft_agnoster(envp, status));
 		if (!line)
 			break ;
-		if (*line)	
+		if (*line)
 			add_history(line);
-		/*if (ft_strncmp(line, "exit", 4) == 0)
-		{
-			last_builtin_result = execute_builtin(exec->builtin_id, cmd->args,
-				envp, myenv);
-			free(line);
-			rl_free_line_state();
-			rl_clear_history();
-			break ;
-		}*/
 		tokens = lexer(line);
 		cmd = parse_tokens(tokens, envp);
-		//print_tokens(tokens);
-		//print_command_list(cmd);
-
-		// Construir el AST a partir de la lista de comandos
+		print_tokens(tokens);
+		print_command_list(cmd);
 		ast_root = build_ast(cmd);
-		//print_ast(ast_root, 0);
+		print_ast(ast_root, 0);
 		exec = init_exec(myenv);
 		minishell = init_minishell(myenv, ast_root, tokens, cmd, exec);
-		// Ejecutar con el AST o con cmd según cómo tengas implementado
 		if (g_signal != S_CANCEL_EXEC)
 		{
-			//int status  = ft_check_executor(minishell, exec, cmd, envp, myenv);
-			//int status  = execute_astint(minishell, exec, cmd, envp, myenv);
 			ft_syntax_check(minishell);
 			status = execute_command_list(minishell, exec, cmd, envp, myenv);
-			//minishell->exit = status;
-			//ft_printf("status executor: %i\n", status);
 		}
 		free_tokens(tokens);
 		free_command_list(cmd);
@@ -69,7 +54,6 @@ void	main_loop(char **envp)
 	}
 	g_signal = S_BASE;
 }
-
 
 void	free_command_list(t_command *cmd)
 {
@@ -93,7 +77,6 @@ void	free_command_list(t_command *cmd)
 			free(cmd->path);
 		if (cmd->limiter)
 			free(cmd->limiter);
-
 		free(cmd);
 		cmd = tmp;
 	}
