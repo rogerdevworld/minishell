@@ -16,23 +16,16 @@ t_ast_node *build_ast(t_command *cmd_list)
     if (!cmd_list)
         return NULL;
 
-    // DEBUG
-    printf("BUILD_AST: cmd = %s | op = %s\n",
-        cmd_list->args ? cmd_list->args[0] : "NULL",
-        cmd_list->operator ? cmd_list->operator : "NULL"
-    );
-	printf("Try with the operators %s\n", cmd_list->operator);
     // Caso hoja: sin operador
     if (!cmd_list->next)
     {
         t_ast_node *node = malloc(sizeof(t_ast_node));
         if (!node) return NULL;
 
-        node->op = ft_strdup("WORD");
+        node->op = cmd_list->operator;
         node->cmd = cmd_list;
         node->left = NULL;
         node->right = NULL;
-
         return node;
     }
 
@@ -40,10 +33,11 @@ t_ast_node *build_ast(t_command *cmd_list)
     t_command *tmp = cmd_list;
     t_command *prev = NULL;
 
-    while (tmp && tmp->operator && ft_strcmp(tmp->operator, "WORD") == 0)
+    while (tmp && tmp->operator >= 0 && ft_strcmp(tmp->operator, "WORD") == 0)
     {
         prev = tmp;
         tmp = tmp->next;
+		
     }
 
     if (!tmp)
@@ -52,7 +46,7 @@ t_ast_node *build_ast(t_command *cmd_list)
         t_ast_node *node = malloc(sizeof(t_ast_node));
         if (!node) return NULL;
 
-        node->op = ft_strdup("WORD");
+        node->op = ft_strdup(tmp->operator);
         node->cmd = cmd_list;
         node->left = NULL;
         node->right = NULL;

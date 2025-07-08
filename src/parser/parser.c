@@ -51,7 +51,7 @@ void	handle_redirect(t_command *cmd, t_token **tokens)
 	}
 }
 
-const char	*operator_to_str(int token_type)
+char	*operator_to_str(int token_type)
 {
 	if (token_type == TOKEN_PIPE)
 		return "|";
@@ -75,7 +75,8 @@ const char	*operator_to_str(int token_type)
 		return "WORD";
 	else if (token_type == TOKEN_INVALID)
 		return "INVALID";
-	return "UNKNOWN";
+	else
+		return "UNKNOWN";
 }
 
 
@@ -98,22 +99,23 @@ t_command	*parse_tokens(t_token *tokens, char **envp)
 			clean_arg = remove_quotes(tokens->value);
 			tmp->args[i++] = clean_arg;
 			tmp->path = get_path(tmp->args[0], envp);
+			tmp->operator = ft_strdup(operator_to_str(tokens->type));
+
 		}
-		else if (tokens->type == TOKEN_REDIR_IN
-			|| tokens->type == TOKEN_REDIR_OUT || tokens->type == TOKEN_APPEND
-			|| tokens->type == TOKEN_HEREDOC)
+		else if (tokens->type == TOKEN_REDIR_IN || tokens->type == TOKEN_REDIR_OUT || tokens->type == TOKEN_APPEND || tokens->type == TOKEN_HEREDOC)
 		{
 			handle_redirect(tmp, &tokens);
+			if (tokens)
+				tokens = tokens->next;
+			continue ;
 		}
-		else if (tokens->type == TOKEN_PIPE || tokens->type == TOKEN_AND
-			|| tokens->type == TOKEN_OR)
+		else if (tokens->type == TOKEN_AND || tokens->type == TOKEN_OR)
 		{
 			tmp->next = init_command();
 			if (!tmp->next)
 				return (NULL);
 			tmp = tmp->next;
 			tmp->operator = ft_strdup(operator_to_str(tokens->type));
-			//tmp->args[0] = ft_strdup(operator_to_str(tokens->type));
 			tmp->next = init_command();
 			if (!tmp->next)
 				return (NULL);
@@ -133,7 +135,8 @@ void	print_command_list(t_command *cmds)
 	k = 1;
 	while (cmds)
 	{
-		ft_printf("OPERADOR: %s\n", operator_to_str(cmds->operator));
+		ft_printf("NODO: %p\n", cmds);
+		ft_printf("OPERADOR: %s\n", cmds->operator);
 		ft_printf("--comando %i:\n", k);
 		i = 0;
 		while (cmds->args[i])
