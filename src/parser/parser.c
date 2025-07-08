@@ -96,8 +96,9 @@ t_command	*parse_tokens(t_token *tokens, char **envp)
 		{
 			//printf("TOKEN: %s (tipo %d)\n", tokens->value, tokens->type);
 			//printf("ARG[%d]: %s\n", i, current->args[i]);
-			clean_arg = remove_quotes(tokens->value);//para quitar las comillas.
-			current->args[i] = clean_arg;
+			// clean_arg = remove_quotes(tokens->value);//para quitar las comillas.
+			// current->args[i] = clean_arg;
+			current->args[i] = ft_strdup(tokens->value);
 			// -- el path de args[0] simpre sera asi pero eso el 0 esta statico --
 				//
 			//free(clean_arg);
@@ -116,11 +117,11 @@ t_command	*parse_tokens(t_token *tokens, char **envp)
 		{
 			// -- estoy haciendo un arbol de ejecucion para ver grupo de comandso orden etc --
 				//
-			current->next = init_command();
-			if (!current->next)
-				return (NULL);
-			current = current->next;
-			current->args[0] = ft_strdup(operator_to_str(resolve_operator(tokens->value)));
+			// current->next = init_command();
+			// if (!current->next)
+			// 	return (NULL);
+			// current = current->next;
+			//current->args[0] = ft_strdup(operator_to_str(resolve_operator(tokens->value)));
 			current->operator = resolve_operator(tokens->value);
 			current->next = init_command();
 			if (!current->next)
@@ -184,7 +185,7 @@ t_operator	resolve_operator(char *operator)
 		return (OR);
 	if (ft_strcmp(operator, "&&") == 0)
 		return (AND);
-	if (ft_strncmp(operator, "|", 1) == 0)
+	if (ft_strcmp(operator, "|") == 0)
 		return (PIPE);
 	return (COMMAND);
 }
@@ -199,5 +200,6 @@ const char* operator_to_str(t_operator op)
         return "||";
     else if (op == COMMAND)
         return "COMMAND";
-    return "UNKNOWN";
+	else
+		return ("UNKNOWN");
 }

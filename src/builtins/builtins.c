@@ -51,31 +51,34 @@ int	get_builtin_cmd(char *cmd)
 }
 
 // -- design -- //
-int	execute_builtin(int cmd, char **args, char **envp, t_myenv *myenv)
+int	execute_builtin(t_minishell *minishell , char **args, char **envp, t_myenv *myenv)
 {
 	int status = 0;
-	if (cmd == CD)
+	if (minishell->executor->builtin_id == CD)
 		status = ft_cd(args[1], envp);
-	if (cmd == EXIT)
+	if (minishell->executor->builtin_id == EXIT)
 	{
 		//ft_printf("\n PASO \n");
 		status = ft_exit_builtin(args);
-		ft_printf("\nel estatus de salida es: %i \n", status);
+		//ft_printf("\nel estatus de salida es: %i \n", status);
 	}
-	if (cmd == ECHO)
-		ft_echo(args, myenv->list_env);
-	if (cmd == PWD)
+	if (minishell->executor->builtin_id == ECHO)
+	{
+		status = ft_echo(minishell, args, myenv->list_env);
+		ft_printf("\n%s\n", args[0]);
+	}
+	if (minishell->executor->builtin_id == PWD)
 		status = pwd(envp);
-	if (cmd == EXPORT)
+	if (minishell->executor->builtin_id == EXPORT)
 		ft_export(args, myenv);
-	if (cmd == UNSET)
+	if (minishell->executor->builtin_id == UNSET)
 	{
 		ft_unset(args, myenv);
 		update_env_array(myenv);
 	}
-	if (cmd == ENV)
+	if (minishell->executor->builtin_id == ENV)
 		print_env(myenv);
-	if (cmd == CLEAR)
+	if (minishell->executor->builtin_id == CLEAR)
 		clear();
 	//ft_printf("buitings status: %i", status);
 	return (status);

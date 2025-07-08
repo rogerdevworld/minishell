@@ -11,10 +11,50 @@
 /* ************************************************************************** */
 #include "../include/minishell.h"
 
+void	print_parser(t_command *cmd)
+{
+	int i;
+	const char *op_strs[] = { "NONE", "PIPE", "AND", "OR" };
+
+	while (cmd)
+	{
+		printf("----- Comando -----\n");
+
+		// Mostrar los argumentos
+		i = 0;
+		while (cmd->args && cmd->args[i])
+		{
+			printf("arg[%d]: %s\n", i, cmd->args[i]);
+			i++;
+		}
+
+		// Mostrar path si existe
+		if (cmd->path)
+			printf("path: %s\n", cmd->path);
+
+		// Mostrar redirecciones
+		if (cmd->input_file != -1)
+			printf("input_file: %d\n", cmd->input_file);
+		if (cmd->output_file != -1)
+			printf("output_file: %d\n", cmd->output_file);
+
+		// Mostrar heredoc
+		if (cmd->limiter)
+			printf("heredoc limiter: %s\n", cmd->limiter);
+
+		// Mostrar operador
+		if (cmd->operator >= 0 && cmd->operator <= 3)
+			printf("operator: %s\n", op_strs[cmd->operator]);
+		else
+			printf("operator: UNKNOWN (%d)\n", cmd->operator);
+
+		cmd = cmd->next;
+	}
+}
 /**
  * nueva version de main_loop
  */
-/* void	main_loop(char **envp)
+void	main_loop(char **envp)
 {
 	char	*line;
 	int		status;
@@ -26,7 +66,9 @@
 	t_minishell *minishell;
 
 	tokens = NULL;
+	//status = exec->status;
 	myenv = ft_myenv(envp);
+	status = 0;
 	while (1)
 	{
 		line = readline(ft_agnoster(envp));
@@ -35,18 +77,23 @@
 		if (*line)
 			add_history(line);
 		tokens = lexer(line);
+		//print_tokens(tokens);
 		cmd = parse_tokens(tokens, envp);
+		//print_parser(cmd);
 		ast_root = build_ast(cmd);
 		//print_ast(ast_root, 0);
 		exec = init_exec(myenv);
 		exec->envp = envp;
 		minishell = init_minishell(ast_root, tokens, cmd, exec);
+		//status = minishell->exit;
 		if (g_signal != S_CANCEL_EXEC)
 		{
 			// Aquí puedes elegir si ejecutas AST o lista de comandos:
 			// int status = execute_ast(minishell);
-			status = execute_command_list(minishell);
-			ft_printf("status executor: %i\n", status);
+			//status = execute_command_list(minishell);
+			status = ft_check_executor(minishell, minishell->executor, cmd, exec->envp, exec->myenv);
+			minishell->exit = status;
+			//ft_printf("status executor: %i\n", status);
 		}
 		// Liberar recursos
 		free_tokens(tokens);
@@ -55,15 +102,15 @@
 		free(line);
 	}
 	g_signal = S_BASE;
-} */
+} 
 
 /**
  * old main_loop, funciona pero se cambia para manejar todo en una sola
  * estructura tipo t_minishell
  */
 // -- main loop for minishell -- //
-
-void	main_loop(char **envp)
+/* 
+ void	main_loop(char **envp)
 {
 	char	*line;
 	int		last_builtin_result;
@@ -79,7 +126,8 @@ void	main_loop(char **envp)
 	myenv = ft_myenv(envp);
 	while (1)
 	{
-		line = readline(ft_agnoster(envp)); //"text> "
+		//line = readline("meta_path(envp)"); //"text> "
+		line = readline("minishell> "); //"text> "
 		if (!line)
 			break ;
 		if (*line)
@@ -96,18 +144,18 @@ void	main_loop(char **envp)
 		tokens = lexer(line);
 		cmd = parse_tokens(tokens, envp);
 		// Construir el AST a partir de la lista de comandos
-		ast_root = build_ast(cmd);
+		ast_root = build_ast(cmd); //aqui es donde esta el fallo 
 		print_ast(ast_root, 0);
 		exec = init_exec(myenv);
 		minishell = init_minishell(myenv, ast_root, tokens, cmd, exec);
 		// Ejecutar con el AST o con cmd según cómo tengas implementado
 		if (g_signal != S_CANCEL_EXEC)
 		{
-			//int status  = ft_check_executor(minishell, exec, cmd, envp,
-			//		myenv);
+			status  = ft_check_executor(minishell, exec, cmd, envp,
+					myenv);
 			//int status  = execute_astint(minishell, exec, cmd, envp, myenv);
-			status = execute_command_list(minishell, exec, cmd, envp, myenv);
-			//minishell->exit = status;
+			//status = execute_command_list(minishell, exec, cmd, envp, myenv);
+			minishell->exit = status;
 			ft_printf("status executor: %i\n", status);
 		}
 		free_tokens(tokens);
@@ -116,8 +164,8 @@ void	main_loop(char **envp)
 		free(line);
 	}
 	g_signal = S_BASE;
-}
-
+} */
+ 
 
 void	free_command_list(t_command *cmd)
 {

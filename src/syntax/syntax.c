@@ -11,64 +11,83 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-// -- serparacion general del bonus por lista de comandos -- //
-t_ast_node *build_ast(t_command *cmd_list)
+t_ast_node	*build_ast(t_command *cmd_list)
 {
-    if (!cmd_list)
-        return NULL;
+	t_ast_node	*node;
 
-    // Caso hoja
-    if (cmd_list->operator == COMMAND || cmd_list->operator == NONE)
-    {
-        t_ast_node *node = malloc(sizeof(t_ast_node));
-        if (!node)
-            return NULL;
-        node->op = COMMAND;
-        node->cmd = cmd_list;
-        node->left = NULL;
-        node->right = NULL;
-        return node;
-    }
-
-    // Buscar primer operador en la lista
-    t_command *current = cmd_list;
-    t_command *prev = NULL;
-
-    while (current && (current->operator == COMMAND || current->operator == NONE))
-    {
-        prev = current;
-        current = current->next;
-    }
-
-    if (!current)
-    {
-        // Sólo comandos sin operador
-        t_ast_node *node = malloc(sizeof(t_ast_node));
-        if (!node)
-            return NULL;
-        node->op = COMMAND;
-        node->cmd = cmd_list;
-        node->left = NULL;
-        node->right = NULL;
-        return node;
-    }
-
-    // Crear nodo operador
-    t_ast_node *node = malloc(sizeof(t_ast_node));
-    if (!node)
-        return NULL;
-    node->op = current->operator;
-    node->cmd = current;
-
-    // Cortar lista para dividir
-    if (prev)
-        prev->next = NULL;
-
-    node->left = build_ast(cmd_list);
-    node->right = build_ast(current->next);
-
-    return node;
+	if (!cmd_list)
+		return (NULL);
+	node = malloc(sizeof(t_ast_node));
+	if (!node)
+		return (NULL);
+	if (cmd_list->operator== COMMAND || cmd_list->operator== NONE)
+	{
+		node->op = COMMAND;
+		node->cmd = cmd_list;
+		node->left = NULL;
+		node->right = NULL;
+		return (node);
+	}
+	else
+	{
+		node->op = cmd_list->operator;
+		node->cmd = cmd_list;
+		node->left = build_ast_without_operator(cmd_list);
+		node->right = build_ast(cmd_list->next);
+	}
+	return (node);
 }
+
+// -- serparacion general del bonus por lista de comandos -- //
+// t_ast_node *build_ast(t_command *cmd_list)
+// {
+//     if (!cmd_list)
+//         return NULL;
+//     // Caso hoja
+//     if (cmd_list->operator == COMMAND || cmd_list->operator == NONE)
+//     {
+//         t_ast_node *node = malloc(sizeof(t_ast_node));
+//         if (!node)
+//             return NULL;
+//         node->op = COMMAND;
+//         node->cmd = cmd_list;
+//         node->left = NULL;
+//         node->right = NULL;
+//         return node;
+//     }
+//     // Buscar primer operador en la lista
+//     t_command *current = cmd_list;
+//     t_command *prev = NULL;
+//     while (current && (current->operator == COMMAND || current->operator == NONE))
+//     {
+//         prev = current;
+//         current = current->next;
+//     }
+//     if (!current)
+//     {
+//         // Sólo comandos sin operador
+//         t_ast_node *node = malloc(sizeof(t_ast_node));
+//         if (!node)
+//             return NULL;
+//         node->op = COMMAND;
+//         node->cmd = cmd_list;
+//         node->left = NULL;
+//         node->right = NULL;
+//         return node;
+//     }
+//     // Crear nodo operador
+//     t_ast_node *node = malloc(sizeof(t_ast_node));
+//     if (!node)
+//         return NULL;
+//     node->op = current->operator;
+//     node->cmd = current;
+//     // Cortar lista para dividir
+//     if (prev)
+//         prev->next = NULL;
+//     node->left = build_ast(cmd_list);
+//     node->right = build_ast(current->next);
+//     return node;
+// }
 
 
 // Liberar recursivamente todo el AST
