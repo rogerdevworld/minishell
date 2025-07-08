@@ -61,7 +61,7 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 		// Manejo de operadores lógicos
 		//if (ft_strcmp(current->args[0], "&&") == 0)
 		ft_printf("status executor antes de : %i\n", minishell->exit);
-		if (exec->builtin_id != -1 && current->operator != PIPE && exec->prev_fd == -1)
+		if (exec->builtin_id != -1 && current->operator != TOKEN_PIPE && exec->prev_fd == -1)
 		{
 			int saved_stdin = dup(STDIN_FILENO);
 			int saved_stdout = dup(STDOUT_FILENO);
@@ -89,7 +89,7 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 		}
 
 		// PIPE
-		if (current->operator == PIPE)
+		if (current->operator == TOKEN_PIPE)
 			if (pipe(pipefd) == -1)
 				ft_exit("pipe failed");
 
@@ -110,7 +110,7 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 
 			if (current->output_file != -1)
 				dup2(current->output_file, STDOUT_FILENO);
-			else if (current->operator == PIPE)
+			else if (current->operator == TOKEN_PIPE)
 			{
 				close(pipefd[0]);
 				dup2(pipefd[1], STDOUT_FILENO);
@@ -119,7 +119,7 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 			if (exec->prev_fd != -1)
 				close(exec->prev_fd);
 
-			if (current->operator == PIPE)
+			if (current->operator == TOKEN_PIPE)
 				close(pipefd[0]);
 
 			if (exec->builtin_id != -1)
@@ -146,7 +146,7 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 			pids[i++] = exec->pid;
 			if (exec->prev_fd != -1)
 				close(exec->prev_fd);
-			if (current->operator == PIPE)
+			if (current->operator == TOKEN_PIPE)
 			{
 				close(pipefd[1]);
 				exec->prev_fd = pipefd[0];
@@ -692,3 +692,4 @@ void	print_args(char **args)
 		i++;
 	}
 }
+	*/
