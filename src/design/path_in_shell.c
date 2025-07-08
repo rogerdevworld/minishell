@@ -121,46 +121,84 @@ char	*get_computer_name(void)
 	{
 		return ("Desconocido");
 	}
-	ft_strlcpy(str, hostname, 8);
+	ft_strlcpy(str, hostname, 7);
 	return (str);
 }
 
-char	*ft_agnoster(char **envp)
+char	*ft_agnoster(char **envp, int status)
 {
-	char	*prompt[11];
+	char	*prompt[14];
 	char	*result;
 
-	prompt[0] = "\033[44m ⚙ ⚡";
+	prompt[0] = "\033[44m 🐧";
 	prompt[1] = get_user(envp);
 	prompt[2] = "@";
 	prompt[3] = get_computer_name();
 	prompt[4] = "\033[42m\033[34m\033[0m";
 	prompt[5] = "\033[42m";
 	prompt[6] = path_terminal();
+
 	if (get_git_branch())
 	{
-		prompt[7] = " \033[43m\033[32m\033[0m";
-		prompt[8] = "\033[31m\033[43m   ";
+		prompt[7] = " \033[43m\033[32m\033[0m";                 // Desde verde a amarillo (git)
+		prompt[8] = "\033[43m\033[32m   ";                      // Fondo amarillo, texto verde
 		prompt[9] = get_git_branch();
-		prompt[10] = " ● \033[0m\033[33m\033[0m\n$";
+	
+		if (status == 0)
+			prompt[10] = " ● \033[42m\033[33m\033[42m";          // Amarillo → verde si ok
+		else
+			prompt[10] = " ● \033[41m\033[33m\033[41m";          // Amarillo → rojo si error
 	}
 	else
 	{
-		prompt[7] = " \033[0m\033[32m\033[0m";
-		prompt[8] = "\033[0m\n$";
+		if (status == 0)
+			prompt[7] = "\033[42m\033[33m\033[0m";             // Verde directamente
+		else
+			prompt[7] = "\033[42m\033[33m\033[0m";             // Rojo directamente
+	
+		prompt[8] = "";    // No git branch, se omite
 		prompt[9] = NULL;
 		prompt[10] = NULL;
 	}
+
+	char *status_str = ft_itoa(status);
+
+	if (status == 0)
+	{
+		prompt[11] = " \033[42m\033[31m\033[0m";  // Verde → bloque de estado
+		prompt[12] = ft_strjoin(
+			"\033[42m\033[32m ✅ ",
+			ft_strjoin("\033[37m", ft_strjoin(status_str, "\033[32m\033[49m\033[0m"))
+		);
+	}
+	else
+	{
+		prompt[11] = " \033[41m\033[32m\033[0m";  // Rojo → bloque de error
+		prompt[12] = ft_strjoin(
+			"\033[41m\033[32m ❌ ",
+			ft_strjoin("\033[37m", ft_strjoin(status_str, "\033[31m\033[49m\033[0m"))
+		);
+	}
+	prompt[13] = "\033[0m\n";
+	free(status_str);
+	
+	
+ 	
+
+	// Concatenación segura (mejor usar bucles o builder, pero siguiendo tu estilo):
 	result = ft_strjoin(prompt[0], ft_strjoin(prompt[1], ft_strjoin(prompt[2],
-					ft_strjoin(prompt[3], ft_strjoin(prompt[4],
-							ft_strjoin(prompt[5], ft_strjoin(prompt[6],
-									ft_strjoin(prompt[7], ft_strjoin(prompt[8],
-											ft_strjoin(prompt[9],
-												prompt[10]))))))))));
+		ft_strjoin(prompt[3], ft_strjoin(prompt[4], ft_strjoin(prompt[5],
+		ft_strjoin(prompt[6], ft_strjoin(prompt[7], ft_strjoin(prompt[8],
+		ft_strjoin(prompt[9] ? prompt[9] : "", ft_strjoin(prompt[10] ? prompt[10] : "",
+		ft_strjoin(prompt[11], ft_strjoin(prompt[12], prompt[13])))))))))))));
+
 	free(prompt[6]);
-	free(prompt[9]);
+	if (prompt[9])
+		free(prompt[9]);
+
 	return (result);
 }
+
 
 char	*ft_desing(char **envp)
 {

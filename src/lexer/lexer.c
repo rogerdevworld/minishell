@@ -48,16 +48,28 @@ t_token	*init_lexer(char *token)
 		free(result);
 		return (NULL);
 	}
-	if (ft_strcmp(token, "&&") == 0)
-		result->type = TOKEN_OPERATOR;
-	else if (ft_strcmp(token, "||") == 0)
-		result->type = TOKEN_OPERATOR;
-	else if (token[0] == '\'' || token[0] == '"')
-		result->type = TOKEN_ARGUMENT;
-	else if (token[0] == '>' || token[0] == '<')
-		result->type = TOKEN_REDIRECTION;
+	if (ft_strncmp(token, "||", 2) == 0)
+		result->type = TOKEN_OR;
+	else if (ft_strcmp(token, "<") == 0)
+		result->type = TOKEN_REDIR_IN;
+	else if (ft_strcmp(token, ">") == 0)
+		result->type = TOKEN_REDIR_OUT;
+	else if (ft_strcmp(token, ">>") == 0)
+		result->type = TOKEN_APPEND;
+	else if (ft_strcmp(token, "<<") == 0)
+		result->type = TOKEN_HEREDOC;
+	else if (ft_strcmp(token, "&&") == 0)
+		result->type = TOKEN_AND;
+	else if (ft_strcmp(token, "|") == 0)
+		result->type = TOKEN_PIPE;
+	else if (ft_strcmp(token, "(") == 0)
+		result->type = TOKEN_OPEN_PAREN;
+	else if (ft_strcmp(token, ")") == 0)
+		result->type = TOKEN_CLOSE_PAREN;
+	else if (token[0] == '\0')
+		result->type = TOKEN_INVALID;
 	else
-		result->type = TOKEN_COMMAND;
+		result->type = TOKEN_WORD;
 	result->next = NULL;
 	return (result);
 }

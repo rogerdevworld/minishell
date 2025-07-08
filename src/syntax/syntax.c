@@ -11,31 +11,62 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-t_ast_node	*build_ast(t_command *cmd_list)
+t_ast_node *build_ast(t_command *cmd_list)
 {
 	t_ast_node	*node;
 
-	if (!cmd_list)
-		return (NULL);
-	node = malloc(sizeof(t_ast_node));
-	if (!node)
-		return (NULL);
-	if (cmd_list->operator== COMMAND || cmd_list->operator== NONE)
-	{
-		node->op = COMMAND;
-		node->cmd = cmd_list;
-		node->left = NULL;
-		node->right = NULL;
-		return (node);
-	}
-	else
-	{
-		node->op = cmd_list->operator;
-		node->cmd = cmd_list;
-		node->left = build_ast_without_operator(cmd_list);
-		node->right = build_ast(cmd_list->next);
-	}
-	return (node);
+    // Caso hoja: sin operador
+    if (!cmd_list->next)
+    {
+        t_ast_node *node = malloc(sizeof(t_ast_node));
+        if (!node) return NULL;
+
+        node->op = cmd_list->operator;
+        node->cmd = cmd_list;
+        node->left = NULL;
+        node->right = NULL;
+        return node;
+    }
+
+    // Buscar primer operador
+    t_command *tmp = cmd_list;
+    t_command *prev = NULL;
+
+    while (tmp && tmp->operator >= 0 && ft_strcmp(tmp->operator, "WORD") == 0)
+    {
+        prev = tmp;
+        tmp = tmp->next;
+		
+    }
+
+    if (!tmp)
+    {
+        // No se encontró operador
+        t_ast_node *node = malloc(sizeof(t_ast_node));
+        if (!node) return NULL;
+
+        node->op = ft_strdup(tmp->operator);
+        node->cmd = cmd_list;
+        node->left = NULL;
+        node->right = NULL;
+
+        return node;
+    }
+
+    // Cortar lista antes del operador
+    if (prev)
+        prev->next = NULL;
+
+    t_ast_node *node = malloc(sizeof(t_ast_node));
+    if (!node) return NULL;
+
+    node->op = ft_strdup(tmp->operator);
+    node->cmd = tmp;
+
+    node->left = build_ast(cmd_list);
+    node->right = build_ast(tmp->next);
+
+    return node;
 }
 
 // -- serparacion general del bonus por lista de comandos -- //
@@ -116,8 +147,8 @@ void	print_ast(t_ast_node *root, int level)
 	if (!root)
 		return ;
 	print_indent(level);
-	printf("Nodo AST - operador: %s\n", operator_to_str(root->op));
-	if (root->cmd && root->op == COMMAND)
+	printf("Nodo AST - operador: %s, Valor: %i \n", root->op, ft_strcmp(root->op, "WORD"));
+	if (root->cmd && ft_strcmp(root->op, "WORD") == 0)
 	{
 		print_indent(level + 1);
 		printf("Comando: %s\n", root->cmd->args[0]);
@@ -161,7 +192,7 @@ void	print_ast(t_ast_node *root, int level)
 t_ast_node *build_ast_without_operator(t_command *cmd_list)
 {
 	t_ast_node	*root = NULL;
-	t_ast_node	*current = NULL;
+	t_ast_node	*tmp = NULL;
 	t_ast_node	*new_node;
 
 	while (cmd_list)
@@ -172,7 +203,7 @@ t_ast_node *build_ast_without_operator(t_command *cmd_list)
 			free_ast(root);
 			return (NULL);
 		}
-		new_node->op = COMMAND;
+		new_node->op = ft_strdup("WORD");
 		new_node->cmd = cmd_list;
 		new_node->left = NULL;
 		new_node->right = NULL;
@@ -180,13 +211,13 @@ t_ast_node *build_ast_without_operator(t_command *cmd_list)
 		if (!root)
 		{
 			root = new_node;
-			current = new_node;
+			tmp = new_node;
 		}
 		else
 		{
 			// Como no hay operador, vamos enlazando por derecha como lista simple (opcional)
-			current->right = new_node;
-			current = new_node;
+			tmp->right = new_node;
+			tmp = new_node;
 		}
 
 		cmd_list = cmd_list->next;

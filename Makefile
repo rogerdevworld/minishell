@@ -29,7 +29,8 @@ SRCS =	$(SRC_DIR)minishell.c $(SRC_DIR)minishell/init.c $(SRC_DIR)exit.c \
 	$(SRC_DIR)here_doc.c \
 	$(SRC_DIR)env.c \
 	$(SRC_DIR)wildcards.c \
-	$(SRC_DIR)/syntax/syntax.c
+	$(SRC_DIR)syntax/syntax.c \
+	$(SRC_DIR)utils/ft_shlvl.c
 
 OBJS = $(SRCS:$(SRC_DIR)%.c=$(OBJ_DIR)/%.o)
 
@@ -83,6 +84,7 @@ $(OBJ_DIR):
 	mkdir -p ./obj/design
 	mkdir -p ./obj/redirections
 	mkdir -p ./obj/syntax
+	mkdir -p ./obj/utils
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)%.c $(HEADER) Makefile | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
