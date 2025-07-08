@@ -28,7 +28,7 @@ void	main_loop(char **envp)
 	int status = 0;
 	while (1)
 	{
-		line = readline(ft_agnoster(envp, status)); //"text> "ft_agnoster(envp)
+		line = readline("minishell >"); //ft_agnoster(envp, status)"text> "ft_agnoster(envp)
 		if (!line)
 			break ;
 		if (*line)	
@@ -44,12 +44,12 @@ void	main_loop(char **envp)
 		}*/
 		tokens = lexer(line);
 		cmd = parse_tokens(tokens, envp);
-		// print_tokens(tokens);
-		// print_command_list(cmd);
+		print_tokens(tokens);
+		print_command_list(cmd);
 
 		// Construir el AST a partir de la lista de comandos
 		ast_root = build_ast(cmd);
-		//print_ast(ast_root, 0);
+		print_ast(ast_root, 0);
 		exec = init_exec(myenv);
 		minishell = init_minishell(myenv, ast_root, tokens, cmd, exec);
 		// Ejecutar con el AST o con cmd según cómo tengas implementado

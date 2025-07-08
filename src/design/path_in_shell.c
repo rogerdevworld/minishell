@@ -121,7 +121,7 @@ char	*get_computer_name(void)
 	{
 		return ("Desconocido");
 	}
-	ft_strlcpy(str, hostname, 8);
+	ft_strlcpy(str, hostname, 7);
 	return (str);
 }
 

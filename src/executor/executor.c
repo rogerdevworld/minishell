@@ -58,7 +58,7 @@ static void child_process(t_executor *exec, t_command *cmd, char **envp, t_myenv
         dup2(cmd->output_file, STDOUT_FILENO);
         close(cmd->output_file);
     }
-    else if (cmd->operator == PIPE)
+    else if (ft_strcmp(cmd->operator, "|") == 0)
     {
         close(pipefd[0]);
         dup2(pipefd[1], STDOUT_FILENO);
@@ -90,7 +90,7 @@ static void parent_process(t_minishell *minishell, t_executor *exec, t_command *
     if (exec->prev_fd != -1)
         close(exec->prev_fd);
 
-    if (cmd->operator == PIPE)
+    if (ft_strcmp(cmd->operator, "|") == 0)
     {
         close(pipefd[1]);
         exec->prev_fd = pipefd[0];
@@ -138,12 +138,12 @@ void ft_check_executor_single(t_minishell *minishell, t_executor *exec, t_comman
     if (!cmd->args || !cmd->args[0])
         return;
     exec->builtin_id = get_builtin_cmd(cmd->args[0]);
-    if (exec->builtin_id != -1 && cmd->operator != PIPE && exec->prev_fd == -1)
+    if (exec->builtin_id != -1 && (ft_strcmp(cmd->operator, "PIPE") == 0) && exec->prev_fd == -1)
     {
         execute_builtin_no_pipe(minishell, exec, cmd, envp, myenv);
         return ;
     }
-    if (cmd->operator == PIPE)
+    if (ft_strcmp(cmd->operator, "|") == 0)
     {
         if (pipe(pipefd) == -1)
             ft_exit("pipe failed");
