@@ -15,7 +15,7 @@
 // -- lexer.h -- //
 char	*path_terminal(void);
 char	*get_git_branch(void);
-char	*ft_agnoster(char **envp);
+char	*ft_agnoster(char **envp, int status);
 char	*get_computer_name(void);
 char	*get_user(char **envp);
 

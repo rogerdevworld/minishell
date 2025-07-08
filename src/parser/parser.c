@@ -204,6 +204,8 @@ const char* operator_to_str(t_operator op)
 
 void	ft_syntax_check(t_minishell *minishell)
 {
+	if (!minishell)
+		return ;
 	// -- caso shlvl -- //
 	if (ft_strcmp(minishell->cmd->args[0], "./minishell"))
 		ft_shlvl(minishell);

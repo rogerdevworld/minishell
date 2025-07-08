@@ -25,9 +25,10 @@ void	main_loop(char **envp)
 
 	tokens = NULL;
 	myenv = ft_myenv(envp);
+	int status = 0;
 	while (1)
 	{
-		line = readline("minishell> "); //"text> "ft_agnoster(envp)
+		line = readline(ft_agnoster(envp, status)); //"text> "ft_agnoster(envp)
 		if (!line)
 			break ;
 		if (*line)	
@@ -57,7 +58,7 @@ void	main_loop(char **envp)
 			//int status  = ft_check_executor(minishell, exec, cmd, envp, myenv);
 			//int status  = execute_astint(minishell, exec, cmd, envp, myenv);
 			ft_syntax_check(minishell);
-			int status = execute_command_list(minishell, exec, cmd, envp, myenv);
+			status = execute_command_list(minishell, exec, cmd, envp, myenv);
 			//minishell->exit = status;
 			//ft_printf("status executor: %i\n", status);
 		}
