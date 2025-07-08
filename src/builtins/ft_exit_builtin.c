@@ -25,7 +25,6 @@ static int	check_exit(char **args)
 	count_args = 0;
 	while (args[count_args])
 		count_args++;
-	//ft_printf("\n args son: %i\n", count_args);
 	if (count_args > 2)
 		return (-1);
 	if (count_args == 2)
@@ -46,14 +45,11 @@ int	ft_exit_builtin(char **args)
 	int	status;
 
 	status = check_exit(args);
-	//ft_putstr_fd("exit\n", 2);
-	//ft_printf("exit");
 	if (status == -1)
 	{
 		ft_putstr_fd("exit: too many arguments\n", 2);
 		
 		status = 1;
-		//ft_printf("\nel estatus de salida es: %i \n", status);
 	}
 	else if (status == -2)
 	{
@@ -61,39 +57,9 @@ int	ft_exit_builtin(char **args)
 		ft_putstr_fd(args[1], 2);
 		ft_putstr_fd(": numeric argument required\n", 2);
 		//exit(2);
-		//return (2);
 	}
 	else
 		exit(status);
 	return (status);
-	//ft_printf("\nel estatus de salida es: %i \n", status);
 }
 
-/*
-int	ft_exit_builtin(char **args)
-{
-	int	status;
-
-	status = check_exit(args);
-	//ft_putstr_fd("exit\n", 2);
-	//ft_printf("exit");
-	if (status == -1)
-	{
-		ft_putstr_fd("exit: too many arguments\n", 2);
-		
-		status = 1;
-		//ft_printf("\nel estatus de salida es: %i \n", status);
-	}
-	else if (status == -2)
-	{
-		ft_putstr_fd("exit: ", 2);
-		ft_putstr_fd(args[1], 2);
-		ft_putstr_fd(": numeric argument required\n", 2);
-		//exit(2);
-		//return (2);
-	}
-	else
-		exit(status);
-	//ft_printf("\nel estatus de salida es: %i \n", status);
-}
-*/
