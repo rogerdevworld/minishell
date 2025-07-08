@@ -43,8 +43,6 @@ static void child_process(t_executor *exec, t_command *cmd, char **envp, t_myenv
 
     signal(SIGINT, SIG_DFL);
     signal(SIGQUIT, SIG_DFL);
-
-    // Input redirection
     if (cmd->input_file != -1)
     {
         dup2(cmd->input_file, STDIN_FILENO);
@@ -55,8 +53,6 @@ static void child_process(t_executor *exec, t_command *cmd, char **envp, t_myenv
         dup2(exec->prev_fd, STDIN_FILENO);
         close(exec->prev_fd);
     }
-
-    // Output redirection
     if (cmd->output_file != -1)
     {
         dup2(cmd->output_file, STDOUT_FILENO);
@@ -68,12 +64,8 @@ static void child_process(t_executor *exec, t_command *cmd, char **envp, t_myenv
         dup2(pipefd[1], STDOUT_FILENO);
         close(pipefd[1]);
     }
-
-    // Builtin en child
     if (exec->builtin_id != -1)
         exit(execute_builtin(exec->builtin_id, cmd->args, envp, myenv));
-
-    // Buscar PATH
     if (cmd->args[0][0] == '/' || cmd->args[0][0] == '.')
         path = ft_strdup(cmd->args[0]);
     else
@@ -145,32 +137,25 @@ void ft_check_executor_single(t_minishell *minishell, t_executor *exec, t_comman
         ft_here_doc(cmd->limiter);
     if (!cmd->args || !cmd->args[0])
         return;
-
     exec->builtin_id = get_builtin_cmd(cmd->args[0]);
     if (exec->builtin_id != -1 && cmd->operator != PIPE && exec->prev_fd == -1)
     {
         execute_builtin_no_pipe(minishell, exec, cmd, envp, myenv);
-        return;
+        return ;
     }
     if (cmd->operator == PIPE)
     {
         if (pipe(pipefd) == -1)
             ft_exit("pipe failed");
     }
-
     g_signal = S_CMD;
     pid = fork();
     if (pid == -1)
         ft_exit("fork failed");
-
     if (pid == 0)
-    {
         child_process(exec, cmd, envp, myenv, pipefd);
-    }
     else
-    {
         parent_process(minishell, exec, cmd, pipefd, pid);
-    }
 }
 
 

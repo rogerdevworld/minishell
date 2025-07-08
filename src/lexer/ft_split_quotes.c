@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-static void	handle_quotes(char c, int *in_quotes, char *quote_type)
+static void	ft_quotes(char c, int *in_quotes, char *quote_type)
 {
 	int	is_quote;
 
@@ -46,7 +46,7 @@ static int	count_words_loop(const char *s, char c)
 			count++;
 			while (*s && (*s != c || in_quotes))
 			{
-				handle_quotes(*s, &in_quotes, &quote_type);
+				ft_quotes(*s, &in_quotes, &quote_type);
 				s++;
 			}
 		}
@@ -66,7 +66,7 @@ static char	*word_dup_loop(const char *s, char c)
 	quote_type = 0;
 	while (s[len] && (s[len] != c || in_quotes))
 	{
-		handle_quotes(s[len], &in_quotes, &quote_type);
+		ft_quotes(s[len], &in_quotes, &quote_type);
 		len++;
 	}
 	word = (char *)malloc(sizeof(char) * (len + 1));
@@ -96,7 +96,7 @@ static int	process_split_loop(char **s, char **split, char c, int *i)
 			(*i)++;
 			while (**s && (**s != c || in_quotes))
 			{
-				handle_quotes(**s, &in_quotes, &quote_type);
+				ft_quotes(**s, &in_quotes, &quote_type);
 				(*s)++;
 			}
 		}
