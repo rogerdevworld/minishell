@@ -29,11 +29,22 @@ typedef struct s_executor
 
 typedef struct s_minishell t_minishell;
 
+/**
+ * aqui montare las nuevas funciones para
+ * el nuevo executor
+ */
+int	executor_loop(t_minishell *minishell, int status);
+
+
+ /**
+  * funciones viejas
+  */
+
 // executor.h o en minishell.h
 t_executor	*init_exec(t_myenv *myenv);
 
 int			ft_check_executor(t_minishell *minishell, t_executor *exec,
-				t_command *cmd, char **env, t_myenv *myenv);
+				t_command *cmd, char **env, t_myenv *myenv, int s);
 void		ft_exec_cmd(t_command *cmd, char **envp);
 void		ft_pipe_and_fork(t_command *cmd, char **env);
 pid_t		external_command(t_command *cmd, t_executor *ex);

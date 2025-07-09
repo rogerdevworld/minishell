@@ -42,7 +42,7 @@ t_ast_node *build_ast(t_command *cmd_list)
     if (!tmp)
     {
         // No se encontró operador
-        t_ast_node *node = malloc(sizeof(t_ast_node));
+        node = malloc(sizeof(t_ast_node));
         if (!node) return NULL;
 
         node->op = ft_strdup(tmp->operator);
@@ -57,7 +57,7 @@ t_ast_node *build_ast(t_command *cmd_list)
     if (prev)
         prev->next = NULL;
 
-    t_ast_node *node = malloc(sizeof(t_ast_node));
+    node = malloc(sizeof(t_ast_node));
     if (!node) return NULL;
 
     node->op = ft_strdup(tmp->operator);

@@ -12,10 +12,24 @@
 #include "../../include/minishell.h"
 
 /**
- * executor actualizado de GPT probando
+ * montando nuevo executor con menos parametros recibidos
+ * tenemos dos opciones, gestionar el status haciendo 
+ * verificaciones en el lexer y el parser
+ * o gestionar todo el status dentro del mismo loop
+ */
+int	executor_loop(t_minishell *minishell, int status)
+{
+	ft_printf("\nel estatus al inciar es: %i\n", status);
+	ft_printf("\nlo que entro es: %s\n", minishell->ast_tree->cmd->args[0]);
+	if (!minishell->ast_tree->cmd)
+		return (1);
+}
+
+/**
+ * executor actualizado// signals en mal funcionamiento
  */
 int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
-	char **envp, t_myenv *myenv)
+	char **envp, t_myenv *myenv, int s)
 {
 	int		pipefd[2];
 	int		i = 0;
@@ -26,10 +40,12 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 		exec = init_exec(myenv);
 	if (!exec)
 		return (1);
-
 	while (current)
 	{
-		if (current->operator == 2)
+
+        if (minishell)
+            minishell->exit = s;
+		if (ft_strcmp(current->operator, "&&") == 0)
 		{
 			//ft_printf("ha entrado");
 			//ft_printf("\nel estatus es: \n%i", minishell->exit);
@@ -42,8 +58,8 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 			current = current->next;
 			continue ;
 		}
-		//else if (ft_strcmp(current->args[0], "||") == 0)
-		else if (current->operator == 3)
+		else if (ft_strcmp(current->args[0], "||") == 0)
+		//else if (current->operator == 3)
 		{
 			if (minishell->exit == 0) // Éxito previo, no ejecutar lo siguiente
 			{
@@ -60,8 +76,8 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 		//ft_printf("\nel current args es: %s\n", current->args[0]);
 		// Manejo de operadores lógicos
 		//if (ft_strcmp(current->args[0], "&&") == 0)
-		ft_printf("status executor antes de : %i\n", minishell->exit);
-		if (exec->builtin_id != -1 && current->operator != TOKEN_PIPE && exec->prev_fd == -1)
+		//ft_printf("status executor antes de : %i\n", minishell->exit);
+		if (exec->builtin_id != -1 && ft_strcmp(current->operator, "|") == 0 && exec->prev_fd == -1)
 		{
 			int saved_stdin = dup(STDIN_FILENO);
 			int saved_stdout = dup(STDOUT_FILENO);
@@ -77,7 +93,7 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 				close(current->output_file);
 			}
 
-			minishell->exit = execute_builtin(minishell, current->args, envp, myenv);
+			minishell->exit = execute_builtin(minishell, current->args, envp, myenv, s);
 
 			dup2(saved_stdin, STDIN_FILENO);
 			dup2(saved_stdout, STDOUT_FILENO);
@@ -89,7 +105,7 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 		}
 
 		// PIPE
-		if (current->operator == TOKEN_PIPE)
+		if (ft_strcmp(current->operator, "|") == 0)
 			if (pipe(pipefd) == -1)
 				ft_exit("pipe failed");
 
@@ -110,7 +126,7 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 
 			if (current->output_file != -1)
 				dup2(current->output_file, STDOUT_FILENO);
-			else if (current->operator == TOKEN_PIPE)
+			else if (ft_strcmp(current->operator, "|") == 0)
 			{
 				close(pipefd[0]);
 				dup2(pipefd[1], STDOUT_FILENO);
@@ -119,11 +135,11 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 			if (exec->prev_fd != -1)
 				close(exec->prev_fd);
 
-			if (current->operator == TOKEN_PIPE)
+			if (ft_strcmp(current->operator, "|") == 0)
 				close(pipefd[0]);
 
 			if (exec->builtin_id != -1)
-				exit(execute_builtin(exec->builtin_id, current->args, envp, myenv));
+				exit(execute_builtin(minishell, current->args, envp, myenv, s));
 
 			char *path = NULL;
 			if (current->args[0][0] == '/' || current->args[0][0] == '.')
@@ -146,7 +162,7 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 			pids[i++] = exec->pid;
 			if (exec->prev_fd != -1)
 				close(exec->prev_fd);
-			if (current->operator == TOKEN_PIPE)
+			if (ft_strcmp(current->operator, "|") == 0)
 			{
 				close(pipefd[1]);
 				exec->prev_fd = pipefd[0];
@@ -165,7 +181,11 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 
 	// Actualiza minishell->exit según el resultado
 	if (WIFEXITED(exec->status))
+	{
+		//minishell->exit = s;
+		ft_printf("\nentro\n");
 		minishell->exit = WEXITSTATUS(exec->status);
+	}
 	else if (WIFSIGNALED(exec->status))
 	{
 		int signo = WTERMSIG(exec->status);
@@ -189,10 +209,8 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 		minishell->exit = 130;
 
 	g_signal = S_BASE;
-	ft_printf("status executor: %i\n", minishell->exit);
-	return minishell->exit;
+	return (minishell->exit);
 }
-
 
 /**
  * este executor funciona con el build_ast antiguo
@@ -494,46 +512,47 @@ static void	child_process(t_minishell *minishell, t_command *cmd, int pipefd[2])
 	char		*path;
 	t_executor	*exec;
 
-    signal(SIGINT, SIG_DFL);
-    signal(SIGQUIT, SIG_DFL);
-    if (cmd->input_file != -1)
-    {
-        dup2(cmd->input_file, STDIN_FILENO);
-        close(cmd->input_file);
-    }
-    else if (exec->prev_fd != -1)
-    {
-        dup2(exec->prev_fd, STDIN_FILENO);
-        close(exec->prev_fd);
-    }
-    if (cmd->output_file != -1)
-    {
-        dup2(cmd->output_file, STDOUT_FILENO);
-        close(cmd->output_file);
-    }
-    else if (ft_strcmp(cmd->operator, "|") == 0)
-    {
-        close(pipefd[0]);
-        dup2(pipefd[1], STDOUT_FILENO);
-        close(pipefd[1]);
-    }
-    if (exec->builtin_id != -1)
-        exit(execute_builtin(exec->builtin_id, cmd->args, envp, myenv));
-    if (cmd->args[0][0] == '/' || cmd->args[0][0] == '.')
-        path = ft_strdup(cmd->args[0]);
-    else
-        path = get_path(cmd->args[0], envp);
-
-    if (!path || access(path, X_OK) != 0)
-    {
-        ft_putstr_fd(cmd->args[0], 2);
-        write(2, ": command not found\n", 21);
-        free(path);
-        exit(EXIT_CMD_NOT_FOUND);
-    }
-
-    execve(path, cmd->args, myenv->env);
-    exit(EXIT_CMD_NOT_FOUND);
+	exec = minishell->executor;
+	path = NULL;
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+	if (cmd->input_file != -1)
+	{
+		dup2(cmd->input_file, STDIN_FILENO);
+		close(cmd->input_file);
+	}
+	else if (exec->prev_fd != -1)
+	{
+		dup2(exec->prev_fd, STDIN_FILENO);
+		close(exec->prev_fd);
+	}
+	if (cmd->output_file != -1)
+	{
+		dup2(cmd->output_file, STDOUT_FILENO);
+		close(cmd->output_file);
+	}
+	else if (cmd->operator== PIPE)
+	{
+		close(pipefd[0]);
+		dup2(pipefd[1], STDOUT_FILENO);
+		close(pipefd[1]);
+	}
+	if (exec->builtin_id != -1)
+		exit(execute_builtin(exec->builtin_id, cmd->args, exec->envp,
+				exec->myenv));
+	if (cmd->args[0][0] == '/' || cmd->args[0][0] == '.')
+		path = ft_strdup(cmd->args[0]);
+	else
+		path = get_path(cmd->args[0], exec->envp);
+	if (!path || access(path, X_OK) != 0)
+	{
+		ft_putstr_fd(cmd->args[0], 2);
+		write(2, ": command not found\n", 21);
+		free(path);
+		exit(EXIT_CMD_NOT_FOUND);
+	}
+	execve(path, cmd->args, exec->myenv->env);
+	exit(EXIT_CMD_NOT_FOUND);
 }
 
 // *
@@ -545,45 +564,38 @@ int			status;
 int			signo;
 t_executor	*exec;
 
-    if (exec->prev_fd != -1)
-        close(exec->prev_fd);
-
-    if (ft_strcmp(cmd->operator, "|") == 0)
-    {
-        close(pipefd[1]);
-        exec->prev_fd = pipefd[0];
-    }
-    else
-    {
-        exec->prev_fd = -1;
-    }
-
-    waitpid(pid, &status, 0);
-
-    if (WIFEXITED(status))
-    {
-        minishell->exit = WEXITSTATUS(status);
-    }
-    else if (WIFSIGNALED(status))
-    {
-        int signo = WTERMSIG(status);
-        if (signo == SIGPIPE)
-            minishell->exit = 0;
-        else if (signo == SIGINT)
-        {
-            minishell->exit = 130;
-            write(1, "\n", 1);
-        }
-        else if (signo == SIGQUIT)
-        {
-            minishell->exit = 131;
-            write(1, "Quit (core dumped)\n", 19);
-        }
-        else
-            minishell->exit = 128 + signo;
-    }
-
-    g_signal = S_BASE;
+exec = minishell->executor;
+if (exec->prev_fd != -1)
+	close(exec->prev_fd);
+if (cmd->operator== PIPE)
+{
+	close(pipefd[1]);
+	exec->prev_fd = pipefd[0];
+}
+else
+	exec->prev_fd = -1;
+waitpid(pid, &status, 0);
+if	(WIFEXITED(status))
+	minishell->exit = WEXITSTATUS(status);
+else if	(WIFSIGNALED(status))
+{
+	signo = WTERMSIG(status);
+	if (signo == SIGPIPE)
+		minishell->exit = 0;
+	else if (signo == SIGINT)
+	{
+		minishell->exit = 130;
+		write(1, "\n", 1);
+	}
+	else if (signo == SIGQUIT)
+	{
+		minishell->exit = 131;
+		write(1, "Quit (core dumped)\n", 19);
+	}
+	else
+		minishell->exit = 128 + signo;
+}
+g_signal = S_BASE;
 }
 
 // *
@@ -594,62 +606,261 @@ void	ft_check_executor_single(t_minishell *minishell, t_command *cmd)
 	pid_t		pid;
 	t_executor	*exec;
 
-    if (cmd->limiter)
-        ft_here_doc(cmd->limiter);
-    if (!cmd->args || !cmd->args[0])
-        return;
-    exec->builtin_id = get_builtin_cmd(cmd->args[0]);
-    if (exec->builtin_id != -1 && (ft_strcmp(cmd->operator, "PIPE") == 0) && exec->prev_fd == -1)
-    {
-        execute_builtin_no_pipe(minishell, exec, cmd, envp, myenv);
-        return ;
-    }
-    if (ft_strcmp(cmd->operator, "|") == 0)
-    {
-        if (pipe(pipefd) == -1)
-            ft_exit("pipe failed");
-    }
-    g_signal = S_CMD;
-    pid = fork();
-    if (pid == -1)
-        ft_exit("fork failed");
-    if (pid == 0)
-        child_process(exec, cmd, envp, myenv, pipefd);
-    else
-        parent_process(minishell, exec, cmd, pipefd, pid);
+	exec = minishell->executor;
+	if (cmd->limiter)
+		ft_here_doc(cmd->limiter);
+	if (!cmd->args || !cmd->args[0])
+		return ;
+	exec->builtin_id = get_builtin_cmd(cmd->args[0]);
+	if (exec->builtin_id != -1 && cmd->operator!= PIPE && exec->prev_fd == - 1)
+	{
+		execute_builtin_no_pipe(minishell, cmd);
+		return ;
+	}
+	if (cmd->operator== PIPE)
+	{
+		if (pipe(pipefd) == -1)
+			ft_exit("pipe failed");
+	}
+	g_signal = S_CMD;
+	pid = fork();
+	if (pid == -1)
+		ft_exit("fork failed");
+	if (pid == 0)
+		child_process(minishell, cmd, pipefd);
+	else
+		parent_process(minishell, cmd, pipefd, pid);
 }
 
 // *
 //  * nueva funcion de executer recibiendo solo un parametro
 int	execute_command_list(t_minishell *minishell)
 {
-    t_command *tmp = cmd;
+	t_command	*current;
 
-    while (tmp)
-    {
-        if (ft_strcmp(tmp->args[0], "&&") == 0)
-        {
-            if (minishell->exit != 0)
-                tmp = tmp->next;
-            tmp = tmp->next;
-            continue;
-        }
-        else if (ft_strcmp(tmp->args[0], "||") == 0)
-        {
-            if (minishell->exit == 0)
-                tmp = tmp->next;
-            tmp = tmp->next;
-            continue;
-        }
-        ft_check_executor_single(minishell, exec, tmp, envp, myenv);
-        tmp = tmp->next;
-    }
+	current = minishell->cmd;
+	while (current)
+	{
+		if (ft_strcmp(current->args[0], "&&") == 0)
+		{
+			if (minishell->exit != 0)
+				current = current->next;
+			current = current->next;
+			continue ;
+		}
+		else if (ft_strcmp(current->args[0], "||") == 0)
+		{
+			if (minishell->exit == 0)
+				current = current->next;
+			current = current->next;
+			continue ;
+		}
+		ft_check_executor_single(minishell, current);
+		current = current->next;
+	}
+	if (minishell)
+		return (minishell->exit);
+	return (0);
+} */
 
-    if (minishell)
+/**
+ * version vieja con 5 parametros
+ */
+/*
+static void	execute_builtin_no_pipe(t_minishell *minishell, t_executor *exec,
+		t_command *cmd, char **envp, t_myenv *myenv)
+{
+	int	saved_stdin;
+	int	saved_stdout;
+	int	builtin_result;
+
+	saved_stdin = dup(STDIN_FILENO);
+	saved_stdout = dup(STDOUT_FILENO);
+	if (cmd->input_file != -1)
+	{
+		dup2(cmd->input_file, STDIN_FILENO);
+		close(cmd->input_file);
+	}
+	if (cmd->output_file != -1)
+	{
+		dup2(cmd->output_file, STDOUT_FILENO);
+		close(cmd->output_file);
+	}
+	builtin_result = execute_builtin(exec->builtin_id, cmd->args, envp, myenv);
+	dup2(saved_stdin, STDIN_FILENO);
+	dup2(saved_stdout, STDOUT_FILENO);
+	close(saved_stdin);
+	close(saved_stdout);
+	minishell->exit = builtin_result;
+}
+ */
+
+/**
+ * version antigua, muchos parametros
+ */
+/*
+static void	child_process(t_executor *exec, t_command *cmd, char **envp,
+		t_myenv *myenv, int pipefd[2])
+{
+	char	*path;
+
+	path = NULL;
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+	if (cmd->input_file != -1)
+	{
+		dup2(cmd->input_file, STDIN_FILENO);
+		close(cmd->input_file);
+	}
+	else if (exec->prev_fd != -1)
+	{
+		dup2(exec->prev_fd, STDIN_FILENO);
+		close(exec->prev_fd);
+	}
+	if (cmd->output_file != -1)
+	{
+		dup2(cmd->output_file, STDOUT_FILENO);
+		close(cmd->output_file);
+	}
+	else if (cmd->operator== PIPE)
+	{
+		close(pipefd[0]);
+		dup2(pipefd[1], STDOUT_FILENO);
+		close(pipefd[1]);
+	}
+	if (exec->builtin_id != -1)
+		exit(execute_builtin(exec->builtin_id, cmd->args, envp, myenv));
+	if (cmd->args[0][0] == '/' || cmd->args[0][0] == '.')
+		path = ft_strdup(cmd->args[0]);
+	else
+		path = get_path(cmd->args[0], envp);
+	if (!path || access(path, X_OK) != 0)
+	{
+		ft_putstr_fd(cmd->args[0], 2);
+		write(2, ": command not found\n", 21);
+		free(path);
+		exit(EXIT_CMD_NOT_FOUND);
+	}
+	execve(path, cmd->args, myenv->env);
+	exit(EXIT_CMD_NOT_FOUND);
+}
+ */
+
+/**
+ * version vieja demasiados parametros
+ */
+/*
+static void	parent_process(t_minishell *minishell, t_executor *exec,
+		t_command *cmd, int pipefd[2], pid_t pid)
+{
+	int	status;
+	int	signo;
+
+	if (exec->prev_fd != -1)
+		close(exec->prev_fd);
+	if (cmd->operator== PIPE)
+	{
+		close(pipefd[1]);
+		exec->prev_fd = pipefd[0];
+	}
+	else
+		exec->prev_fd = -1;
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
+		minishell->exit = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+	{
+		signo = WTERMSIG(status);
+		if (signo == SIGPIPE)
+			minishell->exit = 0;
+		else if (signo == SIGINT)
+		{
+			minishell->exit = 130;
+			write(1, "\n", 1);
+		}
+		else if (signo == SIGQUIT)
+		{
+			minishell->exit = 131;
+			write(1, "Quit (core dumped)\n", 19);
+		}
+		else
+			minishell->exit = 128 + signo;
+	}
+	g_signal = S_BASE;
+}
+ */
+
+/**
+ * vieja funcion recibiendo 5 parametros
+ */
+/*
+void	ft_check_executor_single(t_minishell *minishell, t_executor *exec,
+		t_command *cmd, char **envp, t_myenv *myenv)
+{
+	int		pipefd[2];
+	pid_t	pid;
+
+	if (cmd->limiter)
+		ft_here_doc(cmd->limiter);
+	if (!cmd->args || !cmd->args[0])
+		return ;
+	exec->builtin_id = get_builtin_cmd(cmd->args[0]);
+	if (exec->builtin_id != -1 && cmd->operator!= PIPE && exec->prev_fd == - 1)
+	{
+		execute_builtin_no_pipe(minishell, exec, cmd, envp, myenv);
+		return ;
+	}
+	if (cmd->operator == PIPE)
+	{
+		if (pipe(pipefd) == -1)
+			ft_exit("pipe failed");
+	}
+	g_signal = S_CMD;
+	pid = fork();
+	if (pid == -1)
+		ft_exit("fork failed");
+	if (pid == 0)
+		child_process(exec, cmd, envp, myenv, pipefd);
+	else
+		parent_process(minishell, exec, cmd, pipefd, pid);
+}
+ */
+
+/**
+ * funcion antigua con 5 parametros de entrada, se cambia para
+ * que solo reciba la estructura t_minishell
+ */
+/*
+int	execute_command_list(t_minishell *minishell, t_executor *exec,
+		t_command *cmd, char **envp, t_myenv *myenv)
+{
+	t_command	*current;
+
+	current = cmd;
+	while (current)
+	{
+		if (ft_strcmp(current->args[0], "&&") == 0)
+		{
+			if (minishell->exit != 0)
+				current = current->next;
+			current = current->next;
+			continue ;
+		}
+		else if (ft_strcmp(current->args[0], "||") == 0)
+		{
+			if (minishell->exit == 0)
+				current = current->next;
+			current = current->next;
+			continue ;
+		}
+		ft_check_executor_single(minishell, exec, current, envp, myenv);
+		current = current->next;
+	}
+	if (minishell)
 		return (minishell->exit);
 	return (0);
 }
-
+ */
 void	redirections(t_command *cmd, int *saved_stdin, int *saved_stdout)
 {
 	if (cmd->input_file != -1)
@@ -692,4 +903,3 @@ void	print_args(char **args)
 		i++;
 	}
 }
-	*/

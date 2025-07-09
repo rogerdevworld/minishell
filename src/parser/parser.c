@@ -96,8 +96,7 @@ t_command	*parse_tokens(t_token *tokens, char **envp)
 	{
 		if (tokens->type == TOKEN_WORD)
 		{
-			clean_arg = remove_quotes(tokens->value);
-			tmp->args[i++] = clean_arg;
+			tmp->args[i++] = ft_strdup(tokens->value);
 			tmp->path = get_path(tmp->args[0], envp);
 			tmp->operator = ft_strdup(operator_to_str(tokens->type));
 
