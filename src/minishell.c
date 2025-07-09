@@ -31,9 +31,9 @@ void	main_loop(char **envp)
 	while (1)
 	{
 		if (minishell)
-			line = readline(ft_agnoster(envp, minishell->exit));
+			line = readline("minishell >");//ft_agnoster(envp, minishell->exit)
 		else
-			line = readline(ft_agnoster(envp, status));
+			line = readline("minishell >");//ft_agnoster(envp, status)
 		if (!line)
 			break ;
 		if (*line)
