@@ -37,7 +37,7 @@ char	*copy_plain_text(char *arg, int *i)
 	int	start;
 
 	start = *i;
-	while (arg[*i] && arg[*i] != '$' && arg[*i] != '\'')
+	while (arg[*i] && arg[*i] != '$' && arg[*i] != '\'' && arg[*i] != '"' && arg[*i] != '\\')
 		(*i)++;
 	return (ft_substr(arg, start, *i - start));
 }
@@ -50,6 +50,8 @@ char	*expand_variable(t_minishell *minishell, const char *arg, int *i, t_env *en
 
 	//ft_printf("\nel estatus es %i\n", s);
 	(*i)++;
+	if (!arg[*i] || (!ft_isalpha(arg[*i]) && arg[*i] != '_' && arg[*i] != '?' && arg[*i] != '{'))
+		return (ft_strdup("$"));
 	if (arg[*i] == '?')
 	{
 		(*i)++;
@@ -73,19 +75,11 @@ char	*expand_variable(t_minishell *minishell, const char *arg, int *i, t_env *en
 	}
 	if (!var_name)
 		return (ft_strdup(""));
-
-		//ft_printf("\nentro var_name: %s\n", var_name);
 	if (ft_strcmp(var_name, "?") == 0)
 	{
 		free(var_name);
-		//ft_printf("entro");
 		return (ft_itoa(minishell->exit));
 	}
-	// value = ft_echo_expand(var_name, env);
-	// free(var_name);
-	// if (value)
-	// 	return (value);
-	// return (ft_strdup(""));
 	if (var_name)
 	{
 		value = ft_echo_expand(var_name, env);
@@ -104,13 +98,20 @@ char	*copy_double_quoted_text(t_minishell *minishell, const char *arg, int *i, t
 
 	result = ft_calloc(1, sizeof(char));
 	(*i)++; // skip initial "
-
 	while (arg[*i] && arg[*i] != '"')
 	{
-		if (arg[*i] == '\\' && arg[*i + 1] == '$') // escaped $
+		if (arg[*i] == '\\') // escaped $
 		{
-			part = ft_substr(arg, *i + 1, 1);
-			*i += 2;
+			if (arg[*i + 1] == '\\' || arg[*i + 1] == '"' || arg[*i + 1] == '$')
+			{
+				part = ft_substr(arg, *i + 1, 1);
+				*i += 2;
+			}
+			else
+			{
+				part = ft_substr(arg, *i, 1);
+				(*i)++;
+			}
 		}
 		else if (arg[*i] == '$') // variable expansion
 			part = expand_variable(minishell, arg, i, env, s);
@@ -157,10 +158,14 @@ char	*ft_expand_arg(t_minishell *minishell, char *arg, t_env *env, int s)
 		return (NULL);
 	while(arg[i])
 	{
+		//ft_printf("\ncharacter = %c y la i es %i \n", arg[i], i);
 		if (arg[i] == '\'')
 			part = copy_single_quoted_text(arg, &i);//TD--Done
 		else if (arg[i] == '"')
+		{
 			part = copy_double_quoted_text(minishell, arg, &i, env, s);//TD--Done
+			//ft_printf("character = \n%c", arg[i]);
+		}
 		else if (arg[i] == '\\' && arg[i + 1] == '$')
 		{
 			part = ft_substr(arg, i + 1, 1);
@@ -169,9 +174,13 @@ char	*ft_expand_arg(t_minishell *minishell, char *arg, t_env *env, int s)
 		else if (arg[i] == '$')
 		 	part = expand_variable(minishell, arg, &i, env, s);//TD--Done
 		else
+		{
 			part = copy_plain_text(arg, &i);//TD--Done
+			//ft_printf("\nla i es %i \n", i);
+		}
 		if (!part)
 			return (free(result), NULL);
+		//ft_printf("\n-> Parte expandida: [%s]\n", part); // DEBUG
 		result = ft_strjoin_free(result, part);
 	}
 	return (result);

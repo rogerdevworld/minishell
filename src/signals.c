@@ -9,9 +9,9 @@
 /*   Updated: 2025/04/22 12:42:00 by xviladri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../../include/minishell.h"
+#include "../include/minishell.h"
 
-int		g_signal;
+int			g_signal;
 
 static void	sigint_handler_aux(void)
 {
@@ -26,28 +26,28 @@ static void	sigint_handler_aux(void)
 
 static void	sigint_handler(int sig)
 {
-    (void)sig;
-    if (g_signal == S_BASE || g_signal == S_SIGINT)
-    {
-        rl_on_new_line();
-        rl_redisplay();
-        ft_putstr_fd("\n", 1);
-        rl_replace_line("", 0);
-        rl_on_new_line();
-        rl_redisplay();
-    }
-    else if (g_signal == S_CMD)
-    {
-        g_signal = S_SIGINT_CMD;
-        ft_putstr_fd("\n", 1);
-        rl_on_new_line();
-    }
-    else if (g_signal == S_HEREDOC)
-    {
-        ioctl(0, TIOCSTI, '\n');
-        exit(0);
-    }
-    sigint_handler_aux();
+	(void)sig;
+	if (g_signal == S_BASE || g_signal == S_SIGINT)
+	{
+		rl_on_new_line();
+		rl_redisplay();
+		ft_putstr_fd("\n", 1);
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		rl_redisplay();
+	}
+	else if (g_signal == S_CMD)
+	{
+		g_signal = S_SIGINT_CMD;
+		ft_putstr_fd("\n", 1);
+		rl_on_new_line();
+	}
+	else if (g_signal == S_HEREDOC)
+	{
+		ioctl(0, TIOCSTI, '\n');
+		exit(0);
+	}
+	sigint_handler_aux();
 }
 
 void	signal_init(void)
@@ -56,16 +56,3 @@ void	signal_init(void)
 	signal(SIGINT, sigint_handler);
 	signal(SIGQUIT, SIG_IGN);
 }
-/*
-void	ft_sigint(int signum)
-{
-	(void)signum;
-	write(1, "minishell> \n", 2);
-}
-
-void	ft_sigquit(int sig)
-{
-	sig = sig;
-	write(1, "Quit (core dumped)\n", 20);
-}
-*/

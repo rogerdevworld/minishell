@@ -18,7 +18,7 @@ t_ast_node	*build_ast(t_command *cmd_list);
 void		free_ast(t_ast_node *root);
 
 // Funciones auxiliares para ejecución o impresión (opcional)
-void		print_ast(t_ast_node *root, int level);
+//void		print_ast(t_ast_node *root, int level);
 
 t_ast_node	*build_ast_without_operator(t_command *cmd_list);
 

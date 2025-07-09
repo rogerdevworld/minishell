@@ -19,7 +19,7 @@ void	main_loop(char **envp)
 	char	*line;
 	t_token *tokens;
 	t_command *cmd;
-	t_ast_node *ast_root;
+	t_ast *ast;
 	t_executor *exec; 
 	t_myenv *myenv;
 	t_minishell *minishell;
@@ -31,36 +31,35 @@ void	main_loop(char **envp)
 	while (1)
 	{
 		if (minishell)
-			line = readline("minishell >");//ft_agnoster(envp, minishell->exit)
+			line = readline(ft_agnoster(envp, minishell->exit));//"minishell >"
 		else
-			line = readline("minishell >");//ft_agnoster(envp, status)
+			line = readline(ft_agnoster(envp, status));//"minishell >"
 		if (!line)
 			break ;
 		if (*line)
 			add_history(line);
 		tokens = lexer(line);
-		//print_tokens(tokens);
-		cmd = parse_tokens(tokens, envp);
-		//print_parser(cmd);
-		ast_root = build_ast(cmd);
+		print_tokens(tokens);
+		ast = parse_expression(&tokens, envp);
+		print_ast(ast, 0);
+		//ast_root = build_ast(cmd);
 		//print_ast(ast_root, 0);
-		exec = init_exec(myenv);
-		exec->envp = envp;
-		minishell = init_minishell(ast_root, tokens, cmd, exec);
-		if (minishell)
-				
+		//exec = init_exec(myenv);
+		//exec->envp = envp;
+		//minishell = init_minishell(line, envp);
+		//minishell = init_minishell(ast_root, tokens, cmd, exec);
 		if (g_signal != S_CANCEL_EXEC)
 		{
 			// Aquí puedes elegir si ejecutas AST o lista de comandos:
 			// int status = execute_ast(minishell);
 			//status = execute_command_list(minishell);
-			status = ft_check_executor(minishell, minishell->executor, cmd, exec->envp, exec->myenv, status);
+			//status = ft_check_executor(minishell, minishell->executor, cmd, exec->envp, exec->myenv, status);
 			//ft_printf("status executor: %i\n", status);
 		}
 		// Liberar recursos
 		free_tokens(tokens);
-		free_command_list(cmd);
-		free_ast(ast_root);
+		//free_command_list(cmd);
+		//free_ast(ast_root);
 		free(line);
 	}
 	g_signal = S_BASE;
@@ -128,33 +127,6 @@ void	main_loop(char **envp)
 	g_signal = S_BASE;
 } */
  
-
-void	free_command_list(t_command *cmd)
-{
-	int			i;
-	t_command	*tmp;
-
-	while (cmd)
-	{
-		tmp = cmd->next;
-		if (cmd->args)
-		{
-			i = 0;
-			while (cmd->args[i])
-			{
-				free(cmd->args[i]);
-				i++;
-			}
-			free(cmd->args);
-		}
-		if (cmd->path)
-			free(cmd->path);
-		if (cmd->limiter)
-			free(cmd->limiter);
-		free(cmd);
-		cmd = tmp;
-	}
-}
 
 void	free_tokens(t_token *tokens)
 {

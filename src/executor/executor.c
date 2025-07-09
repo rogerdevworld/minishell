@@ -12,7 +12,22 @@
 #include "../../include/minishell.h"
 
 /**
- * executor actualizado de GPT probando
+ * montando nuevo executor con menos parametros recibidos
+ * tenemos dos opciones, gestionar el status haciendo 
+ * verificaciones en el lexer y el parser
+ * o gestionar todo el status dentro del mismo loop
+ */
+int	executor_loop(t_minishell *minishell, int status)
+{
+	ft_printf("\nel estatus al inciar es: %i\n", status);
+	ft_printf("\nlo que entro es: %s\n", minishell->ast_tree->cmd->args[0]);
+	if (!minishell->ast_tree->cmd)
+		return (1);
+    return (0);
+}
+
+/**
+ * executor actualizado// signals en mal funcionamiento
  */
 int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 	char **envp, t_myenv *myenv, int s)
@@ -167,7 +182,11 @@ int	ft_check_executor(t_minishell *minishell, t_executor *exec, t_command *cmd,
 
 	// Actualiza minishell->exit según el resultado
 	if (WIFEXITED(exec->status))
+	{
+		//minishell->exit = s;
+		//ft_printf("\nentro\n");
 		minishell->exit = WEXITSTATUS(exec->status);
+	}
 	else if (WIFSIGNALED(exec->status))
 	{
 		int signo = WTERMSIG(exec->status);

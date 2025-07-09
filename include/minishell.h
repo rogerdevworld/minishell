@@ -17,7 +17,7 @@
 extern	int		g_signal;
 
 // -- internal libs -- //
-# include "../src/libft/libft.h"
+# include "../src/utils/libft/libft.h"
 # include "env.h"
 # include "lexer.h"
 # include "parser.h"
@@ -41,6 +41,7 @@ extern	int		g_signal;
 # include <sys/wait.h>
 # include <sys/ioctl.h>
 # include <unistd.h>
+#include <ctype.h>
 
 // -- readline -- //
 # include <readline/history.h>
@@ -75,8 +76,10 @@ typedef struct s_minishell
 	int exit;
 }				t_minishell;
 
-//t_minishell	*init_minishell(t_myenv *env, t_ast_node *ast_tree, t_token *tokens, t_command *cmd,
-//	t_executor *executor);
+// t_minishell	*init_minishell(t_myenv *env, t_ast_node *ast_tree, t_token *tokens, t_command *cmd,
+// 	t_executor *executor);
+
+// t_minishell	*init_minishell(char *line, char **envp);
 
 t_minishell	*init_minishell(t_ast_node *ast, t_token *tokens, t_command *cmd,
 	t_executor *exec);
@@ -87,7 +90,7 @@ void			main_loop(char **envp);
 void			ft_wildcards(char ***args);
 // -- free -- //
 void			free_tokens(t_token *tokens);
-void			free_command_list(t_command *cmd);
+//void			free_command_list(t_command *cmd);
 // -- exit.h -- //
 void			ft_exit(char *msg);
 

@@ -29,6 +29,17 @@ typedef struct s_executor
 
 typedef struct s_minishell t_minishell;
 
+/**
+ * aqui montare las nuevas funciones para
+ * el nuevo executor
+ */
+int	executor_loop(t_minishell *minishell, int status);
+
+
+ /**
+  * funciones viejas
+  */
+
 // executor.h o en minishell.h
 t_executor	*init_exec(t_myenv *myenv);
 
