@@ -32,7 +32,7 @@ int	read_word(const char *s, char **out)
 
 	i = 0;
 	quote = 0;
-	while (s[i] && (quote || (!isspace(s[i]) && !is_operator(s + i))))
+	while (s[i] && (quote || (!ft_isspace(s[i]) && !is_operator(s + i))))
 	{
 		if ((s[i] == '\'' || s[i] == '"') && !quote)
 			quote = s[i];
@@ -107,7 +107,7 @@ t_token	*lexer(char *input)
 	len = 0;
 	while (input[i])
 	{
-		while (isspace(input[i]))
+		while (ft_isspace(input[i]))
 			i++;
 		if (!input[i])
 			break ;
