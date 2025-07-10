@@ -13,5 +13,16 @@
 # define UTILS_H
 
 void	ft_shlvl(t_minishell *minishell);
+char	*get_path(char *cmd, char **env);
+char	**ft_split_quotes(char const *s, char c);
+int	ft_open(char *file, int mode);
+
+
+// -- free -- // 
+void	free_split(char **split);
+void	free_minishell(t_minishell *minishell);
+
+// -- test -- // 
+void	print_tokens(t_token *tokens);
 
 #endif

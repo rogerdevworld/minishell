@@ -72,7 +72,7 @@ typedef struct s_minishell
 	t_command	*cmd;
 	t_myenv		*env;
 	t_executor	*executor;
-	t_ast_node	*ast_tree;
+	t_ast	*ast;
 	int exit;
 }				t_minishell;
 
@@ -81,7 +81,7 @@ typedef struct s_minishell
 
 // t_minishell	*init_minishell(char *line, char **envp);
 
-t_minishell	*init_minishell(t_ast_node *ast, t_token *tokens, t_command *cmd,
+t_minishell	*init_minishell(t_ast *ast, t_token *tokens, t_command *cmd,
 	t_executor *exec);
 
 // -- main loop -- //

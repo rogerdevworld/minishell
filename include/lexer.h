@@ -37,13 +37,7 @@ typedef struct s_token
 
 t_token				*lexer(char *str);
 t_token				*init_lexer(char *token);
-t_token				*get_last_token(t_token *token);
 void				add_back(t_token **tokens, t_token *token);
-void				print_tokens(t_token *tokens);
-char				*token_type_to_string(int type);
-
-// -- ft_split.h -- //
-char				**ft_split_quotes(char const *s, char c);
-void				free_split(char **split);
+int	validate_syntax(t_token *tokens);
 
 #endif

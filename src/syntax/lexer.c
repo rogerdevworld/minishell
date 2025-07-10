@@ -9,7 +9,7 @@ int	is_operator(const char *s)
 }
 
 // Extrae un operador del input
-int	read_operator(const char *s, char **out)
+static int	read_operator(const char *s, char **out)
 {
 	if (ft_strncmp(s, "&&", 2) == 0 || ft_strncmp(s, "||", 2) == 0
 		|| ft_strncmp(s, ">>", 2) == 0 || ft_strncmp(s, "<<", 2) == 0)
@@ -25,7 +25,7 @@ int	read_operator(const char *s, char **out)
 }
 
 // Extrae una palabra, incluyendo comillas
-int	read_word(const char *s, char **out)
+static int	read_word(const char *s, char **out)
 {
 	int		i;
 	char	quote;

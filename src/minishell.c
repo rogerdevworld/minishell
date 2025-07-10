@@ -30,36 +30,19 @@ void	main_loop(char **envp)
 	myenv = ft_myenv(envp);
 	while (1)
 	{
-		if (minishell)
-			line = readline(ft_agnoster(envp, minishell->exit));//"minishell >"
-		else
-			line = readline(ft_agnoster(envp, status));//"minishell >"
+		line = readline(ft_agnoster(envp, status));
 		if (!line)
 			break ;
 		if (*line)
 			add_history(line);
 		tokens = lexer(line);
+		validate_syntax(tokens);
 		print_tokens(tokens);
 		ast = parse_expression(&tokens, envp);
 		print_ast(ast, 0);
-		//ast_root = build_ast(cmd);
-		//print_ast(ast_root, 0);
-		//exec = init_exec(myenv);
-		//exec->envp = envp;
-		//minishell = init_minishell(line, envp);
-		//minishell = init_minishell(ast_root, tokens, cmd, exec);
-		if (g_signal != S_CANCEL_EXEC)
-		{
-			// Aquí puedes elegir si ejecutas AST o lista de comandos:
-			// int status = execute_ast(minishell);
-			//status = execute_command_list(minishell);
-			//status = ft_check_executor(minishell, minishell->executor, cmd, exec->envp, exec->myenv, status);
-			//ft_printf("status executor: %i\n", status);
-		}
-		// Liberar recursos
-		free_tokens(tokens);
-		//free_command_list(cmd);
-		//free_ast(ast_root);
+		exec = init_exec(myenv);
+		minishell = init_minishell(ast, tokens, cmd, exec);
+		status = execute_ast(ast, envp, myenv, minishell);
 		free(line);
 	}
 	g_signal = S_BASE;
@@ -166,3 +149,8 @@ int	main(int argc, char **argv, char **envp)
 	main_loop(envp);
 	return (0);
 }
+
+
+/*
+ls && ls -la && (echo "adios" || echo hola) && ls -la | cat -e && pwd > text && cat -e < text
+*/

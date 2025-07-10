@@ -38,7 +38,7 @@
 	return (minishell);
 } */
 
-t_minishell	*init_minishell(t_ast_node *ast, t_token *tokens, t_command *cmd,
+t_minishell	*init_minishell(t_ast *ast, t_token *tokens, t_command *cmd,
 		t_executor *exec)
 {
 	t_minishell	*minishell;
@@ -48,7 +48,7 @@ t_minishell	*init_minishell(t_ast_node *ast, t_token *tokens, t_command *cmd,
 		return (NULL);
 	minishell->tokens = tokens;
 	minishell->cmd = cmd;
-	minishell->ast_tree = ast;
+	minishell->ast = ast;
 	minishell->executor = exec;
 	minishell->env = exec->myenv;
 	minishell->exit = 0;
