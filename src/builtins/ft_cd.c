@@ -11,33 +11,44 @@
 /* ************************************************************************** */
 #include "../include/minishell.h"
 
-// -- print error -- //
 int	msg(char *error, char *arg)
 {
-	ft_putstr_fd(error, 2);
+	if (!arg)
+		ft_putstr_fd(error, 2);
 	if (arg)
 	{
-		ft_putstr_fd(" ", 2);
+		ft_putstr_fd("cd: ", 2);
+		ft_putstr_fd(arg, 2);
+		ft_putstr_fd(": ", 2);
 		ft_putstr_fd(error, 2);
+
 	}
 	ft_putstr_fd("\n", 2);
 	return (1);
 }
 
-// -- cd .. -- //
-// -- int chdir(const char *path); -- //
-int	ft_cd(char *path, char **envp)
+int	ft_cd(char **path, t_env *env)
 {
-	if (!path)
+	char	*target_dir;
+
+	target_dir = NULL;
+	if (path[2])
+		return (msg(" too many arguments", NULL));
+	if (!path[1])
 	{
-		//chdir(ft_getenv("HOME", envp));
-		return (msg("cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory", NULL));
+		target_dir = ft_getenv("HOME", env);
+		if (!target_dir)
+			return (msg("HOME not set", NULL));
 	}
-	if (chdir(path) == -1)
+	else if (path[1][0] == '$')
 	{
-		//chdir(ft_getenv("HOME", envp));
-		//perror("");
-		return (msg("minishell: cd: ", path));
+		target_dir = ft_echo_expand(path[1] + 1, env);
+		if (!target_dir)
+			return (msg("environment variable not found", path[1]));
 	}
+	else
+		target_dir = path[1];
+	if (chdir(target_dir) == -1)
+		return (msg("No such file or directory", target_dir));
 	return (0);
 }

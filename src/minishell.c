@@ -43,7 +43,7 @@ void	main_loop(char **envp)
 		//print_ast(ast, 0);
 		exec = init_exec(myenv);
 		minishell = init_minishell(ast, tokens, cmd, exec);
-		status = execute_ast(ast, envp, myenv, minishell);
+		status = execute_ast(ast, envp, myenv, minishell, status);
 		free(line);
 	}
 	g_signal = S_BASE;

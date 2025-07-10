@@ -18,7 +18,10 @@ t_env	*ft_env_new(char *key, char *content)
 	if (!new)
 		return (NULL);
 	new->key = ft_strdup(key);
-	new->content = ft_strdup(content);
+	if (!content)
+		new->content = NULL;
+	else
+		new->content = ft_strdup(content);
 	new->next = NULL;
 	return (new);
 }

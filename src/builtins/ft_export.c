@@ -45,7 +45,7 @@ t_env	*find_env_var(t_env *env, const char *key)
 	return (NULL);
 }
 
-void	export_add_or_update(t_env **env_list, char *arg)//la tengo que acortar
+int	export_add_or_update(t_env **env_list, char *arg)//la tengo que acortar
 {
 	char	*sep;
 	char	*key;
@@ -65,10 +65,12 @@ void	export_add_or_update(t_env **env_list, char *arg)//la tengo que acortar
 	}
 	if (!is_valid_identifier(key))
 	{
-		ft_printf("export: `%s': not a valid identifier\n", arg);
+		ft_putstr_fd("export: `", 2);
+		ft_putstr_fd(arg, 2);
+		ft_putstr_fd("': not a valid identifier\n", 2);
 		free(key);
 		free(value);
-		return ;
+		return (1);
 	}
 	existing = find_env_var(*env_list, key);
 	if (existing)
@@ -84,6 +86,7 @@ void	export_add_or_update(t_env **env_list, char *arg)//la tengo que acortar
 	else
 		ft_env_add_back(env_list, ft_env_new(key, value));
 	free(key);
+	return (0);
 }
 
 void	print_export(t_env *env)//LA FUNCION NUEVA
@@ -108,19 +111,21 @@ void	print_export(t_env *env)//LA FUNCION NUEVA
 	free(array);
 }
 
-void	ft_export(char **args, t_myenv *myenv)
+int	ft_export(char **args, t_myenv *myenv)
 {
 	int	i;
+	int status = 0;
 
 	if (!args[1])
 	{
 		print_export(myenv->list_env);
-		return ;
+		return (0);
 	}
 	i = 1;
 	while (args[i])
 	{
-		export_add_or_update(&myenv->list_env, args[i]);
+		status = export_add_or_update(&myenv->list_env, args[i]);
 		i++;
 	}
+	return  (status);
 }

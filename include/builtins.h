@@ -37,20 +37,20 @@ int		execute_builtin(t_minishell *minishell, char **args, char **envp, t_myenv *
 // -- local commands -- //
 int	pwd(char **envp);
 void	clear(void);
-int		ft_cd(char *path, char **envp);
+int		ft_cd(char **path, t_env *env);
 int	ft_exit_builtin(char **args);
 
 // -- local cmd echo -- // 
 int	ft_echo(t_minishell *minishell, char **args, t_env *env, int s);
 void	ft_exit_code(t_minishell *minishell);
 
-void	ft_export(char **args, t_myenv *myenv);
+int	ft_export(char **args, t_myenv *myenv);
 
 void	print_export(t_env *env);
 int		env_list_size(t_env *env);
 t_env	**env_to_array(t_env *env);
 void	sort_env_array(t_env **array);
-void	export_add_or_update(t_env **env_list, char *arg);
+int	export_add_or_update(t_env **env_list, char *arg);
 t_env	*find_env_var(t_env *env, const char *key);
 int		is_valid_identifier(const char *str);
 void	ft_unset(char **args, t_myenv *myenv);

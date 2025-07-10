@@ -1,9 +1,8 @@
 #include "../../include/minishell.h"
 
-int	execute_command(t_command *cmd, char **envp, t_myenv *myenv, t_minishell *minishell)
+int	execute_command(t_command *cmd, char **envp, t_myenv *myenv, t_minishell *minishell, int status)
 {
 	int	builtin_id;
-	int	status;
 
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (1);
@@ -13,8 +12,7 @@ int	execute_command(t_command *cmd, char **envp, t_myenv *myenv, t_minishell *mi
 	{
 		// Ejecutar builtin directamente sin fork ni execve
 		minishell->executor->builtin_id = builtin_id;
-		status = execute_builtin(minishell, cmd->args, envp, myenv, 0);
-		return (status);
+		return (execute_builtin(minishell, cmd->args, envp, myenv, status));
 	}
 
 	// Si no es builtin, ejecutar externamente con fork + execve
@@ -47,7 +45,7 @@ int	execute_pipe(t_ast *node, char **envp, t_myenv *myenv, t_minishell *minishel
 	{
 		close(fds[0]);
 		dup2(fds[1], STDOUT_FILENO);
-		exit(execute_ast(node->left, envp, myenv, minishell));
+		exit(execute_ast(node->left, envp, myenv, minishell, status));
 	}
 
 	pid2 = fork();
@@ -55,7 +53,7 @@ int	execute_pipe(t_ast *node, char **envp, t_myenv *myenv, t_minishell *minishel
 	{
 		close(fds[1]);
 		dup2(fds[0], STDIN_FILENO);
-		exit(execute_ast(node->right, envp, myenv, minishell));
+		exit(execute_ast(node->right, envp, myenv, minishell, status));
 	}
 
 	close(fds[0]);
@@ -69,9 +67,9 @@ int	execute_and(t_ast *node, char **envp, t_myenv *myenv, t_minishell *minishell
 {
 	int	status;
 
-	status = execute_ast(node->left, envp, myenv, minishell);
+	status = execute_ast(node->left, envp, myenv, minishell, status);
 	if (status == 0)
-		status = execute_ast(node->right, envp, myenv, minishell);
+		status = execute_ast(node->right, envp, myenv, minishell, status);
 	return (status);
 }
 
@@ -79,9 +77,9 @@ int	execute_or(t_ast *node, char **envp, t_myenv *myenv, t_minishell *minishell)
 {
 	int	status;
 
-	status = execute_ast(node->left, envp, myenv, minishell);
+	status = execute_ast(node->left, envp, myenv, minishell, status);
 	if (status != 0)
-		status = execute_ast(node->right, envp, myenv, minishell);
+		status = execute_ast(node->right, envp, myenv, minishell, status);
 	return (status);
 }
 
@@ -92,17 +90,17 @@ int	execute_subshell(t_ast *node, char **envp, t_myenv *myenv, t_minishell *mini
 
 	pid = fork();
 	if (pid == 0)
-		exit(execute_ast(node->left, envp, myenv, minishell));
+		exit(execute_ast(node->left, envp, myenv, minishell, status));
 	waitpid(pid, &status, 0);
 	return (WEXITSTATUS(status));
 }
 
-int	execute_ast(t_ast *node, char **envp, t_myenv *myenv, t_minishell *minishell)
+int	execute_ast(t_ast *node, char **envp, t_myenv *myenv, t_minishell *minishell, int status)
 {
 	if (!node)
 		return (1);
 	if (node->type == NODE_COMMAND)
-		return (execute_command(node->cmd, envp, myenv, minishell));
+		return (execute_command(node->cmd, envp, myenv, minishell, status));
 	else if (node->type == NODE_PIPE)
 		return (execute_pipe(node, envp, myenv, minishell));
 	else if (node->type == NODE_AND)
