@@ -15,51 +15,46 @@
  * nueva version mas resumida
  */
 
- /* void	main_loop(char **envp)
+ void	main_loop(char **envp)
 {
 	char	*line;
 	t_minishell *minishell;
 	int status;
 	
+	//ft_printf("line es: %s\n", line);
 	status = 0;
 	while (1)
 	{
-		if (minishell)
-			line = readline(ft_agnoster(envp, minishell->exit));
-		else
-			line = readline(ft_agnoster(envp, status));
+		//ft_printf("line es: %s\n", line);
+		// if (minishell)
+		// 	line = readline(ft_agnoster(envp, minishell->exit));
+		// else
+		// {
+		// 	line = readline(ft_agnoster(envp, status));
+		// }
+		line = readline(ft_agnoster(envp, status));
 		if (!line)
 			break ;
 		if (*line)
 			add_history(line);
-		tokens = lexer(line);
-		print_tokens(tokens);
-		cmd = parse_tokens(tokens, envp);
-		print_command_list(cmd);
-		ast_root = build_ast(cmd);
-		print_ast(ast_root, 0);
-		exec = init_exec(myenv);
-		//exec->envp = envp;
-		minishell = init_minishell(line, envp);
-		//if (minishell)
-				
+		minishell = init_minishell(line, envp);	
 		if (g_signal != S_CANCEL_EXEC)
 		{
-			status = ft_check_executor(minishell, minishell->executor, cmd, exec->envp, exec->myenv, status);
+			status = executor_loop(minishell, status);
 			ft_printf("status executor al finalizar: %i\n", status);
 		}
-		// Liberar recursos
-		free_tokens(tokens);
-		free_command_list(cmd);
-		free_ast(ast_root);
+		free_tokens(minishell->tokens);
+		free_command_list(minishell->cmd);
+		free_ast(minishell->ast_tree);
+		free_myenv(minishell->env);
 		free(line);
 	}
 	g_signal = S_BASE;
-}  */
+} 
 /**
  * nueva version de main_loop
  */
-void	main_loop(char **envp)
+/* void	main_loop(char **envp)
 {
 	char	*line;
 	t_token *tokens;
@@ -111,7 +106,7 @@ void	main_loop(char **envp)
 		free(line);
 	}
 	g_signal = S_BASE;
-} 
+}  */
 
 /**
  * old main_loop, funciona pero se cambia para manejar todo en una sola

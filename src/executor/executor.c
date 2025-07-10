@@ -17,12 +17,52 @@
  * verificaciones en el lexer y el parser
  * o gestionar todo el status dentro del mismo loop
  */
+
+static int	execute_builtin_no_pipe(t_minishell *minishell, t_command *cmd)
+{
+	int			saved_stdin;
+	int			saved_stdout;
+	int			builtin_result;
+	t_executor	*exec;
+
+	
+	exec = minishell->executor;
+	saved_stdin = dup(STDIN_FILENO);
+	saved_stdout = dup(STDOUT_FILENO);
+	if (cmd->input_file != -1)
+	{
+		
+		dup2(cmd->input_file, STDIN_FILENO);
+		close(cmd->input_file);
+	}
+	if (cmd->output_file != -1)
+	{
+		dup2(cmd->output_file, STDOUT_FILENO);
+		close(cmd->output_file);
+	}
+	builtin_result = execute_builtin(minishell, cmd->args, exec->envp,
+			exec->myenv, minishell->exit);
+	dup2(saved_stdin, STDIN_FILENO);
+	dup2(saved_stdout, STDOUT_FILENO);
+	close(saved_stdin);
+	close(saved_stdout);
+	minishell->exit = builtin_result;
+}
+
 int	executor_loop(t_minishell *minishell, int status)
 {
 	ft_printf("\nel estatus al inciar es: %i\n", status);
-	ft_printf("\nlo que entro es: %s\n", minishell->ast_tree->cmd->args[0]);
-	if (!minishell->ast_tree->cmd)
+	ft_printf("\nlo que entro es: %s, y el siguiente es %s\n", minishell->cmd->args[0], minishell->cmd->args[1]);
+	minishell->exit = status;
+	minishell->executor->builtin_id = get_builtin_cmd(minishell->cmd->args[0]);
+	if (minishell->cmd->args[0] != '\0' && minishell->cmd->args[1] == '\0')//significa que solo hay un comando
+	{
+		//ft_printf("\n entro ");
+		minishell->exit = execute_builtin_no_pipe(minishell, minishell->cmd);
+	}
+	if (!minishell->cmd->args)
 		return (1);
+	return (minishell->exit);
 }
 
 /**

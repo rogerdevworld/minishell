@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-/* t_minishell	*init_minishell(char *line, char **envp)
+t_minishell	*init_minishell(char *line, char **envp)
 {
 	t_token		*tokens;
 	t_command	*cmd;
@@ -21,11 +21,11 @@
 	t_minishell	*minishell;
 
 	tokens = NULL;
-	myenv = ft_myenv(envp);
-	exec = init_exec(myenv);
 	tokens = lexer(line);
 	cmd = parse_tokens(tokens, envp);
 	ast_root = build_ast(cmd);
+	myenv = ft_myenv(envp);	
+	exec = init_exec(myenv);
 	minishell = malloc(sizeof(t_minishell));
 	if (!minishell)
 		return (NULL);
@@ -36,9 +36,9 @@
 	minishell->env = exec->myenv;
 	minishell->exit = 0;
 	return (minishell);
-} */
+}
 
-t_minishell	*init_minishell(t_ast_node *ast, t_token *tokens, t_command *cmd,
+/* t_minishell	*init_minishell(t_ast_node *ast, t_token *tokens, t_command *cmd,
 		t_executor *exec)
 {
 	t_minishell	*minishell;
@@ -54,7 +54,7 @@ t_minishell	*init_minishell(t_ast_node *ast, t_token *tokens, t_command *cmd,
 	minishell->exit = 0;
 	return (minishell);
 }
-
+ */
 /**
  * aantiguo init_minishell usado para inicializar la estructura t_minishell
  */

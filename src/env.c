@@ -40,6 +40,42 @@ void	ft_env_add_back(t_env **lst, t_env *new)
 	tmp->next = new;
 }
 
+char *ft_strjoin_3(char *s1, char *s2, char *s3)
+{
+	char *tmp = ft_strjoin(s1, s2);
+	char *res = ft_strjoin(tmp, s3);
+	free(tmp);
+	return res;
+}
+
+
+char	**env_list_to_array(t_env *env_list)
+{
+	int		size = 0;
+	t_env	*tmp = env_list;
+	char	**array;
+	int		i = 0;
+
+	while (tmp)
+	{
+		size++;
+		tmp = tmp->next;
+	}
+	array = malloc(sizeof(char *) * (size + 1));
+	if (!array)
+		return (NULL);
+	tmp = env_list;
+	while (tmp)
+	{
+		array[i] = ft_strjoin_3(tmp->key, "=", tmp->content); // <-- Asegúrate de tener esta función
+		i++;
+		tmp = tmp->next;
+	}
+	array[i] = NULL;
+	return (array);
+}
+
+
 void	ft_env(t_env **env_list, char **envp)
 {
 	int		i;
@@ -88,8 +124,10 @@ t_myenv	*ft_myenv(char **envp)
 	if (!myenv)
 		return (NULL);
 	myenv->env = NULL;
-	myenv->env = NULL;
+	myenv->list_env = NULL;
+
 	ft_env(&myenv->list_env, envp);
+	myenv->env = env_list_to_array(myenv->list_env);
 	return (myenv);
 }
 

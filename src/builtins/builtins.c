@@ -51,9 +51,10 @@ int	get_builtin_cmd(char *cmd)
 }
 
 // -- design -- //
-int	execute_builtin(t_minishell *minishell , char **args, char **envp, t_myenv *myenv, int s)
+int	execute_builtin(t_minishell *minishell, char **args, char **envp, t_myenv *myenv, int s)
 {
 	int status = 0;
+	
 	if (minishell->executor->builtin_id == CD)
 		status = ft_cd(args[1], envp);
 	if (minishell->executor->builtin_id == EXIT)
@@ -68,7 +69,10 @@ int	execute_builtin(t_minishell *minishell , char **args, char **envp, t_myenv *
 		//ft_printf("\n%s\n", args[0]);
 	}
 	if (minishell->executor->builtin_id == PWD)
+	{
+		ft_printf("\n PASO \n");
 		status = pwd(envp);
+	}
 	if (minishell->executor->builtin_id == EXPORT)
 		ft_export(args, myenv);
 	if (minishell->executor->builtin_id == UNSET)

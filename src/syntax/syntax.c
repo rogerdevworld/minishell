@@ -15,6 +15,8 @@ t_ast_node *build_ast(t_command *cmd_list)
 {
 	t_ast_node	*node;
 
+	if (!cmd_list)
+		return (NULL);
     // Caso hoja: sin operador
     if (!cmd_list->next)
     {
