@@ -55,7 +55,7 @@ extern	int		g_signal;
 #define EXIT_GENERAL_ERROR    1    // Error genérico
 #define EXIT_MISUSE_BUILTIN   2    // Uso incorrecto de un comando builtin
 #define EXIT_CMD_NOT_FOUND    127  // Comando no encontrado
-#define EXIT_CMD_NOT_EXEC     126  // Comando no ejecutable
+#define EXIT_NOT_EXECUTABLE   126  // Comando no ejecutable
 
 // Señales comunes
 #define EXIT_SIGINT           130  // Ctrl+C

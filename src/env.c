@@ -74,7 +74,6 @@ void	print_env(t_myenv *myenv)
 	if (!myenv || !myenv->list_env)
 		return ;
 	tmp = myenv->list_env;
-	ft_printf("local env\n");
 	while (tmp)
 	{
 		if (tmp->content)
@@ -132,8 +131,8 @@ void	free_env_array(char **env_array)
 
 void	ft_sort_export(t_env *env)
 {
-	t_env	*ini;
-	char	*tmp;
+	t_env *ini;
+	char *tmp;
 
 	ini = env;
 	if (!env)

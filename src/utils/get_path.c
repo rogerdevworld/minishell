@@ -37,7 +37,7 @@ char	*get_path(char *cmd, char **env)
 	}
 	free_split(allpath);
 	free_split(s_cmd);
-	return (ft_strdup(cmd));
+	return (NULL);
 }
 
 char	*remove_quotes(char *str)

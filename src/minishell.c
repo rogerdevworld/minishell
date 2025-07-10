@@ -30,12 +30,14 @@ void	main_loop(char **envp)
 	myenv = ft_myenv(envp);
 	while (1)
 	{
-		//line = readline(ft_agnoster(envp, status));
+		//ine = readline(ft_agnoster(envp, status));
+		//line = readline(ft_strjoin("mini > ", ft_itoa(status)));
 		line = readline("mini > ");
 		if (!line)
 			break ;
 		if (*line)
 			add_history(line);
+		//status = check_unclosed_quotes(line);
 		tokens = lexer(line);
 		validate_syntax(tokens);
 		//print_tokens(tokens);
