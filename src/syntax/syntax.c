@@ -181,13 +181,11 @@ void	resolve_command_path(t_command *cmd, char **env)
 	{
 		if (access(cmd->args[0], F_OK) != 0)
 		{
-			ft_printf("127\n");
 			perror(cmd->args[0]);
 			exit(127);
 		}
 		else if (access(cmd->args[0], X_OK) != 0)
 		{
-			ft_printf("126\n");
 			perror(cmd->args[0]);
 			exit(126);
 		}
@@ -198,7 +196,6 @@ void	resolve_command_path(t_command *cmd, char **env)
 		cmd->path = get_path(cmd->args[0], env);
 		if (!cmd->path)
 		{
-			ft_printf("segundo 127\n");
 			ft_putstr_fd(cmd->args[0], 2);
 			ft_putstr_fd(": command not found\n", 2);
 			exit(127);
