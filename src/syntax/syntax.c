@@ -38,7 +38,8 @@ int	check_operator_positions(t_token *tokens)
 		return (0);
 	if (tokens->type == TOKEN_PIPE || tokens->type == TOKEN_AND
 		|| tokens->type == TOKEN_OR)
-		return (ft_printf("Syntax error: unexpected token '%s' at start\n", tokens->value), 1);
+		return (ft_printf("Syntax error: unexpected token '%s' at start\n",
+				tokens->value), 1);
 	while (tokens)
 	{
 		if (prev && (prev->type == TOKEN_PIPE || prev->type == TOKEN_AND
@@ -57,7 +58,8 @@ int	check_operator_positions(t_token *tokens)
 	}
 	if (prev && (prev->type == TOKEN_PIPE || prev->type == TOKEN_AND
 			|| prev->type == TOKEN_OR))
-		return (ft_printf("Syntax error: unexpected token '%s' at end\n", prev->value), 1);
+		return (ft_printf("Syntax error: unexpected token '%s' at end\n",
+				prev->value), 1);
 	return (0);
 }
 

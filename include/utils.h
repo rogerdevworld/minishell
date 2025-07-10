@@ -12,17 +12,27 @@
 #ifndef UTILS_H
 # define UTILS_H
 
-void	ft_shlvl(t_minishell *minishell);
+// -- parser and ft_export -- //
+char	*remove_quotes(char *str);
 char	*get_path(char *cmd, char **env);
+
+// -- lexer -- //
 char	**ft_split_quotes(char const *s, char c);
-int	ft_open(char *file, int mode);
+
+// -- builtings -- //
+void	ft_shlvl(t_minishell *minishell);
 
 
-// -- free -- // 
+// -- utils -- // 
+int		ft_open(char *file, int mode);
+
+// -- free -- //
 void	free_split(char **split);
 void	free_minishell(t_minishell *minishell);
 
-// -- test -- // 
+// -- test -- //
 void	print_tokens(t_token *tokens);
+void	print_command(t_command *cmd);
+void	print_ast(t_ast *node, int depth);
 
 #endif

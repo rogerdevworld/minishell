@@ -30,16 +30,17 @@ void	main_loop(char **envp)
 	myenv = ft_myenv(envp);
 	while (1)
 	{
-		line = readline(ft_agnoster(envp, status));
+		//line = readline(ft_agnoster(envp, status));
+		line = readline("mini > ");
 		if (!line)
 			break ;
 		if (*line)
 			add_history(line);
 		tokens = lexer(line);
 		validate_syntax(tokens);
-		print_tokens(tokens);
+		//print_tokens(tokens);
 		ast = parse_expression(&tokens, envp);
-		print_ast(ast, 0);
+		//print_ast(ast, 0);
 		exec = init_exec(myenv);
 		minishell = init_minishell(ast, tokens, cmd, exec);
 		status = execute_ast(ast, envp, myenv, minishell);

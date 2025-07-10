@@ -48,7 +48,7 @@ void	next_token(t_token **tokens)
 }
 
 // Redirecciones
-void	handle_redirects(t_command *cmd, t_token **tokens)
+void	ft_redirects(t_command *cmd, t_token **tokens)
 {
 	int		type;
 	char	*filename;
@@ -91,7 +91,7 @@ t_ast	*parse_simple_command(t_token **tokens, char **envp)
 		cmd->args[i++] = ft_strdup((*tokens)->value);
 		next_token(tokens);
 	}
-	handle_redirects(cmd, tokens);
+	ft_redirects(cmd, tokens);
 	if (cmd->args[0])
 		cmd->path = get_path(cmd->args[0], envp);
 	return (init_ast_node(NODE_COMMAND, cmd));
@@ -107,10 +107,10 @@ t_ast	*parse_factor(t_token **tokens, char **envp)
 		return (NULL);
 	if ((*tokens)->type == TOKEN_OPEN_PAREN)
 	{
-		next_token(tokens); // consume '('
+		next_token(tokens);
 		subtree = parse_expression(tokens, envp);
 		if (*tokens && (*tokens)->type == TOKEN_CLOSE_PAREN)
-			next_token(tokens); // consume ')'
+			next_token(tokens);
 		node = init_ast_node(NODE_SUBSHELL, NULL);
 		node->left = subtree;
 		return (node);
@@ -161,70 +161,4 @@ t_ast	*parse_expression(t_token **tokens, char **envp)
 		left = new;
 	}
 	return (left);
-}
-
-void print_ast(t_ast *node, int depth)
-{
-    int i = 0;
-    while (i++ < depth)
-        printf("  ");
-
-    if (!node)
-    {
-        printf("(null)\n");
-        return;
-    }
-
-    if (node->type == NODE_COMMAND)
-    {
-        printf("COMMAND:\n");
-        print_command(node->cmd);
-    }
-    else if (node->type == NODE_PIPE)
-        printf("PIPE\n");
-    else if (node->type == NODE_AND)
-        printf("AND\n");
-    else if (node->type == NODE_OR)
-        printf("OR\n");
-    else if (node->type == NODE_SUBSHELL)
-        printf("SUBSHELL\n");
-
-    print_ast(node->left, depth + 1);
-    print_ast(node->right, depth + 1);
-}
-
-
-void print_command(t_command *cmd)
-{
-    if (!cmd)
-    {
-        printf("Command is NULL\n");
-        return;
-    }
-
-    printf("         Command:\n");
-
-    // Imprimir args
-    if (cmd->args)
-    {
-        printf("           args:");
-        for (int i = 0; cmd->args[i] != NULL; i++)
-            printf(" \"%s\"", cmd->args[i]);
-        printf("\n");
-    }
-    else
-        printf("           args: (null)\n");
-
-    // Imprimir path
-    printf("           path: %s\n", cmd->path ? cmd->path : "         (null)");
-
-    // Imprimir file descriptors
-    printf("           input_file fd: %d\n", cmd->input_file);
-    printf("           output_file fd: %d\n", cmd->output_file);
-
-    // Imprimir limiter si existe
-    if (cmd->limiter)
-        printf("           limiter: \"%s\"\n", cmd->limiter);
-    else
-        printf("           limiter: (null)\n");
 }

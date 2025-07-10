@@ -28,8 +28,9 @@ SRCS =	$(SRC_DIR)minishell.c $(SRC_DIR)init.c $(SRC_DIR)exit.c \
 		$(SRC_DIR)wildcards.c \
 		$(SRC_DIR)utils/ft_shlvl.c $(SRC_DIR)utils/ft_open.c $(SRC_DIR)utils/get_path.c $(SRC_DIR)utils/ft_split_quotes.c \
 		$(SRC_DIR)cleanup/free_split.c \
-		$(SRC_DIR)test/print_lexer.c \
+		$(SRC_DIR)test/print_lexer.c $(SRC_DIR)test/print_commands.c $(SRC_DIR)test/print_ast.c \
 		$(SRC_DIR)executor/executor.c $(SRC_DIR)executor/init.c
+
 OBJS = $(SRCS:$(SRC_DIR)%.c=$(OBJ_DIR)/%.o)
 
 # --- bonus --- #
