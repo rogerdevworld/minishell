@@ -15,9 +15,7 @@ int	ft_open(char *file, int mode)
 {
 	int	fd;
 
-	// file = remove_quotes(file);
-	file = remove_all_quotes(file);
-	//ft_printf("\n el file que entra con nombre es: %s\n", file);
+	file = remove_quotes(file);
 	if (mode == 0)
 		fd = open(file, O_RDONLY);
 	if (mode == 1)

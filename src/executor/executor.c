@@ -5,6 +5,7 @@ int	execute_command(t_command *cmd, char **envp, t_myenv *myenv,
 {
 	int		builtin_id;
 	pid_t	pid;
+	char	**clean_args;
 
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (1);
@@ -19,12 +20,14 @@ int	execute_command(t_command *cmd, char **envp, t_myenv *myenv,
 	pid = fork();
 	if (pid == 0)
 	{
-		// ft_printf("\nel cmd->input_file es: %i\n", cmd->input_file);
+		// ft_printf("\nel cmd->args es: %i\n", cmd->args);
 		if (cmd->input_file != -1)
 			dup2(cmd->input_file, STDIN_FILENO);
 		if (cmd->output_file != -1)
 			dup2(cmd->output_file, STDOUT_FILENO);
 		resolve_command_path(cmd, envp);
+		clean_args = remove_quotes_from_args(cmd->args);
+		cmd->args = clean_args;
 		execve(cmd->path, cmd->args, envp);
 		// perror("execve failed");
 		exit(1);

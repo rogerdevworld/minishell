@@ -48,7 +48,6 @@ char	*expand_variable(t_minishell *minishell, const char *arg, int *i, t_env *en
 	char	*var_name;
 	char	*value;
 
-	//ft_printf("\nel estatus es %i\n", s);
 	(*i)++;
 	if (!arg[*i] || (!ft_isalpha(arg[*i]) && arg[*i] != '_' && arg[*i] != '?' && arg[*i] != '{'))
 		return (ft_strdup("$"));
@@ -158,13 +157,11 @@ char	*ft_expand_arg(t_minishell *minishell, char *arg, t_env *env, int s)
 		return (NULL);
 	while(arg[i])
 	{
-		//ft_printf("\ncharacter = %c y la i es %i \n", arg[i], i);
 		if (arg[i] == '\'')
 			part = copy_single_quoted_text(arg, &i);//TD--Done
 		else if (arg[i] == '"')
 		{
 			part = copy_double_quoted_text(minishell, arg, &i, env, s);//TD--Done
-			//ft_printf("character = \n%c", arg[i]);
 		}
 		else if (arg[i] == '\\' && arg[i + 1] == '$')
 		{
@@ -176,11 +173,9 @@ char	*ft_expand_arg(t_minishell *minishell, char *arg, t_env *env, int s)
 		else
 		{
 			part = copy_plain_text(arg, &i);//TD--Done
-			//ft_printf("\nla i es %i \n", i);
 		}
 		if (!part)
 			return (free(result), NULL);
-		//ft_printf("\n-> Parte expandida: [%s]\n", part); // DEBUG
 		result = ft_strjoin_free(result, part);
 	}
 	return (result);
@@ -201,7 +196,6 @@ int	ft_echo(t_minishell *minishsell, char **args, t_env *env, int s)
 	}
 	while (args[i])
 	{
-		//ft_printf("\n%s\n", args[i]);
 		expanded = ft_expand_arg(minishsell, args[i], env, s);//TD--Done
 		if (!expanded)
 			return (1);

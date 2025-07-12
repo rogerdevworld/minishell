@@ -2,6 +2,7 @@
     "files.associations": {
         "ctype.h": "c",
         "minishell.h": "c",
-        "utils.h": "c"
+        "utils.h": "c",
+        "stdlib.h": "c"
     }
 }
