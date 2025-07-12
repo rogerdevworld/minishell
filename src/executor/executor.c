@@ -5,6 +5,7 @@ int	execute_command(t_command *cmd, char **envp, t_myenv *myenv,
 {
 	int		builtin_id;
 	pid_t	pid;
+	char	**clean_args;
 
 	ft_wildcards(&(cmd->args));
 	if (!cmd || !cmd->args || !cmd->args[0])
@@ -18,11 +19,18 @@ int	execute_command(t_command *cmd, char **envp, t_myenv *myenv,
 	pid = fork();
 	if (pid == 0)
 	{
+		if (cmd->redir && (cmd->redir->input_file == -1 || cmd->redir->output_file == -1))
+		{
+			ft_printf(" No such file or directory\n"); 
+			exit(1);
+		}
 		if (cmd->redir->input_file != -1)
 			dup2(cmd->redir->input_file, STDIN_FILENO);
 		if (cmd->redir->output_file != -1)
 			dup2(cmd->redir->output_file, STDOUT_FILENO);
 		resolve_command_path(cmd, envp);
+		clean_args = remove_quotes_from_args(cmd->args);
+		cmd->args = clean_args;
 		execve(cmd->path, cmd->args, envp);
 		exit(1);
 	}

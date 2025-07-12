@@ -15,8 +15,8 @@ void	init_redir(t_redir *redir)
 {
 	if (!redir)
 		return ;
-	redir->input_file = -1;
-	redir->output_file = -1;
+	redir->input_file = -2;
+	redir->output_file = -2;
 	redir->limiter = NULL;
 	redir->file = NULL;
 }

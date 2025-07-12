@@ -11,15 +11,15 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-char	*remove_quotes(char *str)
-{
-	size_t	len;
+// char	*remove_quotes(char *str)
+// {
+// 	size_t	len;
 
-	if (!str)
-		return (NULL);
-	len = ft_strlen(str);
-	if ((str[0] == '"' && str[len - 1] == '"')
-		|| (str[0] == '\'' && str[len - 1] == '\''))
-		return (ft_substr(str, 1, len - 2));
-	return (ft_strdup(str));
-}
+// 	if (!str)
+// 		return (NULL);
+// 	len = ft_strlen(str);
+// 	if ((str[0] == '"' && str[len - 1] == '"')
+// 		|| (str[0] == '\'' && str[len - 1] == '\''))
+// 		return (ft_substr(str, 1, len - 2));
+// 	return (ft_strdup(str));
+// }

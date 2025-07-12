@@ -90,11 +90,11 @@ t_ast	*parse_simple_command(t_token **tokens, char **envp)
 	cmd = init_command();
 	i = 0;
 	while (*tokens)
-	{
+	{	
 		if ((*tokens)->type == TOKEN_WORD)
 		{
-			cmd->args[i++] = ft_strdup(remove_quotes((*tokens)->value));
-			// cmd->args[i++] = ft_strdup((*tokens)->value);
+			// cmd->args[i++] = ft_strdup(remove_quotes((*tokens)->value));
+			cmd->args[i++] = ft_strdup((*tokens)->value);
 			next_token(tokens);
 		}
 		else if ((*tokens)->type == TOKEN_REDIR_IN

@@ -55,14 +55,16 @@ char	*remove_quotes(char *str)
 char	*remove_all_quotes(char *str)
 {
 	char	*result;
-	int		i = 0, j = 0;
-	int		len = ft_strlen(str);
-	char	quote = 0;
+	int		i = 0, j;
+	int		len;
+	char	quote;
 
+	i = 0, j = 0;
+	len = ft_strlen(str);
+	quote = 0;
 	result = ft_calloc(len + 1, sizeof(char));
 	if (!result)
 		return (NULL);
-
 	while (str[i])
 	{
 		if ((str[i] == '\'' || str[i] == '"') && !quote)
@@ -76,4 +78,28 @@ char	*remove_all_quotes(char *str)
 			result[j++] = str[i++];
 	}
 	return (result);
+}
+
+char	**remove_quotes_from_args(char **args)
+{
+	int		i;
+	int		count;
+	char	**new_args;
+
+	if (!args)
+		return (NULL);
+	count = 0;
+	while (args[count])
+		count++;
+	new_args = malloc(sizeof(char *) * (i + 1));
+	if (!new_args)
+		return (NULL);
+	i = 0;
+	while (args[i])
+	{
+		new_args[i] = remove_quotes(args[i]);
+		i++;
+	}
+	new_args[i] = NULL;
+	return (new_args);
 }
