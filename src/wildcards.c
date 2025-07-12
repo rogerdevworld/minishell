@@ -72,7 +72,7 @@ void	ft_wildcards(char ***args)
 
 	while ((*args)[j])
 	{
-		if (ft_strchr((*args)[j], '*'))
+		if (ft_strcmp((*args)[j], "*") == 0)
 		{
 			char *path = extract_path((*args)[j]);
 			const char *pat = extract_pattern((*args)[j]);

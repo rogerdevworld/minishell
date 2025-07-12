@@ -44,7 +44,7 @@ void	main_loop(char **envp)
 			status = 2;
 		else
 		{
-			///print_tokens(tokens);
+			//print_tokens(tokens);
 			ast = parse_expression(&tokens, envp);
 			//print_ast(ast, 0);
 			exec = init_exec(myenv);
