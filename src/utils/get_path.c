@@ -47,8 +47,33 @@ char	*remove_quotes(char *str)
 	if (!str)
 		return (NULL);
 	len = ft_strlen(str);
-	if ((str[0] == '"' && str[len - 1] == '"')
-		|| (str[0] == '\'' && str[len - 1] == '\''))
+	if ((str[0] == '"' && str[len - 1] == '"'))
 		return (ft_substr(str, 1, len - 2));
 	return (ft_strdup(str));
+}
+
+char	*remove_all_quotes(char *str)
+{
+	char	*result;
+	int		i = 0, j = 0;
+	int		len = ft_strlen(str);
+	char	quote = 0;
+
+	result = ft_calloc(len + 1, sizeof(char));
+	if (!result)
+		return (NULL);
+
+	while (str[i])
+	{
+		if ((str[i] == '\'' || str[i] == '"') && !quote)
+			quote = str[i++];
+		else if (str[i] == quote)
+		{
+			quote = 0;
+			i++;
+		}
+		else
+			result[j++] = str[i++];
+	}
+	return (result);
 }

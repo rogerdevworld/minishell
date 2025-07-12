@@ -90,7 +90,7 @@ t_myenv	*ft_myenv(char **envp)
 	if (!myenv)
 		return (NULL);
 	myenv->env = NULL;
-	myenv->env = NULL;
+	myenv->list_env = NULL;
 	ft_env(&myenv->list_env, envp);
 	return (myenv);
 }

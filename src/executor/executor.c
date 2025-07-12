@@ -6,32 +6,24 @@ int	execute_command(t_command *cmd, char **envp, t_myenv *myenv,
 	int		builtin_id;
 	pid_t	pid;
 
-	ft_printf("Before ft_wildcards:\n");
-	print_args(cmd->args);
 	ft_wildcards(&(cmd->args));
-	// Imprimimos los argumentos después de la expansión
-	ft_printf("\nAfter ft_wildcards:\n");
-	print_args(cmd->args);
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (1);
 	builtin_id = get_builtin_cmd(cmd->args[0]);
 	if (builtin_id != -1)
 	{
-		// Ejecutar builtin directamente sin fork ni execve
 		minishell->executor->builtin_id = builtin_id;
 		return (execute_builtin(minishell, cmd->args, envp, myenv, status));
 	}
-	// Si no es builtin, ejecutar externamente con fork + execve
 	pid = fork();
 	if (pid == 0)
 	{
-		if (cmd->input_file != -1)
-			dup2(cmd->input_file, STDIN_FILENO);
-		if (cmd->output_file != -1)
-			dup2(cmd->output_file, STDOUT_FILENO);
+		if (cmd->redir->input_file != -1)
+			dup2(cmd->redir->input_file, STDIN_FILENO);
+		if (cmd->redir->output_file != -1)
+			dup2(cmd->redir->output_file, STDOUT_FILENO);
 		resolve_command_path(cmd, envp);
 		execve(cmd->path, cmd->args, envp);
-		// perror("execve failed");
 		exit(1);
 	}
 	waitpid(pid, &status, 0);
@@ -106,7 +98,7 @@ int	execute_ast(t_ast *node, char **envp, t_myenv *myenv,
 		t_minishell *minishell, int status)
 {
 	if (!node)
-		return (1);
+		return (0);
 	if (node->type == NODE_COMMAND)
 		return (execute_command(node->cmd, envp, myenv, minishell, status));
 	else if (node->type == NODE_PIPE)

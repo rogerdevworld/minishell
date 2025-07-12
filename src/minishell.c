@@ -40,13 +40,17 @@ void	main_loop(char **envp)
 			add_history(line);
 		//sintax_st = check_unclosed_quotes(line);
 		tokens = lexer(line);
-		validate_syntax(tokens);
-		///print_tokens(tokens);
-		ast = parse_expression(&tokens, envp);
-		//print_ast(ast, 0);
-		exec = init_exec(myenv);
-		minishell = init_minishell(ast, tokens, cmd, exec);
-		status = execute_ast(ast, envp, myenv, minishell, status);
+		if (validate_syntax(tokens) || check_unclosed_quotes(line))
+			status = 2;
+		else
+		{
+			///print_tokens(tokens);
+			ast = parse_expression(&tokens, envp);
+			//print_ast(ast, 0);
+			exec = init_exec(myenv);
+			minishell = init_minishell(ast, tokens, cmd, exec);
+			status = execute_ast(ast, envp, myenv, minishell, status);
+		}
 		free(line);
 	}
 	g_signal = S_BASE;

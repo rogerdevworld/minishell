@@ -24,6 +24,39 @@ static int	read_operator(const char *s, char **out)
 	}
 }
 
+// Extrae una palabra, gestionando comillas
+// static int	read_word(const char *s, t_word *out)
+// {
+// 	int		i = 0;
+// 	int		j = 0;
+// 	char	quote = 0;
+// 	char	quote_type = 0;
+// 	char	*tmp = ft_calloc(ft_strlen(s) + 1, sizeof(char));
+
+// 	if (!tmp)
+// 		return (0);
+// 	while (s[i] && (quote || (!ft_isspace(s[i]) && !is_operator(s + i))))
+// 	{
+// 		if ((s[i] == '\'' || s[i] == '"') && !quote)
+// 		{
+// 			quote = s[i++];
+// 			if (!quote_type)
+// 				quote_type = quote;
+// 		}
+// 		else if (s[i] == quote)
+// 		{
+// 			quote = 0;
+// 			i++;
+// 		}
+// 		else
+// 			tmp[j++] = s[i++];
+// 	}
+// 	out->value = ft_strdup(tmp);
+// 	out->quote_type = quote_type;
+// 	free(tmp);
+// 	return (i);
+// }
+
 // Extrae una palabra, incluyendo comillas
 static int	read_word(const char *s, char **out)
 {

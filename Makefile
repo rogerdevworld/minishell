@@ -19,7 +19,7 @@ OBJ_DIR_BUI = ./obj/builtins/
 OBJ_DIR_LEX = ./obj/lexer/
 
 SRCS =	$(SRC_DIR)minishell.c $(SRC_DIR)init.c $(SRC_DIR)exit.c \
-		$(SRC_DIR)syntax/lexer.c $(SRC_DIR)syntax/parser.c $(SRC_DIR)syntax/syntax.c \
+		$(SRC_DIR)syntax/lexer.c $(SRC_DIR)syntax/parser.c $(SRC_DIR)syntax/syntax.c $(SRC_DIR)syntax/redirs.c \
 		$(SRC_DIR_BUI)builtins.c $(SRC_DIR_BUI)pwd.c $(SRC_DIR_BUI)clear.c $(SRC_DIR_BUI)ft_cd.c $(SRC_DIR_BUI)ft_exit_builtin.c $(SRC_DIR_BUI)ft_unset.c $(SRC_DIR_BUI)ft_echo.c $(SRC_DIR_BUI)ft_export.c $(SRC_DIR_BUI)ft_export_utils.c \
 		$(SRC_DIR)signals.c \
 		$(SRC_DIR)design/path_in_shell.c \

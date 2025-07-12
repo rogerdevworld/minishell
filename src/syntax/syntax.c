@@ -39,7 +39,7 @@ int	check_operator_positions(t_token *tokens)
 	if (tokens->type == TOKEN_PIPE || tokens->type == TOKEN_AND
 		|| tokens->type == TOKEN_OR)
 		return (ft_printf("Syntax error: unexpected token '%s' at start\n",
-				tokens->value), 1);
+				tokens->value), 2);
 	while (tokens)
 	{
 		if (prev && (prev->type == TOKEN_PIPE || prev->type == TOKEN_AND
@@ -50,7 +50,7 @@ int	check_operator_positions(t_token *tokens)
 			{
 				ft_printf("Syntax error: unexpected token '%s' after '%s'\n",
 					tokens->value, prev->value);
-				return (1);
+				return (2);
 			}
 		}
 		prev = tokens;
@@ -59,7 +59,7 @@ int	check_operator_positions(t_token *tokens)
 	if (prev && (prev->type == TOKEN_PIPE || prev->type == TOKEN_AND
 			|| prev->type == TOKEN_OR))
 		return (ft_printf("Syntax error: unexpected token '%s' at end\n",
-				prev->value), 1);
+				prev->value), 2);
 	return (0);
 }
 
@@ -133,13 +133,13 @@ int	check_parentheses_balance(t_token *tokens)
 int	validate_syntax(t_token *tokens)
 {
 	if (check_invalid_tokens(tokens))
-		return (1);
+		return (2);
 	if (check_operator_positions(tokens))
-		return (1);
+		return (2);
 	if (check_redirection_args(tokens))
-		return (1);
+		return (2);
 	if (check_parentheses_balance(tokens))
-		return (1);
+		return (2);
 	return (0);
 }
 /*
@@ -164,7 +164,7 @@ int	check_unclosed_quotes(char *line)
 	if (quote)
 	{
 		ft_printf("Syntax error: unclosed quote %c\n", quote);
-		_exit(2);
+		return (2);
 	}
 	return (0);
 }
@@ -175,6 +175,8 @@ funciona con / pero si pasa mas cosas falla de momento ./ failt
 
 void	resolve_command_path(t_command *cmd, char **env)
 {
+	struct stat statbuf;
+
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return ;
 	//ft_printf("\nel cmd->arg que llega es %s\n", cmd->args[3]);
@@ -185,7 +187,13 @@ void	resolve_command_path(t_command *cmd, char **env)
 			perror(cmd->args[0]);
 			exit(127);
 		}
-		else if (access(cmd->args[0], X_OK) != 0)
+		if (stat(cmd->args[0], &statbuf) == 0 && S_ISDIR(statbuf.st_mode))
+		{
+			ft_putstr_fd(cmd->args[0], 2);
+			ft_putstr_fd(": Is a directory\n", 2);
+			exit(126);
+		}
+		if (access(cmd->args[0], X_OK) != 0)
 		{
 			perror(cmd->args[0]);
 			exit(126);

@@ -14,6 +14,7 @@
 
 // -- parser and ft_export -- //
 char	*remove_quotes(char *str);
+char	*remove_all_quotes(char *str);
 char	*get_path(char *cmd, char **env);
 
 // -- lexer -- //

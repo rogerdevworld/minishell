@@ -21,13 +21,19 @@ typedef enum e_node_type
 	NODE_SUBSHELL
 }							t_node_type;
 
+typedef struct s_redir
+{
+	int						input_file;
+	int						output_file;
+	char					*limiter;
+	char					*file;
+}							t_redir;
+
 typedef struct s_command
 {
 	char					**args;
 	char					*path;
-	int						input_file;
-	int						output_file;
-	char					*limiter;
+	t_redir					*redir;
 }							t_command;
 
 typedef struct s_ast
@@ -44,5 +50,10 @@ t_command					*init_command(void);
 void						ft_redirect(t_command *cmd, t_token **tokens);
 void						ft_syntax_check(t_minishell *minishell);
 t_ast						*parse_expression(t_token **tokens, char **envp);
+
+// -- redirs -- //
+void						init_redir(t_redir *redir);
+void						free_redir(t_redir *redir);
+void						reset_redir(t_redir *redir);
 
 #endif

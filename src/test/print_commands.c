@@ -25,12 +25,12 @@ void print_command(t_command *cmd)
     printf("           path: %s\n", cmd->path ? cmd->path : "         (null)");
 
     // Imprimir file descriptors
-    printf("           input_file fd: %d\n", cmd->input_file);
-    printf("           output_file fd: %d\n", cmd->output_file);
+    printf("           input_file fd: %d\n", cmd->redir->input_file);
+    printf("           output_file fd: %d\n", cmd->redir->output_file);
 
     // Imprimir limiter si existe
-    if (cmd->limiter)
-        printf("           limiter: \"%s\"\n", cmd->limiter);
+    if (cmd->redir->limiter)
+        printf("           limiter: \"%s\"\n", cmd->redir->limiter);
     else
         printf("           limiter: (null)\n");
 }
