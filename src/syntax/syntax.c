@@ -164,7 +164,7 @@ int	check_unclosed_quotes(char *line)
 	if (quote)
 	{
 		ft_printf("Syntax error: unclosed quote %c\n", quote);
-		return (1);
+		_exit(2);
 	}
 	return (0);
 }
@@ -177,6 +177,7 @@ void	resolve_command_path(t_command *cmd, char **env)
 {
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return ;
+	//ft_printf("\nel cmd->arg que llega es %s\n", cmd->args[3]);
 	if (strchr(cmd->args[0], '/'))
 	{
 		if (access(cmd->args[0], F_OK) != 0)

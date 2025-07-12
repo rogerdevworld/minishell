@@ -6,6 +6,12 @@ int	execute_command(t_command *cmd, char **envp, t_myenv *myenv,
 	int		builtin_id;
 	pid_t	pid;
 
+	ft_printf("Before ft_wildcards:\n");
+	print_args(cmd->args);
+	ft_wildcards(&(cmd->args));
+	// Imprimimos los argumentos después de la expansión
+	ft_printf("\nAfter ft_wildcards:\n");
+	print_args(cmd->args);
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (1);
 	builtin_id = get_builtin_cmd(cmd->args[0]);

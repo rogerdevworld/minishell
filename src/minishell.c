@@ -24,23 +24,24 @@ void	main_loop(char **envp)
 	t_myenv *myenv;
 	t_minishell *minishell;
 	int status = 0;
+	//int sintax_st = 0;
 
 	tokens = NULL;
 	//status = exec->status;
 	myenv = ft_myenv(envp);
 	while (1)
 	{
-		//ine = readline(ft_agnoster(envp, status));
+		//line = readline(ft_agnoster(envp, status));
 		//line = readline(ft_strjoin("mini > ", ft_itoa(status)));
 		line = readline("mini > ");
 		if (!line)
 			break ;
 		if (*line)
 			add_history(line);
-		//status = check_unclosed_quotes(line);
+		//sintax_st = check_unclosed_quotes(line);
 		tokens = lexer(line);
 		validate_syntax(tokens);
-		//print_tokens(tokens);
+		///print_tokens(tokens);
 		ast = parse_expression(&tokens, envp);
 		//print_ast(ast, 0);
 		exec = init_exec(myenv);

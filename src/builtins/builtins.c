@@ -43,8 +43,8 @@ int	get_builtin_cmd(char *cmd)
 		return (EXPORT);
 	if (ft_strncmp(cmd, "unset", 5) == 0)
 		return (UNSET);
-	if (ft_strncmp(cmd, "clear", 5) == 0)
-		return (CLEAR);
+	//if (ft_strncmp(cmd, "clear", 5) == 0)
+		//return (CLEAR);
 	if (ft_strncmp(cmd, "env", 3) == 0)
 		return (ENV);
 	return (-1);
