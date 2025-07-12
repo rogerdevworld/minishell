@@ -175,6 +175,8 @@ funciona con / pero si pasa mas cosas falla de momento ./ failt
 
 void	resolve_command_path(t_command *cmd, char **env)
 {
+	struct stat statbuf;
+
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return ;
 	if (strchr(cmd->args[0], '/'))
@@ -184,7 +186,13 @@ void	resolve_command_path(t_command *cmd, char **env)
 			perror(cmd->args[0]);
 			exit(127);
 		}
-		else if (access(cmd->args[0], X_OK) != 0)
+		if (stat(cmd->args[0], &statbuf) == 0 && S_ISDIR(statbuf.st_mode))
+		{
+			ft_putstr_fd(cmd->args[0], 2);
+			ft_putstr_fd(": Is a directory\n", 2);
+			exit(126);
+		}
+		if (access(cmd->args[0], X_OK) != 0)
 		{
 			perror(cmd->args[0]);
 			exit(126);

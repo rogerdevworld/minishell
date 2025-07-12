@@ -19,6 +19,7 @@ int	execute_command(t_command *cmd, char **envp, t_myenv *myenv,
 	pid = fork();
 	if (pid == 0)
 	{
+		// ft_printf("\nel cmd->input_file es: %i\n", cmd->input_file);
 		if (cmd->input_file != -1)
 			dup2(cmd->input_file, STDIN_FILENO);
 		if (cmd->output_file != -1)
@@ -100,7 +101,7 @@ int	execute_ast(t_ast *node, char **envp, t_myenv *myenv,
 		t_minishell *minishell, int status)
 {
 	if (!node)
-		return (1);
+		return (0);
 	if (node->type == NODE_COMMAND)
 		return (execute_command(node->cmd, envp, myenv, minishell, status));
 	else if (node->type == NODE_PIPE)

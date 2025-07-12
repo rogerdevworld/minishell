@@ -72,7 +72,7 @@ void	ft_redirects(t_command *cmd, t_token **tokens)
 		else if (type == TOKEN_HEREDOC)
 		{
 			cmd->limiter = ft_strdup(filename);
-			cmd->input_file = ft_open(filename, 2);
+			//cmd->input_file = ft_open(filename, 2);
 		}
 		next_token(tokens);
 	}
@@ -80,6 +80,41 @@ void	ft_redirects(t_command *cmd, t_token **tokens)
 
 // Comando base (WORD, args, redirs)
 t_ast	*parse_simple_command(t_token **tokens, char **envp)
+{
+	t_command	*cmd;
+	int			i;
+
+	cmd = init_command();
+	i = 0;
+
+	while (*tokens)
+	{
+		
+		if ((*tokens)->type == TOKEN_WORD)
+		{
+			cmd->args[i++] = ft_strdup(remove_quotes((*tokens)->value));
+			// cmd->args[i++] = ft_strdup((*tokens)->value);
+			next_token(tokens);
+		}
+		else if ((*tokens)->type == TOKEN_REDIR_IN
+			|| (*tokens)->type == TOKEN_REDIR_OUT
+			|| (*tokens)->type == TOKEN_APPEND
+			|| (*tokens)->type == TOKEN_HEREDOC)
+		{
+			ft_redirects(cmd, tokens);
+		}
+		else
+			break;
+	}
+	cmd->args[i] = NULL;
+
+	if (cmd->args[0])
+		cmd->path = get_path(cmd->args[0], envp);
+
+	return (init_ast_node(NODE_COMMAND, cmd));
+}
+
+/* t_ast	*parse_simple_command(t_token **tokens, char **envp)
 {
 	t_command	*cmd;
 	int			i;
@@ -95,7 +130,7 @@ t_ast	*parse_simple_command(t_token **tokens, char **envp)
 	if (cmd->args[0])
 		cmd->path = get_path(cmd->args[0], envp);
 	return (init_ast_node(NODE_COMMAND, cmd));
-}
+} */
 
 // Paréntesis o comando base
 t_ast	*parse_factor(t_token **tokens, char **envp)

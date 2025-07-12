@@ -40,8 +40,9 @@ extern	int		g_signal;
 # include <stdlib.h>
 # include <sys/wait.h>
 # include <sys/ioctl.h>
+# include <sys/stat.h>
 # include <unistd.h>
-#include <ctype.h>
+# include <ctype.h>
 
 // -- readline -- //
 # include <readline/history.h>

@@ -15,13 +15,14 @@ int	ft_open(char *file, int mode)
 {
 	int	fd;
 
+	// file = remove_quotes(file);
+	file = remove_all_quotes(file);
+	//ft_printf("\n el file que entra con nombre es: %s\n", file);
 	if (mode == 0)
 		fd = open(file, O_RDONLY);
 	if (mode == 1)
 		fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (mode == 2)
 		fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-	else if (fd == -1)
-		ft_exit("Failed to open file");
 	return (fd);
 }
