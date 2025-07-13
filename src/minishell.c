@@ -16,52 +16,53 @@
  */
 void	main_loop(char **envp)
 {
-	char	*line;
-	t_token *tokens;
-	t_command *cmd;
-	t_ast *ast;
-	t_executor *exec; 
-	t_myenv *myenv;
-	t_minishell *minishell;
-	int status = 0;
-	//int sintax_st = 0;
+	char		*line;
+	t_token		*tokens;
+	t_command	*cmd;
+	t_ast		*ast;
+	t_executor	*exec;
+	t_myenv		*myenv;
+	t_minishell	*minishell;
+	int			status;
 
+	status = 0;
+	// int sintax_st = 0;
 	tokens = NULL;
-	//status = exec->status;
+	// status = exec->status;
 	myenv = ft_myenv(envp);
 	while (1)
 	{
-		line = readline(ft_agnoster(envp, status));
-		//line = readline(ft_strjoin("mini > ", ft_itoa(status)));
-		//line = readline("mini > ");
+		/// line = readline(ft_agnoster(envp, status));
+		// line = readline(ft_strjoin("mini > ", ft_itoa(status)));
+		line = readline("mini > ");
 		if (!line)
 			break ;
 		if (*line)
 			add_history(line);
-		//sintax_st = check_unclosed_quotes(line);
+		// sintax_st = check_unclosed_quotes(line);
 		tokens = lexer(line);
 		if (validate_syntax(tokens) || check_unclosed_quotes(line))
 			status = 2;
 		else
 		{
-			//print_tokens(tokens);
+			// print_tokens(tokens);
 			ast = parse_expression(&tokens, envp);
-			//print_ast(ast, 0);
-			exec = init_exec(myenv);
-			minishell = init_minishell(ast, tokens, cmd, exec);
+			// print_ast(ast, 0);
+			minishell = init_minishell(ast, tokens, cmd, myenv);
 			status = execute_ast(ast, envp, myenv, minishell, status);
 		}
+		free_minishell(minishell);
 		free(line);
 	}
 	g_signal = S_BASE;
-} 
+}
 
 /**
  * old main_loop, funciona pero se cambia para manejar todo en una sola
  * estructura tipo t_minishell
  */
 // -- main loop for minishell -- //
-/* 
+/*
  void	main_loop(char **envp)
 {
 	char	*line;
@@ -97,7 +98,7 @@ void	main_loop(char **envp)
 		tokens = lexer(line);
 		cmd = parse_tokens(tokens, envp);
 		// Construir el AST a partir de la lista de comandos
-		ast_root = build_ast(cmd); //aqui es donde esta el fallo 
+		ast_root = build_ast(cmd); //aqui es donde esta el fallo
 		print_ast(ast_root, 0);
 		exec = init_exec(myenv);
 		minishell = init_minishell(myenv, ast_root, tokens, cmd, exec);
@@ -117,22 +118,6 @@ void	main_loop(char **envp)
 	}
 	g_signal = S_BASE;
 } */
- 
-
-void	free_tokens(t_token *tokens)
-{
-	t_token	*tmp;
-
-	while (tokens)
-	{
-		tmp = tokens->next;
-		if (tokens->value)
-			free(tokens->value);
-		free(tokens);
-		tokens = tmp;
-	}
-}
-
 // -- structuracion del codigo para el main -- //
 /*
 	1. inicializacion de las structs para el shell
@@ -145,7 +130,6 @@ int	main(int argc, char **argv, char **envp)
 {
 	(void)argc;
 	(void)argv;
-
 	// -- inicializacion de las funciones -- //
 	// -- senales -- //
 	signal_init();
@@ -158,7 +142,7 @@ int	main(int argc, char **argv, char **envp)
 	return (0);
 }
 
-
 /*
-ls && ls -la && (echo "adios" || echo hola) && ls -la | cat -e && pwd > text && cat -e < text
+ls && ls -la && (echo "adios" || echo hola) && ls -la | cat -e && pwd > text
+	&& cat -e < text
 */

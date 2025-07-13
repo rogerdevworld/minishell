@@ -27,7 +27,7 @@ int	msg(char *error, char *arg)
 	return (1);
 }
 
-int	ft_cd(char **path, t_env *env)
+int	ft_cd(char **path, t_myenv *env)
 {
 	char	*target_dir;
 
@@ -36,13 +36,13 @@ int	ft_cd(char **path, t_env *env)
 		return (msg(" too many arguments", NULL));
 	if (!path[1])
 	{
-		target_dir = ft_getenv("HOME", env);
+		target_dir = ft_getenv("HOME", env->env);
 		if (!target_dir)
 			return (msg("HOME not set", NULL));
 	}
 	else if (path[1][0] == '$')
 	{
-		target_dir = ft_echo_expand(path[1] + 1, env);
+		target_dir = ft_echo_expand(path[1] + 1, env->list_env);
 		if (!target_dir)
 			return (msg("environment variable not found", path[1]));
 	}

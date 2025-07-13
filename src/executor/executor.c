@@ -29,9 +29,9 @@ int	execute_command(t_command *cmd, char **envp, t_myenv *myenv,
 		if (cmd->redir->output_file != -1)
 			dup2(cmd->redir->output_file, STDOUT_FILENO);
 		resolve_command_path(cmd, envp);
-		// clean_args = remove_quotes_from_args(cmd->args);
-		// free_split(cmd->args);
-		// cmd->args = clean_args;
+		clean_args = remove_quotes_from_args(cmd->args);
+		free_split(cmd->args);
+		cmd->args = clean_args;
 		// free_split(clean_args);
 		execve(cmd->path, cmd->args, envp);
 		exit(1);

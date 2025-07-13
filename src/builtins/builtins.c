@@ -55,7 +55,7 @@ int	execute_builtin(t_minishell *minishell , char **args, char **envp, t_myenv *
 {
 	int status = 0;
 	if (minishell->executor->builtin_id == CD)
-		status = ft_cd(args, myenv->list_env);
+		status = ft_cd(args, myenv);
 	if (minishell->executor->builtin_id == EXIT)
 	{
 		//ft_printf("\n PASO \n");

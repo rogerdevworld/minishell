@@ -90,7 +90,7 @@ t_ast	*parse_simple_command(t_token **tokens, char **envp)
 	cmd = init_command();
 	i = 0;
 	while (*tokens)
-	{	
+	{
 		if ((*tokens)->type == TOKEN_WORD)
 		{
 			// cmd->args[i++] = ft_strdup(remove_quotes((*tokens)->value));
@@ -158,9 +158,9 @@ t_ast	*parse_pipeline(t_token **tokens, char **envp)
 // && y ||
 t_ast	*parse_expression(t_token **tokens, char **envp)
 {
-	t_ast		*left;
-	t_ast		*new;
-	t_node_type	type;
+	t_ast *left;
+	t_ast *new;
+	t_node_type type;
 
 	left = parse_pipeline(tokens, envp);
 	while (*tokens && ((*tokens)->type == TOKEN_AND
@@ -177,25 +177,4 @@ t_ast	*parse_expression(t_token **tokens, char **envp)
 		left = new;
 	}
 	return (left);
-}
-
-void	free_command(t_command *cmd)
-{
-	int	i;
-
-	if (!cmd)
-		return ;
-	if (cmd->args)
-	{
-		for (i = 0; cmd->args[i]; i++)
-			free(cmd->args[i]);
-		free(cmd->args);
-	}
-	if (cmd->path)
-		free(cmd->path);
-	if (cmd->redir)
-	{
-		free_redir(cmd->redir);
-	}
-	free(cmd);
 }
