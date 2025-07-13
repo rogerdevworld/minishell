@@ -1,29 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/22 21:49:28 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/02/22 21:49:33 by rmarrero         ###   ########.fr       */
+/*   Created: 2025/07/03 17:34:46 by rmarrero          #+#    #+#             */
+/*   Updated: 2025/07/03 17:34:48 by rmarrero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
-t_minishell	*init_minishell(t_ast *ast, t_token *tokens, t_command *cmd,
-		t_executor *exec)
+t_executor	*init_exec(t_myenv *myenv)
 {
-	t_minishell *minishell;
+	t_executor	*exec;
 
-	minishell = malloc(sizeof(t_minishell));
-	if (!minishell)
+	if (!myenv)
 		return (NULL);
-	minishell->tokens = tokens;
-	minishell->cmd = cmd;
-	minishell->ast = ast;
-	minishell->executor = exec;
-	minishell->env = exec->myenv;
-	minishell->exit = 0;
-	return (minishell);
+	exec = malloc(sizeof(t_executor));
+	if (!exec)
+		return (NULL);
+	exec->status = 0;
+	exec->p_fd[0] = -1;
+	exec->p_fd[1] = -1;
+	exec->prev_fd = -1;
+	exec->pid = -1;
+	exec->builtin_id = -1;
+	exec->saved_stdin = -1;
+	exec->saved_stdout = -1;
+	exec->myenv = myenv;
+	exec->envp = myenv->env;
+	return (exec);
 }
