@@ -32,7 +32,8 @@ int	execute_command(t_command *cmd, char **envp, t_myenv *myenv,
 		clean_args = remove_quotes_from_args(cmd->args);
 		free_split(cmd->args);
 		cmd->args = clean_args;
-		// free_split(clean_args);
+		free_split(clean_args);
+		//print_args(cmd->args);
 		execve(cmd->path, cmd->args, envp);
 		exit(1);
 	}
