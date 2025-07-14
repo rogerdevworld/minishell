@@ -37,7 +37,7 @@ int		execute_builtin(t_minishell *minishell, char **args, char **envp, t_myenv *
 // -- local commands -- //
 int	pwd(char **envp);
 void	clear(void);
-int		ft_cd(char **path, t_env *env);
+int	ft_cd(char **path, t_myenv *env);
 int	ft_exit_builtin(char **args);
 
 // -- local cmd echo -- // 

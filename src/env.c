@@ -95,40 +95,6 @@ t_myenv	*ft_myenv(char **envp)
 	return (myenv);
 }
 
-void	free_myenv(t_myenv *myenv)
-{
-	if (!myenv)
-		return ;
-	free_env_list(myenv->list_env);
-	free_env_array(myenv->env);
-	free(myenv);
-}
-
-void	free_env_list(t_env *env)
-{
-	t_env	*tmp;
-
-	while (env)
-	{
-		tmp = env->next;
-		free(env->key);
-		free(env->content);
-		free(env);
-		env = tmp;
-	}
-}
-void	free_env_array(char **env_array)
-{
-	int	i;
-
-	i = 0;
-	if (!env_array)
-		return ;
-	while (env_array[i])
-		free(env_array[i++]);
-	free(env_array);
-}
-
 void	ft_sort_export(t_env *env)
 {
 	t_env *ini;
