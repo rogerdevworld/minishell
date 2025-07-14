@@ -43,6 +43,7 @@ extern	int		g_signal;
 # include <sys/stat.h>
 # include <unistd.h>
 # include <ctype.h>
+#include <limits.h>
 
 // -- readline -- //
 # include <readline/history.h>
@@ -64,7 +65,7 @@ extern	int		g_signal;
 
 // Código especial al usar 'exit' incorrectamente
 #define EXIT_INVALID_EXIT     128
-
+//#define PATH_MAX 1024
 // -- minishell.h -- //
 // -- internal strcts -- //
 typedef struct s_minishell

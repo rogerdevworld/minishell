@@ -14,7 +14,7 @@
 // -- char *getcwd(char *buf, size_t size); -- //
 int	pwd(void)
 {
-	char	cwd[1024];
+	char	cwd[PATH_MAX];
 
 	if (getcwd(cwd, sizeof(cwd)))
 		ft_printf("%s\n", cwd);

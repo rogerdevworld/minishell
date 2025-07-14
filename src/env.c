@@ -85,6 +85,7 @@ void print_env(t_myenv *myenv)
 t_myenv *ft_myenv(char **env)
 {
 	t_myenv *myenv;
+	char cwd[PATH_MAX];
 
 	myenv = malloc(sizeof(t_myenv));
 	if (!myenv)
@@ -92,6 +93,14 @@ t_myenv *ft_myenv(char **env)
 	myenv->env = ft_dup_env(env);
 	myenv->list_env = NULL;
 	ft_env(&myenv->list_env, env);
+	if (!env_has_key(myenv->list_env, "PATH"))
+		ft_add_env(myenv, "PATH", "/usr/local/bin:/usr/bin:/bin");
+	if (!env_has_key(myenv->list_env, "PWD") && getcwd(cwd, sizeof(cwd)))
+		ft_add_env(myenv, "PWD", cwd);
+	if (!env_has_key(myenv->list_env, "SHLVL"))
+		ft_add_env(myenv, "SHLVL", "1");
+	if (!env_has_key(myenv->list_env, "_"))
+		ft_add_env(myenv, "_", "/usr/bin/env");
 	return (myenv);
 }
 
@@ -138,15 +147,15 @@ char **ft_dup_env(char **envp)
 	return copy;
 }
 
-void	ft_add_env(t_myenv *myenv, const char *key, const char *value)
+void ft_add_env(t_myenv *myenv, const char *key, const char *value)
 {
-	char	*arg;
-	int		len_key = ft_strlen(key);
-	int		len_val = ft_strlen(value);
+	char *arg;
+	int len_key = ft_strlen(key);
+	int len_val = ft_strlen(value);
 
-	arg = malloc(len_key + len_val + 2); // key + '=' + value + '\0'
+	arg = malloc(len_key + len_val + 2);
 	if (!arg)
-		return ;
+		return;
 	strcpy(arg, key);
 	arg[len_key] = '=';
 	strcpy(arg + len_key + 1, value);
@@ -154,4 +163,15 @@ void	ft_add_env(t_myenv *myenv, const char *key, const char *value)
 
 	export_add_or_update(&myenv->list_env, arg);
 	free(arg);
+}
+
+int env_has_key(t_env *env_list, const char *key)
+{
+	while (env_list)
+	{
+		if (ft_strcmp(env_list->key, key) == 0)
+			return (1);
+		env_list = env_list->next;
+	}
+	return (0);
 }

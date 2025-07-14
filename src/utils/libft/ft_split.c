@@ -11,9 +11,9 @@
 /* ************************************************************************** */
 #include "libft.h"
 
-static char	*ft_strncpy(char *dest, const char *src, unsigned int n)
+static char *ft_strncpy(char *dest, const char *src, unsigned int n)
 {
-	unsigned int	i;
+	unsigned int i;
 
 	i = 0;
 	while (i < n && src[i] != '\0')
@@ -29,11 +29,13 @@ static char	*ft_strncpy(char *dest, const char *src, unsigned int n)
 	return (dest);
 }
 
-static int	ft_count_words(const char *s, char c)
+static int ft_count_words(const char *s, char c)
 {
-	int	count;
+	int count;
 
 	count = 0;
+	if (!*s)
+		return (0);
 	while (*s)
 	{
 		while (*s == c)
@@ -48,10 +50,10 @@ static int	ft_count_words(const char *s, char c)
 	return (count);
 }
 
-static char	*ft_word_dup(const char *s, char c)
+static char *ft_word_dup(const char *s, char c)
 {
-	unsigned int	len;
-	char			*word;
+	unsigned int len;
+	char *word;
 
 	len = 0;
 	while (s[len] && s[len] != c)
@@ -64,9 +66,9 @@ static char	*ft_word_dup(const char *s, char c)
 	return (word);
 }
 
-static void	ft_free_split(char **split)
+static void ft_free_split(char **split)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	while (split[i])
@@ -77,13 +79,15 @@ static void	ft_free_split(char **split)
 	free(split);
 }
 
-char	**ft_split(char const *s, char c)
+char **ft_split(char const *s, char c)
 {
-	int		words;
-	char	**split;
-	int		i;
+	int words;
+	char **split;
+	int i;
 
 	i = 0;
+	if (!*s)
+		return (NULL);
 	words = ft_count_words(s, c);
 	split = (char **)malloc(sizeof(char *) * (words + 1));
 	if (!split)

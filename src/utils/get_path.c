@@ -11,16 +11,19 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-char	*get_path(char *cmd, char **env)
+char *get_path(char *cmd, char **env)
 {
-	int		i;
-	char	*exec;
-	char	**allpath;
-	char	*path_part;
-	char	**s_cmd;
+	int i;
+	char *exec;
+	char **allpath;
+	char *path_part;
+	char **s_cmd;
 
 	i = -1;
-	allpath = ft_split(ft_getenv("PATH", env), ':');
+	char *path_env = ft_getenv("PATH", env);
+	if (!path_env)
+		return (NULL);
+	allpath = ft_split(path_env, ':');
 	s_cmd = ft_split(cmd, ' ');
 	while (allpath[++i])
 	{
@@ -28,21 +31,15 @@ char	*get_path(char *cmd, char **env)
 		exec = ft_strjoin(path_part, s_cmd[0]);
 		free(path_part);
 		if (access(exec, F_OK | X_OK) == 0)
-		{
-			free_split(allpath);
-			free_split(s_cmd);
-			return (exec);
-		}
+			return (free_split(allpath), free_split(s_cmd), exec);
 		free(exec);
 	}
-	free_split(allpath);
-	free_split(s_cmd);
-	return (NULL);
+	return (free_split(allpath), free_split(s_cmd), NULL);
 }
 
-char	*remove_quotes(char *str)
+char *remove_quotes(char *str)
 {
-	size_t	len;
+	size_t len;
 
 	if (!str)
 		return (NULL);
@@ -52,13 +49,13 @@ char	*remove_quotes(char *str)
 	return (ft_strdup(str));
 }
 
-char	*remove_all_quotes(char *str)
+char *remove_all_quotes(char *str)
 {
-	char	*result;
-	int		i;
-	int		j;
-	int		len;
-	char	quote;
+	char *result;
+	int i;
+	int j;
+	int len;
+	char quote;
 
 	i = 0, j = 0;
 	len = ft_strlen(str);
@@ -81,12 +78,12 @@ char	*remove_all_quotes(char *str)
 	return (result);
 }
 
-char	**remove_quotes_from_args(char **args)
+char **remove_quotes_from_args(char **args)
 {
-	int		count;
-	int		i;
-	int		j;
-	char	**args_no_quotes;
+	int count;
+	int i;
+	int j;
+	char **args_no_quotes;
 
 	count = 0;
 	while (args && args[count])
