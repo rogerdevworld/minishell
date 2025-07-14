@@ -1,0 +1,9 @@
+env -i ./minishell
+eliminar el PATH
+input: cat < 1 2 3 4
+output:
+2
+3
+4
+
+shlvl y shlvl +999
