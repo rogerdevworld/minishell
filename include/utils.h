@@ -10,31 +10,30 @@
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef UTILS_H
-# define UTILS_H
+#define UTILS_H
 
 // -- parser and ft_export -- //
-char	*remove_quotes(char *str);
-char	*remove_all_quotes(char *str);
-char	**remove_quotes_from_args(char **args);
-char	*get_path(char *cmd, char **env);
+char *remove_quotes(char *str);
+char *remove_all_quotes(char *str);
+char **remove_quotes_from_args(char **args);
+char *get_path(char *cmd, char **env);
 
 // -- lexer -- //
-char	**ft_split_quotes(char const *s, char c);
+char **ft_split_quotes(char const *s, char c);
 
 // -- builtings -- //
-void	ft_shlvl(t_minishell *minishell);
+void ft_shlvl(t_myenv *myenv);
 
-
-// -- utils -- // 
-int		ft_open(char *file, int mode);
+// -- utils -- //
+int ft_open(char *file, int mode);
 
 // -- free -- //
-void	free_split(char **split);
-void	free_minishell(t_minishell *minishell);
+void free_split(char **split);
+void free_minishell(t_minishell *minishell);
 
 // -- test -- //
-void	print_tokens(t_token *tokens);
-void	print_command(t_command *cmd);
-void	print_ast(t_ast *node, int depth);
+void print_tokens(t_token *tokens);
+void print_command(t_command *cmd);
+void print_ast(t_ast *node, int depth);
 
 #endif

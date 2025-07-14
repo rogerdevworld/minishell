@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 #include "../include/minishell.h"
 
-static int	verify_sigint(status)
+static int verify_sigint(status)
 {
 	if (g_signal == S_SIGINT)
 	{
@@ -24,20 +24,18 @@ static int	verify_sigint(status)
 /**
  * nueva version de main_loop
  */
-void	main_loop(char **env)
+void main_loop(t_myenv *myenv)
 {
-	char		*line;
-	t_token		*tokens;
-	t_command	*cmd;
-	t_ast		*ast;
-	t_executor	*exec;
-	t_myenv		*myenv;
-	t_minishell	*minishell;
-	int			status;
+	char *line;
+	t_token *tokens;
+	t_command *cmd;
+	t_ast *ast;
+	t_executor *exec;
+	t_minishell *minishell;
+	int status;
 
 	status = 0;
 	tokens = NULL;
-	myenv = ft_myenv(env);
 	while (1)
 	{
 		// line = readline(ft_agnoster(envp, status));
@@ -46,7 +44,7 @@ void	main_loop(char **env)
 		line = readline("mini > ");
 		status = verify_sigint(status);
 		if (!line)
-			break ;
+			break;
 		if (*line)
 			add_history(line);
 		tokens = lexer(line);
@@ -55,24 +53,29 @@ void	main_loop(char **env)
 		else
 		{
 			// print_tokens(tokens);
-			ast = parse_expression(&tokens, env);
+			ast = parse_expression(&tokens, myenv->env);
 			// print_ast(ast, 0);
 			exec = init_exec(myenv);
 			minishell = init_minishell(ast, tokens, cmd, exec);
 			if (g_signal != S_CANCEL_EXEC)
-				status = execute_ast(ast, env, myenv, minishell, status);
+				status = execute_ast(ast, myenv->env, myenv, minishell, status);
 		}
 		free(line);
 	}
 	g_signal = S_BASE;
 }
 
-int	main(int argc, char **argv, char **env)
+int main(int argc, char **argv, char **env)
 {
+	t_myenv *myenv;
+
 	(void)argc;
 	(void)argv;
 
+	ft_printf("shellllllllllllllll\n");
+	myenv = ft_myenv(env);
+	ft_shlvl(myenv);
 	signal_init();
-	main_loop(env);
+	main_loop(myenv);
 	return (0);
 }

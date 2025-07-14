@@ -11,19 +11,26 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-void	ft_shlvl(t_minishell *minishell)
+void	ft_shlvl(t_myenv *myenv)
 {
 	t_env	*env;
 	int		lvl;
 	char	*new_lvl;
 
-	env = minishell->env->list_env;
+	env = myenv->list_env;
 	while (env)
 	{
 		if (ft_strcmp(env->key, "SHLVL") == 0)
 		{
 			if (env->content && ft_isdigit(env->content[0]))
+			{
 				lvl = ft_atoi(env->content) + 1;
+				if (lvl >= 1000)
+				{
+					ft_printf("minishell: warning: shell level (%i) too high, resetting to 1", lvl);
+					lvl = 1;
+				}
+			}
 			else
 				lvl = 1;
 			new_lvl = ft_itoa(lvl);

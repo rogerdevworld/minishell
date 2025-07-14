@@ -85,7 +85,7 @@ typedef struct s_minishell
 t_minishell	*init_minishell(t_ast *ast, t_token *tokens, t_command *cmd, t_executor *exec);
 
 // -- main loop -- //
-void			main_loop(char **envp);
+void main_loop(t_myenv *myenv);
 
 void			ft_wildcards(char ***args);
 // -- free -- //
