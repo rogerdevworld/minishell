@@ -11,6 +11,16 @@
 /* ************************************************************************** */
 #include "../include/minishell.h"
 
+static int	verify_sigint(status)
+{
+	if (g_signal == S_SIGINT)
+	{
+		status = 130;
+		g_signal = S_BASE;
+	}
+	return status;
+}
+
 /**
  * nueva version de main_loop
  */
@@ -24,20 +34,16 @@ void	main_loop(char **envp)
 	t_myenv *myenv;
 	t_minishell *minishell;
 	int status = 0;
-	//int sintax_st = 0;
 
 	tokens = NULL;
-	//status = exec->status;
 	myenv = ft_myenv(envp);
 	while (1)
 	{
-<<<<<<< HEAD
-		// line = readline(ft_agnoster(envp, status));
-=======
+		// line = readline(ft_agnoster(envp, status));	
 		//line = readline(ft_agnoster(envp, status));
->>>>>>> origin
 		//line = readline(ft_strjoin("mini > ", ft_itoa(status)));
 		line = readline("mini > ");
+		status = verify_sigint(status);
 		if (!line)
 			break ;
 		if (*line)
@@ -53,7 +59,8 @@ void	main_loop(char **envp)
 			///print_ast(ast, 0);
 			exec = init_exec(myenv);
 			minishell = init_minishell(ast, tokens, cmd, exec);
-			status = execute_ast(ast, envp, myenv, minishell, status);
+			if (g_signal != S_CANCEL_EXEC)
+				status = execute_ast(ast, envp, myenv, minishell, status);
 		}
 		free(line);
 	}

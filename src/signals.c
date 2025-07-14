@@ -13,6 +13,54 @@
 
 int			g_signal;
 
+void	set_defaul_signals(void)
+{
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+}
+
+static int	handle_normal_exit(int status)
+{
+	return WEXITSTATUS(status);
+}
+
+static int	handle_signal_exit(int status)
+{
+	int signo = WTERMSIG(status);
+
+	if (signo == SIGPIPE)
+		return 0;
+	else if (signo == SIGINT)
+	{
+		write(1, "\n", 1);
+		return 130;
+	}
+	else if (signo == SIGQUIT)
+	{
+		write(1, "Quit (core dumped)\n", 19);
+		return 131;
+	}
+	return (128 + signo);
+}
+
+int	update_exit_status(int status, t_minishell *minishell)
+{
+	if (WIFEXITED(status))
+		status = handle_normal_exit(status);
+	else if (WIFSIGNALED(status))
+		status = handle_signal_exit(status);
+
+	if (g_signal == S_SIGINT_CMD)
+		status = 130;
+
+	g_signal = S_BASE;
+
+	if (minishell)
+		minishell->exit = status;
+
+	return status;
+}
+
 static void	sigint_handler_aux(void)
 {
 	if (g_signal == S_HEREDOC_END)
