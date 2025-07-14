@@ -31,9 +31,9 @@ void	main_loop(char **envp)
 	myenv = ft_myenv(envp);
 	while (1)
 	{
-		line = readline(ft_agnoster(envp, status));
+		// line = readline(ft_agnoster(envp, status));
 		//line = readline(ft_strjoin("mini > ", ft_itoa(status)));
-		//line = readline("mini > ");
+		line = readline("mini > ");
 		if (!line)
 			break ;
 		if (*line)
