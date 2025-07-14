@@ -43,7 +43,7 @@ void	ft_env_add_back(t_env **lst, t_env *new)
 	tmp->next = new;
 }
 
-void	ft_env(t_env **env_list, char **envp)
+void	ft_env(t_env **env_list, char **env)
 {
 	int		i;
 	char	*sep;
@@ -52,12 +52,12 @@ void	ft_env(t_env **env_list, char **envp)
 	char	*value;
 
 	i = 0;
-	while (envp[i])
+	while (env[i])
 	{
-		sep = ft_strchr(envp[i], '=');
+		sep = ft_strchr(env[i], '=');
 		if (sep)
 		{
-			key = ft_substr(envp[i], 0, sep - envp[i]);
+			key = ft_substr(env[i], 0, sep - env[i]);
 			value = ft_strdup(sep + 1);
 			new = ft_env_new(key, value);
 			ft_env_add_back(env_list, new);
@@ -82,7 +82,7 @@ void	print_env(t_myenv *myenv)
 	}
 }
 
-t_myenv	*ft_myenv(char **envp)
+t_myenv	*ft_myenv(char **env)
 {
 	t_myenv	*myenv;
 
@@ -91,7 +91,7 @@ t_myenv	*ft_myenv(char **envp)
 		return (NULL);
 	myenv->env = NULL;
 	myenv->list_env = NULL;
-	ft_env(&myenv->list_env, envp);
+	ft_env(&myenv->list_env, env);
 	return (myenv);
 }
 

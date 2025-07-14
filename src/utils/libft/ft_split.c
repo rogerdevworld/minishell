@@ -29,7 +29,7 @@ static char	*ft_strncpy(char *dest, const char *src, unsigned int n)
 	return (dest);
 }
 
-static int	count_words(const char *s, char c)
+static int	ft_count_words(const char *s, char c)
 {
 	int	count;
 
@@ -84,7 +84,7 @@ char	**ft_split(char const *s, char c)
 	int		i;
 
 	i = 0;
-	words = count_words(s, c);
+	words = ft_count_words(s, c);
 	split = (char **)malloc(sizeof(char *) * (words + 1));
 	if (!split)
 		return (NULL);

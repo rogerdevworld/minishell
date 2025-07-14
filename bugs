@@ -7,3 +7,4 @@ output:
 4
 
 shlvl y shlvl +999
+msg: minishell: warning: shell level (1000) too high, resetting to 1

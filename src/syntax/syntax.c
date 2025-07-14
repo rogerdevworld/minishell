@@ -142,6 +142,7 @@ int	validate_syntax(t_token *tokens)
 		return (2);
 	return (0);
 }
+
 /*
  * comillas en la linea
  *
