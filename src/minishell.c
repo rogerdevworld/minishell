@@ -28,7 +28,6 @@ void main_loop(t_myenv *myenv)
 {
 	char *line;
 	t_token *tokens;
-	t_command *cmd;
 	t_ast *ast;
 	t_executor *exec;
 	t_minishell *minishell;
@@ -61,7 +60,7 @@ void main_loop(t_myenv *myenv)
 			ast = parse_expression(&tokens, myenv->env);
 			// print_ast(ast, 0);
 			exec = init_exec(myenv);
-			minishell = init_minishell(ast, tokens, cmd, exec);
+			minishell = init_minishell(ast, tokens, exec);
 			if (g_signal != S_CANCEL_EXEC)
 				status = execute_ast(ast, myenv->env, myenv, minishell, status);
 		}

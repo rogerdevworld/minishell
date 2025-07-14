@@ -38,21 +38,21 @@ static char *clean_argument(char *arg)
 /**
  * Elimina comillas simples o dobles alrededor del argumento, si existen.
  */
-static char	*strip_quotes(char *str)
-{
-	int	len;
+// static char	*strip_quotes(char *str)
+// {
+// 	int	len;
 
-	if (!str)
-		return (NULL);
-	len = ft_strlen(str);
-	if (len >= 2 && ((str[0] == '"' && str[len - 1] == '"') || (str[0] == '\''
-				&& str[len - 1] == '\'')))
-	{
-		str[len - 1] = '\0';
-		return (str + 1);
-	}
-	return (str);
-}
+// 	if (!str)
+// 		return (NULL);
+// 	len = ft_strlen(str);
+// 	if (len >= 2 && ((str[0] == '"' && str[len - 1] == '"') || (str[0] == '\''
+// 				&& str[len - 1] == '\'')))
+// 	{
+// 		str[len - 1] = '\0';
+// 		return (str + 1);
+// 	}
+// 	return (str);
+// }
 
 /**
  * Verifica si la cadena es un número válido (posiblemente con signo).

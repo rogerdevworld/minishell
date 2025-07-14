@@ -19,5 +19,5 @@ char	*ft_agnoster(char **envp, int status);
 char	*get_computer_name(void);
 char	*get_user(char **envp);
 
-char	*ft_desing(char **envp);
+char	*ft_desing();
 #endif

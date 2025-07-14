@@ -41,7 +41,7 @@ BSRCS =	$(BSRC_DIR)pipex_bonus.c $(BSRC_DIR)parse_bonus.c $(BSRC_DIR)cmd_bonus.c
 BOBJS = $(BSRCS:$(BSRC_DIR)%.c=$(OBJ_DIR)/%.o)
 
 CC = cc -g
-CFLAGS = -I./include #-Wall -Werror -Wextra -I./include
+CFLAGS = -I./include -Wall -Werror -Wextra -I./include
 #-fsanitize=leak
 RM = rm -rf
 

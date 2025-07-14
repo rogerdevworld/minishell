@@ -12,7 +12,7 @@
 #include "../include/minishell.h"
 
 // -- char *getcwd(char *buf, size_t size); -- //
-int	pwd(char **envp)
+int	pwd(void)
 {
 	char	cwd[1024];
 

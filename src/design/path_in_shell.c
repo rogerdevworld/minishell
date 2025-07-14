@@ -200,7 +200,7 @@ char	*ft_agnoster(char **envp, int status)
 }
 
 
-char	*ft_desing(char **envp)
+char	*ft_desing()
 {
 	//char	*user = get_user(envp);
 	//char	*computer = get_computer_name();

@@ -1,11 +1,11 @@
 #include "../../include/minishell.h"
 
-int	execute_command(t_command *cmd, char **envp, t_myenv *myenv,
-		t_minishell *minishell, int status)
+int execute_command(t_command *cmd, char **envp, t_myenv *myenv,
+					t_minishell *minishell, int status)
 {
-	int		builtin_id;
-	pid_t	pid;
-	char	**clean_args;
+	int builtin_id;
+	pid_t pid;
+	char **clean_args;
 
 	ft_wildcards(&(cmd->args));
 	if (!cmd || !cmd->args || !cmd->args[0])
@@ -14,7 +14,7 @@ int	execute_command(t_command *cmd, char **envp, t_myenv *myenv,
 	if (builtin_id != -1)
 	{
 		minishell->executor->builtin_id = builtin_id;
-		return (execute_builtin(minishell, cmd->args, envp, myenv, status));
+		return (execute_builtin(minishell, cmd->args, myenv, status));
 	}
 	g_signal = S_CMD;
 	pid = fork();
@@ -23,7 +23,7 @@ int	execute_command(t_command *cmd, char **envp, t_myenv *myenv,
 		set_defaul_signals();
 		if (cmd->redir && (cmd->redir->input_file == -1 || cmd->redir->output_file == -1))
 		{
-			ft_printf(" No such file or directory\n"); 
+			ft_printf(" No such file or directory\n");
 			exit(1);
 		}
 		if (cmd->redir->input_file != -1)
@@ -43,17 +43,18 @@ int	execute_command(t_command *cmd, char **envp, t_myenv *myenv,
 	return (status);
 }
 
-int	execute_pipe(t_ast *node, char **envp, t_myenv *myenv,
-		t_minishell *minishell)
+int execute_pipe(t_ast *node, char **envp, t_myenv *myenv,
+				 t_minishell *minishell)
 {
-	int	fds[2];
-	int	status;
+	int fds[2];
+	int status;
 
 	pid_t pid1, pid2;
 	if (pipe(fds) == -1)
 		return (1);
 	g_signal = S_CMD;
 	pid1 = fork();
+	status = 0;
 	if (pid1 == 0)
 	{
 		set_defaul_signals();
@@ -79,35 +80,38 @@ int	execute_pipe(t_ast *node, char **envp, t_myenv *myenv,
 	return (status);
 }
 
-int	execute_and(t_ast *node, char **envp, t_myenv *myenv,
-		t_minishell *minishell)
+int execute_and(t_ast *node, char **envp, t_myenv *myenv,
+				t_minishell *minishell)
 {
-	int	status;
+	int status;
 
+	status = 0;
 	status = execute_ast(node->left, envp, myenv, minishell, status);
 	if (status == 0)
 		status = execute_ast(node->right, envp, myenv, minishell, status);
 	return (status);
 }
 
-int	execute_or(t_ast *node, char **envp, t_myenv *myenv, t_minishell *minishell)
+int execute_or(t_ast *node, char **envp, t_myenv *myenv, t_minishell *minishell)
 {
-	int	status;
+	int status;
 
+	status = 0;
 	status = execute_ast(node->left, envp, myenv, minishell, status);
 	if (status != 0)
 		status = execute_ast(node->right, envp, myenv, minishell, status);
 	return (status);
 }
 
-int	execute_subshell(t_ast *node, char **envp, t_myenv *myenv,
-		t_minishell *minishell)
+int execute_subshell(t_ast *node, char **envp, t_myenv *myenv,
+					 t_minishell *minishell)
 {
-	pid_t	pid;
-	int		status;
+	pid_t pid;
+	int status;
 
 	g_signal = S_CMD;
 	pid = fork();
+	status = 0;
 	if (pid == 0)
 	{
 		set_defaul_signals();
@@ -119,8 +123,8 @@ int	execute_subshell(t_ast *node, char **envp, t_myenv *myenv,
 	return (status);
 }
 
-int	execute_ast(t_ast *node, char **envp, t_myenv *myenv,
-		t_minishell *minishell, int status)
+int execute_ast(t_ast *node, char **envp, t_myenv *myenv,
+				t_minishell *minishell, int status)
 {
 	if (!node)
 		return (0);
@@ -137,14 +141,12 @@ int	execute_ast(t_ast *node, char **envp, t_myenv *myenv,
 	return (1);
 }
 
-
-
 void print_args(char **args)
 {
-    int i = 0;
-    while (args[i] != NULL)
-    {
-        printf("Argument %d: %s\n", i, args[i]);
-        i++;
-    }
+	int i = 0;
+	while (args[i] != NULL)
+	{
+		printf("Argument %d: %s\n", i, args[i]);
+		i++;
+	}
 }
