@@ -27,7 +27,7 @@ void	ft_shlvl(t_myenv *myenv)
 				lvl = ft_atoi(env->content) + 1;
 				if (lvl >= 1000)
 				{
-					ft_printf("minishell: warning: shell level (%i) too high, resetting to 1", lvl);
+					ft_printf("minishell: warning: shell level (%i) too high, resetting to 1\n", lvl);
 					lvl = 1;
 				}
 			}

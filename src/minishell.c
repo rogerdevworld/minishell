@@ -50,8 +50,13 @@ void main_loop(t_myenv *myenv)
 		tokens = lexer(line);
 		if (validate_syntax(tokens) || check_unclosed_quotes(line))
 			status = 2;
-		else
-		{
+		else if (ft_strcmp(line, "./minishell") == 0)
+        {
+            ft_shlvl(myenv);
+            clear_history();
+        }
+        else
+        {
 			// print_tokens(tokens);
 			ast = parse_expression(&tokens, myenv->env);
 			// print_ast(ast, 0);
@@ -71,10 +76,8 @@ int main(int argc, char **argv, char **env)
 
 	(void)argc;
 	(void)argv;
-
-	ft_printf("shellllllllllllllll\n");
+    
 	myenv = ft_myenv(env);
-	ft_shlvl(myenv);
 	signal_init();
 	main_loop(myenv);
 	return (0);
