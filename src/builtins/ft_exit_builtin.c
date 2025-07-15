@@ -34,7 +34,6 @@ static char *clean_argument(char *arg)
 	return cleaned;
 }
 
-
 /**
  * Elimina comillas simples o dobles alrededor del argumento, si existen.
  */
@@ -57,9 +56,9 @@ static char *clean_argument(char *arg)
 /**
  * Verifica si la cadena es un número válido (posiblemente con signo).
  */
-static int	is_numeric(const char *str)
+static int is_numeric(const char *str)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	if (!str || !*str)
@@ -85,37 +84,36 @@ static int	is_numeric(const char *str)
  *    valor numérico si válido
  *    0 si no hay argumento
  */
- static int	check_exit(char **args)
- {
-	 int	count_args = 0;
-	 char *num;
- 
-	 while (args[count_args])
-		 count_args++;
-	 if (count_args > 2)
-		 return -1;
-	 if (count_args == 2)
-	 {
-		 num = clean_argument(args[1]); // en lugar de strip_quotes
-		 if (!is_numeric(num))
-		 {
-			 free(num);
-			 return -2;
-		 }
-		 int value = ft_atoi(num);
-		 free(num);
-		 return value;
-	 }
-	 return 0;
- }
- 
+static int check_exit(char **args)
+{
+	int count_args = 0;
+	char *num;
+
+	while (args[count_args])
+		count_args++;
+	if (count_args > 2)
+		return -1;
+	if (count_args == 2)
+	{
+		num = clean_argument(args[1]); // en lugar de strip_quotes
+		if (!is_numeric(num))
+		{
+			free(num);
+			return (-2);
+		}
+		int value = ft_atoi(num);
+		free(num);
+		return (value);
+	}
+	return 0;
+}
 
 /**
  * Implementación de la built-in `exit`.
  */
-int	ft_exit_builtin(char **args)
+int ft_exit_builtin(char **args)
 {
-	int	status;
+	int status;
 
 	ft_putstr_fd("exit\n", 1); // Como hace bash
 	status = check_exit(args);
@@ -132,6 +130,8 @@ int	ft_exit_builtin(char **args)
 		exit(2); // Bash devuelve 2 para este error
 	}
 	else
+	{
 		exit((unsigned char)status);
-	return (status); // Solo se alcanza si no hace exit
+	}
+	return (status);
 }

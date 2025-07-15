@@ -36,4 +36,7 @@ void print_tokens(t_token *tokens);
 void print_command(t_command *cmd);
 void print_ast(t_ast *node, int depth);
 
+void ft_myenv_free(t_myenv *myenv);
+void ft_destroyer(t_minishell *minishell);
+
 #endif

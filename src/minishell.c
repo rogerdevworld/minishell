@@ -40,7 +40,9 @@ void main_loop(t_myenv *myenv)
 		// line = readline(ft_agnoster(envp, status));
 		// line = readline(ft_agnoster(envp, status));
 		// line = readline(ft_strjoin("mini > ", ft_itoa(status)));
-		line = readline("mini > ");
+		//line = readline(ft_desing(myenv->env, status));
+		line = readline("minishell > ");
+		//line = readline("mini > ");
 		status = verify_sigint(status);
 		if (!line)
 			break;
@@ -64,6 +66,7 @@ void main_loop(t_myenv *myenv)
 			if (g_signal != S_CANCEL_EXEC)
 				status = execute_ast(ast, myenv->env, myenv, minishell, status);
 		}
+		//ft_destroyer(minishell);
 		free(line);
 	}
 	g_signal = S_BASE;

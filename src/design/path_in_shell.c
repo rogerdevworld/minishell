@@ -11,10 +11,10 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-char	*get_git_branch(void)
+char *get_git_branch(void)
 {
-	FILE	*fp;
-	char	*branch;
+	FILE *fp;
+	char *branch;
 
 	branch = malloc(1024 * sizeof(char));
 	if (!branch)
@@ -36,15 +36,15 @@ char	*get_git_branch(void)
 	return (branch);
 }
 
-char	*path_terminal(void)
+char *path_terminal(void)
 {
-	char	*path;
-	char	**dirs;
-	char	*final;
-	int		i;
-	int		j;
-	char	*tmp;
-	char	*last;
+	char *path;
+	char **dirs;
+	char *final;
+	int i;
+	int j;
+	char *tmp;
+	char *last;
 
 	i = 0;
 	path = malloc(1024);
@@ -88,7 +88,7 @@ char	*path_terminal(void)
 		free(tmp);
 		tmp = ft_strjoin(last, dirs[i - 1]);
 		free(last);
-		final = ft_strjoin(" ...", tmp);
+		final = ft_strjoin("~/...", tmp);
 		free(tmp);
 	}
 	// liberar dirs
@@ -99,9 +99,9 @@ char	*path_terminal(void)
 	return (final);
 }
 
-char	*get_user(char **envp)
+char *get_user(char **envp)
 {
-	char	*user;
+	char *user;
 
 	if (!envp)
 		return (ft_strdup("Roger"));
@@ -111,10 +111,10 @@ char	*get_user(char **envp)
 	return (user);
 }
 
-char	*get_computer_name(void)
+char *get_computer_name(void)
 {
-	static char	hostname[1024];
-	char		*str;
+	static char hostname[1024];
+	char *str;
 
 	str = malloc(8);
 	if (gethostname(hostname, sizeof(hostname)) != 0)
@@ -125,10 +125,10 @@ char	*get_computer_name(void)
 	return (str);
 }
 
-char	*ft_agnoster(char **envp, int status)
+char *ft_agnoster(char **envp, int status)
 {
-	char	*prompt[14];
-	char	*result;
+	char *prompt[14];
+	char *result;
 
 	prompt[0] = "\033[44m 🐧";
 	prompt[1] = get_user(envp);
@@ -140,23 +140,23 @@ char	*ft_agnoster(char **envp, int status)
 
 	if (get_git_branch())
 	{
-		prompt[7] = " \033[43m\033[32m\033[0m";                 // Desde verde a amarillo (git)
-		prompt[8] = "\033[43m\033[32m   ";                      // Fondo amarillo, texto verde
+		prompt[7] = " \033[43m\033[32m\033[0m"; // Desde verde a amarillo (git)
+		prompt[8] = "\033[43m\033[32m   ";	   // Fondo amarillo, texto verde
 		prompt[9] = get_git_branch();
-	
+
 		if (status == 0)
-			prompt[10] = " ● \033[42m\033[33m\033[42m";          // Amarillo → verde si ok
+			prompt[10] = " ● \033[42m\033[33m\033[42m"; // Amarillo → verde si ok
 		else
-			prompt[10] = " ● \033[41m\033[33m\033[41m";          // Amarillo → rojo si error
+			prompt[10] = " ● \033[41m\033[33m\033[41m"; // Amarillo → rojo si error
 	}
 	else
 	{
 		if (status == 0)
-			prompt[7] = "\033[42m\033[33m\033[0m";             // Verde directamente
+			prompt[7] = "\033[42m\033[33m\033[0m"; // Verde directamente
 		else
-			prompt[7] = "\033[42m\033[33m\033[0m";             // Rojo directamente
-	
-		prompt[8] = "";    // No git branch, se omite
+			prompt[7] = "\033[42m\033[33m\033[0m"; // Rojo directamente
+
+		prompt[8] = ""; // No git branch, se omite
 		prompt[9] = NULL;
 		prompt[10] = NULL;
 	}
@@ -165,32 +165,27 @@ char	*ft_agnoster(char **envp, int status)
 
 	if (status == 0)
 	{
-		prompt[11] = " \033[42m\033[31m\033[0m";  // Verde → bloque de estado
+		prompt[11] = " \033[42m\033[31m\033[0m"; // Verde → bloque de estado
 		prompt[12] = ft_strjoin(
 			"\033[42m\033[32m ✅ ",
-			ft_strjoin("\033[37m", ft_strjoin(status_str, "\033[32m\033[49m\033[0m"))
-		);
+			ft_strjoin("\033[37m", ft_strjoin(status_str, "\033[32m\033[49m\033[0m")));
 	}
 	else
 	{
-		prompt[11] = " \033[41m\033[32m\033[0m";  // Rojo → bloque de error
+		prompt[11] = " \033[41m\033[32m\033[0m"; // Rojo → bloque de error
 		prompt[12] = ft_strjoin(
 			"\033[41m\033[32m ❌ ",
-			ft_strjoin("\033[37m", ft_strjoin(status_str, "\033[31m\033[49m\033[0m"))
-		);
+			ft_strjoin("\033[37m", ft_strjoin(status_str, "\033[31m\033[49m\033[0m")));
 	}
 	prompt[13] = "\033[0m\n";
 	free(status_str);
-	
-	
- 	
 
 	// Concatenación segura (mejor usar bucles o builder, pero siguiendo tu estilo):
 	result = ft_strjoin(prompt[0], ft_strjoin(prompt[1], ft_strjoin(prompt[2],
-		ft_strjoin(prompt[3], ft_strjoin(prompt[4], ft_strjoin(prompt[5],
-		ft_strjoin(prompt[6], ft_strjoin(prompt[7], ft_strjoin(prompt[8],
-		ft_strjoin(prompt[9] ? prompt[9] : "", ft_strjoin(prompt[10] ? prompt[10] : "",
-		ft_strjoin(prompt[11], ft_strjoin(prompt[12], prompt[13])))))))))))));
+																	ft_strjoin(prompt[3], ft_strjoin(prompt[4], ft_strjoin(prompt[5],
+																														   ft_strjoin(prompt[6], ft_strjoin(prompt[7], ft_strjoin(prompt[8],
+																																												  ft_strjoin(prompt[9] ? prompt[9] : "", ft_strjoin(prompt[10] ? prompt[10] : "",
+																																																									ft_strjoin(prompt[11], ft_strjoin(prompt[12], prompt[13])))))))))))));
 
 	free(prompt[6]);
 	if (prompt[9])
@@ -199,12 +194,66 @@ char	*ft_agnoster(char **envp, int status)
 	return (result);
 }
 
+#define RESET "\001\033[0m\002"
+#define RED "\001\033[0;31m\002"
+#define GREEN "\001\033[0;32m\002"
+#define CYAN "\001\033[0;36m\002"
+#define MAGENTA "\001\033[0;35m\002"
+#define YELLOW "\001\033[0;33m\002"
 
-char	*ft_desing()
+char *ft_desing(char **env, int status)
 {
-	//char	*user = get_user(envp);
-	//char	*computer = get_computer_name();
-	char	*path = path_terminal();
+	char *user = get_user(env);
+	char *path = path_terminal();
+	char *arrow_color;
+	char *colored_arrow;
+	char *lightning;
+	char *tmp1;
+	char *tmp2;
+	char *tmp3;
+	// char	*tmp4;
+	char *final;
 
-	return (ft_strjoin(path, " >"));
+	// Color para la flecha según status
+	if (status == 0)
+		arrow_color = GREEN;
+	else
+		arrow_color = RED;
+
+	colored_arrow = ft_strjoin(arrow_color, " ⟿  ");
+
+	// rayo amarillo
+	lightning = ft_strjoin(YELLOW, " ⚡ ");
+
+	// minishell@ (magenta)
+	tmp1 = ft_strjoin(MAGENTA, "minishell@");
+
+	// minishell@ + user (cyan)
+	tmp2 = ft_strjoin(tmp1, CYAN);
+	free(tmp1);
+	tmp1 = ft_strjoin(tmp2, user);
+	free(tmp2);
+
+	// + rayo amarillo
+	tmp2 = ft_strjoin(tmp1, lightning);
+	free(tmp1);
+	free(lightning);
+
+	// + path (amarillo)
+	tmp1 = ft_strjoin(tmp2, YELLOW);
+	free(tmp2);
+	tmp2 = ft_strjoin(tmp1, path);
+	free(tmp1);
+
+	// + flecha coloreada
+	tmp1 = ft_strjoin(tmp2, colored_arrow);
+	free(tmp2);
+	free(colored_arrow);
+
+	// + reset de color
+	tmp3 = ft_strjoin(tmp1, RESET);
+	free(tmp1);
+
+	final = tmp3;
+	return (final);
 }
