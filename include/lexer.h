@@ -32,7 +32,7 @@ typedef struct s_token
 {
 	char			*value;
 	int				type;
-	char			quote_type; // para manejar comillas en lexer
+	char quote_type; // para manejar comillas en lexer
 	struct s_token	*next;
 }					t_token;
 
@@ -44,8 +44,12 @@ typedef struct s_word
 
 t_token				*lexer(char *str);
 t_token				*init_lexer(char *token);
-// t_token				*init_lexer(char *token, char quote_type); 
+// t_token				*init_lexer(char *token, char quote_type);
 void				add_back(t_token **tokens, t_token *token);
 int					validate_syntax(t_token *tokens);
+
+int					is_operator(const char *s);
+int					read_operator(const char *s, char **out);
+int					read_word(const char *s, char **out);
 
 #endif

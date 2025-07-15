@@ -11,57 +11,54 @@
 /* ************************************************************************** */
 #include "../include/minishell.h"
 
-int g_signal;
+int			g_signal;
 
-void set_defaul_signals(void)
+void	set_defaul_signals(void)
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 }
 
-static int handle_normal_exit(int status)
-{
-	return WEXITSTATUS(status);
-}
+// int	handle_normal_exit(int status)
+// {
+// 	return (WEXITSTATUS(status));
+// }
 
-static int handle_signal_exit(int status)
+int	handle_signal_exit(int status)
 {
-	int signo = WTERMSIG(status);
+	int	signo;
 
+	signo = WTERMSIG(status);
 	if (signo == SIGPIPE)
-		return 0;
+		return (0);
 	else if (signo == SIGINT)
 	{
 		write(1, "\n", 1);
-		return 130;
+		return (130);
 	}
 	else if (signo == SIGQUIT)
 	{
 		write(1, "Quit (core dumped)\n", 19);
-		return 131;
+		return (131);
 	}
 	return (128 + signo);
 }
 
-int update_exit_status(int status, t_minishell *minishell)
+int	update_exit_status(int status, t_minishell *minishell)
 {
 	if (WIFEXITED(status))
-		status = handle_normal_exit(status);
+		status = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
 		status = handle_signal_exit(status);
-
 	if (g_signal == S_SIGINT_CMD)
 		status = 130;
-
 	g_signal = S_BASE;
-
 	if (minishell)
 		minishell->exit = status;
-
-	return status;
+	return (status);
 }
 
-static void sigint_handler_aux(void)
+void	sigint_handler_aux(void)
 {
 	if (g_signal == S_HEREDOC_END)
 	{
@@ -72,7 +69,7 @@ static void sigint_handler_aux(void)
 		g_signal = S_SIGINT;
 }
 
-static void sigint_handler(int sig)
+void	ft_sigint(int sig)
 {
 	(void)sig;
 	if (g_signal == S_BASE || g_signal == S_SIGINT)
@@ -98,9 +95,9 @@ static void sigint_handler(int sig)
 	sigint_handler_aux();
 }
 
-void signal_init(void)
+void	signal_init(void)
 {
 	g_signal = S_BASE;
-	signal(SIGINT, sigint_handler);
+	signal(SIGINT, ft_sigint);
 	signal(SIGQUIT, SIG_IGN);
 }

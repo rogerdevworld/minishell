@@ -22,13 +22,11 @@ typedef enum e_signal
 	S_CMD,         // se ejecuta un comando
 	S_CANCEL_EXEC, // Ctrl + D en heredoc
 	S_SIZE
-}			t_signal;
+}		t_signal;
 
 // -- signals.h -- //
 void	signal_init(void);
-int	update_exit_status(int status, t_minishell *minishell);
+int		update_exit_status(int status, t_minishell *minishell);
 void	set_defaul_signals(void);
-//void	ft_sigint(int signum);
-//void	ft_sigquit(int sig);
 
 #endif

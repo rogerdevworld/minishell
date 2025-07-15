@@ -24,6 +24,9 @@ static int verify_sigint(status)
 /**
  * nueva version de main_loop
  */
+// line = readline(ft_agnoster(envp, status));
+// line = readline(ft_agnoster(envp, status));
+// line = readline(ft_strjoin("mini > ", ft_itoa(status)));
 void main_loop(t_myenv *myenv)
 {
 	char *line;
@@ -37,12 +40,8 @@ void main_loop(t_myenv *myenv)
 	tokens = NULL;
 	while (1)
 	{
-		// line = readline(ft_agnoster(envp, status));
-		// line = readline(ft_agnoster(envp, status));
-		// line = readline(ft_strjoin("mini > ", ft_itoa(status)));
-		//line = readline(ft_desing(myenv->env, status));
-		line = readline("minishell > ");
-		//line = readline("mini > ");
+		//line = readline("minishell > ");
+		line = readline(ft_desing(myenv->env, status));
 		status = verify_sigint(status);
 		if (!line)
 			break;
