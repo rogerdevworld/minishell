@@ -15,7 +15,6 @@ void	ft_shlvl(t_myenv *myenv)
 {
 	t_env	*env;
 	int		lvl;
-	char	*new_lvl;
 
 	env = myenv->list_env;
 	while (env)
@@ -27,18 +26,15 @@ void	ft_shlvl(t_myenv *myenv)
 				lvl = ft_atoi(env->content) + 1;
 				if (lvl >= 1000)
 				{
-					ft_printf("minishell: warning: shell level (%i) too high, resetting to 1\n", lvl);
+					ft_printf("minishell: warning: shell level (%i) too high, \
+						resetting to 1\n", lvl);
 					lvl = 1;
 				}
 			}
 			else
 				lvl = 1;
-			new_lvl = ft_itoa(lvl);
-			if (!new_lvl)
-				return ;
 			free(env->content);
-			env->content = new_lvl;
-			return ;
+			return (env->content = ft_itoa(lvl), (void)0);
 		}
 		env = env->next;
 	}

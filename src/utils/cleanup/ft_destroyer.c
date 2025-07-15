@@ -11,8 +11,8 @@
 /* ************************************************************************** */
 #include "../../../include/minishell.h"
 
-void ft_destroyer(t_minishell *minishell)
+void	ft_destroyer(t_minishell *minishell)
 {
-    free_minishell(minishell);
-    ft_myenv_free(minishell->env);
+	free_minishell(minishell);
+	ft_myenv_free(minishell->env);
 }

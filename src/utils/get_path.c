@@ -3,24 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   get_path.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: xviladri <xviladri@student.42barcelon      +#+  +:+       +#+        */
+/*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/01 12:43:57 by xviladri          #+#    #+#             */
-/*   Updated: 2025/04/22 20:28:23 by xviladri         ###   ########.fr       */
+/*   Created: 2025/07/15 14:01:14 by rmarrero          #+#    #+#             */
+/*   Updated: 2025/07/15 14:01:17 by rmarrero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-char *get_path(char *cmd, char **env)
+char	*get_path(char *cmd, char **env)
 {
-	int i;
-	char *exec;
-	char **allpath;
-	char *path_part;
-	char **s_cmd;
+	int		i;
+	char	*exec;
+	char	**allpath;
+	char	*path_part;
+	char	**s_cmd;
+	char	*path_env;
 
 	i = -1;
-	char *path_env = ft_getenv("PATH", env);
+	path_env = ft_getenv("PATH", env);
 	if (!path_env)
 		return (NULL);
 	allpath = ft_split(path_env, ':');
@@ -35,79 +36,4 @@ char *get_path(char *cmd, char **env)
 		free(exec);
 	}
 	return (free_split(allpath), free_split(s_cmd), NULL);
-}
-
-char *remove_quotes(char *str)
-{
-	size_t len;
-
-	if (!str)
-		return (NULL);
-	len = ft_strlen(str);
-	if ((str[0] == '"' && str[len - 1] == '"'))
-		return (ft_substr(str, 1, len - 2));
-	return (ft_strdup(str));
-}
-
-char *remove_all_quotes(char *str)
-{
-	char *result;
-	int i;
-	int j;
-	int len;
-	char quote;
-
-	i = 0, j = 0;
-	len = ft_strlen(str);
-	quote = 0;
-	result = ft_calloc(len + 1, sizeof(char));
-	if (!result)
-		return (NULL);
-	while (str[i])
-	{
-		if ((str[i] == '\'' || str[i] == '"') && !quote)
-			quote = str[i++];
-		else if (str[i] == quote)
-		{
-			quote = 0;
-			i++;
-		}
-		else
-			result[j++] = str[i++];
-	}
-	return (result);
-}
-
-char **remove_quotes_from_args(char **args)
-{
-	int count;
-	int i;
-	int j;
-	char **args_no_quotes;
-
-	count = 0;
-	while (args && args[count])
-		count++;
-	args_no_quotes = ft_calloc(count + 1, sizeof(char *));
-	if (!args_no_quotes)
-		return (NULL);
-	i = 0;
-	j = 0;
-	while (i < count)
-	{
-		args_no_quotes[i] = remove_quotes(args[i]);
-		if (!args_no_quotes[i])
-		{
-			while (j < i)
-			{
-				free(args_no_quotes[j]);
-				j++;
-			}
-			free(args_no_quotes);
-			return (NULL);
-		}
-		i++;
-	}
-	args_no_quotes[count] = NULL;
-	return (args_no_quotes);
 }
