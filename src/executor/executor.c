@@ -1,164 +1,82 @@
 #include "../../include/minishell.h"
 
 int	execute_command(t_command *cmd, char **envp, t_myenv *myenv,
-	t_minishell *minishell, int status)
+		t_minishell *minishell, int status)
 {
-int		builtin_id;
-pid_t	pid;
-char	**clean_args;
+	int		builtin_id;
+	pid_t	pid;
+	char	**clean_args;
 
-if (!cmd || !cmd->args || !cmd->args[0])
-	return (1);
-builtin_id = get_builtin_cmd(cmd->args[0]);
-
-if (builtin_id == -1) // No es builtin -> fork + execve
-{
-	g_signal = S_CMD;
-	pid = fork();
-	if (pid == 0)
+	if (!cmd || !cmd->args || !cmd->args[0])
+		return (1);
+	builtin_id = get_builtin_cmd(cmd->args[0]);
+	if (builtin_id == -1)
 	{
-		set_defaul_signals();
-		if (cmd->redir)
-		{
-			if (process_all_heredocs(cmd->redir) == -1)
-				exit(1);
-			if (handle_input_redirection(cmd->redir) == -1)
-				exit(1);
-			if (handle_output_redirections(cmd->redir) == -1)
-				exit(1);
-			if (cmd->redir->input_file != -1)
-				dup2(cmd->redir->input_file, STDIN_FILENO);
-			if (cmd->redir->output_file != -1)
-				dup2(cmd->redir->output_file, STDOUT_FILENO);
-		}
-		resolve_command_path(cmd, envp);
-		clean_args = remove_quotes_from_args(cmd->args);
-		free_split(cmd->args);
-		cmd->args = clean_args;
-		execve(cmd->path, cmd->args, envp);
-		perror("execve");
-		exit(1);
-	}
-	waitpid(pid, &status, 0);
-	status = update_exit_status(status, minishell);
-	return (status);
-}
-else // Es builtin
-{
-	// Si no hay redirección, ejecútalo directamente sin fork
-	if (!cmd->redir || (cmd->redir->input_file == -1
-			&& cmd->redir->output_file == -1))
-	{
-		minishell->executor->builtin_id = builtin_id;
-		return (execute_builtin(minishell, cmd->args, myenv, status));
-	}
-	else
-	{
-		// Hay redirección: ejecutar builtin en un hijo para hacer dup2
 		g_signal = S_CMD;
 		pid = fork();
 		if (pid == 0)
 		{
 			set_defaul_signals();
-			if (process_all_heredocs(cmd->redir) == -1)
-				exit(1);
-			if (handle_input_redirection(cmd->redir) == -1)
-				exit(1);
-			if (handle_output_redirections(cmd->redir) == -1)
-				exit(1);
-			if (cmd->redir->input_file != -1)
-				dup2(cmd->redir->input_file, STDIN_FILENO);
-			if (cmd->redir->output_file != -1)
-				dup2(cmd->redir->output_file, STDOUT_FILENO);
-			minishell->executor->builtin_id = builtin_id;
-			exit(execute_builtin(minishell, cmd->args, myenv, status));
+			if (cmd->redir)
+			{
+				if (process_all_heredocs(cmd->redir) == -1)
+					exit(1);
+				if (handle_output_redirections(cmd->redir) == -1)
+					exit(1);
+				if (handle_input_redirection(cmd->redir) == -1)
+					exit(1);
+				if (cmd->redir->input_file != -1)
+					dup2(cmd->redir->input_file, STDIN_FILENO);
+				if (cmd->redir->output_file != -1)
+					dup2(cmd->redir->output_file, STDOUT_FILENO);
+			}
+			resolve_command_path(cmd, envp);
+			clean_args = remove_quotes_from_args(cmd->args);
+			free_split(cmd->args);
+			cmd->args = clean_args;
+			execve(cmd->path, cmd->args, envp);
+			perror("execve");
+			exit(1);
 		}
 		waitpid(pid, &status, 0);
 		status = update_exit_status(status, minishell);
 		return (status);
 	}
-}
-}
+	else // Es builtin
+	{
+		if (!cmd->redir || (cmd->redir->input_file == -1
+				&& cmd->redir->output_file == -1))
+		{
+			minishell->executor->builtin_id = builtin_id;
+			return (execute_builtin(minishell, cmd->args, myenv, status));
+		}
+		else
+		{
+			g_signal = S_CMD;
+			pid = fork();
+			if (pid == 0)
+			{
+				set_defaul_signals();
+				if (process_all_heredocs(cmd->redir) == -1)
+					exit(1);
+				if (handle_output_redirections(cmd->redir) == -1)
+					exit(1);
+				if (handle_input_redirection(cmd->redir) == -1)
+					exit(1);
 
-// int	execute_command(t_command *cmd, char **envp, t_myenv *myenv,
-// 		t_minishell *minishell, int status)
-// {
-// 	int		builtin_id;
-// 	pid_t	pid;
-// 	char	**clean_args;
-
-// 	builtin_id = get_builtin_cmd(cmd->args[0]);
-// 	if (!cmd || !cmd->args || !cmd->args[0])
-// 		return (1);
-// 	if (builtin_id == -1) // No es builtin -> fork + execve
-// 	{
-// 		g_signal = S_CMD;
-// 		pid = fork();
-// 		if (pid == 0)
-// 		{
-// 			set_defaul_signals();
-// 			if (cmd->redir)
-// 			{
-// 				// Heredoc y redirecciones
-// 				if (cmd->redir->limiter && process_heredoc(cmd->redir) == -1)
-// 					exit(1);
-// 				if (handle_input_redirection(cmd->redir) == -1)
-// 					exit(1);
-// 				if (handle_output_redirections(cmd->redir) == -1)
-// 					exit(1);
-// 				if (cmd->redir->input_file != -1)
-// 					dup2(cmd->redir->input_file, STDIN_FILENO);
-// 				if (cmd->redir->output_file != -1)
-// 					dup2(cmd->redir->output_file, STDOUT_FILENO);
-// 			}
-// 			resolve_command_path(cmd, envp);
-// 			clean_args = remove_quotes_from_args(cmd->args);
-// 			free_split(cmd->args);
-// 			cmd->args = clean_args;
-// 			execve(cmd->path, cmd->args, envp);
-// 			perror("execve");
-// 			exit(1);
-// 		}
-// 		waitpid(pid, &status, 0);
-// 		status = update_exit_status(status, minishell);
-// 		return (status);
-// 	}
-// 	else // Es builtin
-// 	{
-// 		// Si no hay redirección, ejecútalo directamente sin fork
-// 		if (!cmd->redir || (cmd->redir->input_file == -1
-// 				&& cmd->redir->output_file == -1))
-// 		{
-// 			minishell->executor->builtin_id = builtin_id;
-// 			return (execute_builtin(minishell, cmd->args, myenv, status));
-// 		}
-// 		else
-// 		{
-// 			// Hay redirección: ejecutar builtin en un hijo para hacer dup2
-// 			g_signal = S_CMD;
-// 			pid = fork();
-// 			if (pid == 0)
-// 			{
-// 				set_defaul_signals();
-// 				if (cmd->redir->limiter && process_heredoc(cmd->redir) == -1)
-// 					exit(1);
-// 				if (handle_input_redirection(cmd->redir) == -1)
-// 					exit(1);
-// 				if (handle_output_redirections(cmd->redir) == -1)
-// 					exit(1);
-// 				if (cmd->redir->input_file != -1)
-// 					dup2(cmd->redir->input_file, STDIN_FILENO);
-// 				if (cmd->redir->output_file != -1)
-// 					dup2(cmd->redir->output_file, STDOUT_FILENO);
-// 				minishell->executor->builtin_id = builtin_id;
-// 				exit(execute_builtin(minishell, cmd->args, myenv, status));
-// 			}
-// 			waitpid(pid, &status, 0);
-// 			status = update_exit_status(status, minishell);
-// 			return (status);
-// 		}
-// 	}
-// }
+				if (cmd->redir->input_file != -1)
+					dup2(cmd->redir->input_file, STDIN_FILENO);
+				if (cmd->redir->output_file != -1)
+					dup2(cmd->redir->output_file, STDOUT_FILENO);
+				minishell->executor->builtin_id = builtin_id;
+				exit(execute_builtin(minishell, cmd->args, myenv, status));
+			}
+			waitpid(pid, &status, 0);
+			status = update_exit_status(status, minishell);
+			return (status);
+		}
+	}
+}
 
 int	execute_pipe(t_ast *node, char **envp, t_myenv *myenv,
 		t_minishell *minishell)
@@ -275,7 +193,8 @@ int	process_all_heredocs(t_redir *redir)
 	i = 0;
 	while (i < redir->heredoc_count)
 	{
-		if (process_single_heredoc(redir->limiter[i], &redir->heredoc_fds[i]) == -1)
+		if (process_single_heredoc(redir->limiter[i], &redir->heredoc_fds[i]) ==
+			-1)
 			return (-1);
 		i++;
 	}
@@ -283,8 +202,6 @@ int	process_all_heredocs(t_redir *redir)
 	redir->input_file = redir->heredoc_fds[redir->heredoc_count - 1];
 	return (0);
 }
-
-
 
 int	handle_output_redirections(t_redir *redir)
 {

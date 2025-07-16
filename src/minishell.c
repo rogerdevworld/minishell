@@ -40,8 +40,8 @@ void main_loop(t_myenv *myenv)
 	tokens = NULL;
 	while (1)
 	{
-		//line = readline("minishell > ");
-		line = readline(ft_desing(myenv->env, status));
+		line = readline("minishell > ");
+		//line = readline(ft_desing(myenv->env, status));
 		status = verify_sigint(status);
 		if (!line)
 			break;
@@ -57,9 +57,9 @@ void main_loop(t_myenv *myenv)
         }
         else
         {
-			print_tokens(tokens);
+			//print_tokens(tokens);
 			ast = parse_expression(&tokens, myenv->env);
-			print_ast(ast, 0);
+			//print_ast(ast, 0);
 			exec = init_exec(myenv);
 			minishell = init_minishell(ast, tokens, exec);
 			if (g_signal != S_CANCEL_EXEC)
