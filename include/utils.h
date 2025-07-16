@@ -27,7 +27,9 @@ void	ft_shlvl(t_myenv *myenv);
 // -- utils -- //
 int		ft_open(char *file, int mode);
 int     check_expansion(char *str);
-char	*ft_expand_arg_ini(t_minishell *minishell, char *arg, t_env *env, int s);
+// char	*ft_expand_arg_ini(t_minishell *minishell, char *arg, t_env *env, int s);
+void	expand_before_executor(t_token **tokens, t_env *env, int status);
+char	*ft_expand_arg_ini(char *arg, t_env *env, int s);
 void    shift_empty_args(char **args);
 
 

@@ -57,7 +57,7 @@ void shift_empty_args(char **args)
 }
 
 
-char	*expand_variable_ini(t_minishell *minishell, const char *arg, int *i, t_env *env, int s)
+char	*expand_variable_ini(const char *arg, int *i, t_env *env, int s)
 {
 	int		start;
 	char	*var_name;
@@ -93,7 +93,7 @@ char	*expand_variable_ini(t_minishell *minishell, const char *arg, int *i, t_env
 	if (ft_strcmp(var_name, "?") == 0)
 	{
 		free(var_name);
-		return (ft_itoa(minishell->exit));
+		return (ft_itoa(s));
 	}
 	if (var_name)
 	{
@@ -105,7 +105,7 @@ char	*expand_variable_ini(t_minishell *minishell, const char *arg, int *i, t_env
 	return (ft_strdup(""));
 }
 
-char	*copy_double_quoted_text_ini(t_minishell *minishell, const char *arg, int *i, t_env *env, int s)
+char	*copy_double_quoted_text_ini(const char *arg, int *i, t_env *env, int s)
 {
 	char	*result;
 	char	*part;
@@ -129,7 +129,7 @@ char	*copy_double_quoted_text_ini(t_minishell *minishell, const char *arg, int *
 			}
 		}
 		else if (arg[*i] == '$') // variable expansion
-			part = expand_variable_ini(minishell, arg, i, env, s);
+			part = expand_variable_ini(arg, i, env, s);
 		else
 		{
 			start = *i;
@@ -160,7 +160,45 @@ char	*copy_single_quoted_text_ini(const char *arg, int *i)
 	return (text);
 }
 
-char	*ft_expand_arg_ini(t_minishell *minishell, char *arg, t_env *env, int s)
+// char	*ft_expand_arg_ini(t_minishell *minishell, char *arg, t_env *env, int s)
+// {
+// 	char	*result;
+// 	char	*part;
+// 	int	i;
+
+// 	// ft_printf("\n el arg que entra es \n%s", arg);
+// 	part = NULL;
+// 	result = ft_calloc(1, sizeof(char));
+// 	i = 0;
+// 	if (!result)
+// 		return (NULL);
+// 	while(arg[i])
+// 	{
+// 		if (arg[i] == '\'')
+// 			part = copy_single_quoted_text_ini(arg, &i);//TD--Done
+// 		else if (arg[i] == '"')
+// 		{
+// 			part = copy_double_quoted_text_ini(minishell, arg, &i, env, s);//TD--Done
+// 		}
+// 		else if (arg[i] == '\\' && arg[i + 1] == '$')
+// 		{
+// 			part = ft_substr(arg, i + 1, 1);
+// 			i += 2;
+// 		}
+// 		else if (arg[i] == '$')
+// 		 	part = expand_variable_ini(minishell, arg, &i, env, s);//TD--Done
+// 		else
+// 		{
+// 			part = copy_plain_text_ini(arg, &i);//TD--Done
+// 		}
+// 		if (!part)
+// 			return (free(result), NULL);
+// 		result = ft_strjoin_free(result, part);
+// 	}
+// 	return (result);
+// }
+
+char	*ft_expand_arg_ini(char *arg, t_env *env, int s)
 {
 	char	*result;
 	char	*part;
@@ -178,7 +216,7 @@ char	*ft_expand_arg_ini(t_minishell *minishell, char *arg, t_env *env, int s)
 			part = copy_single_quoted_text_ini(arg, &i);//TD--Done
 		else if (arg[i] == '"')
 		{
-			part = copy_double_quoted_text_ini(minishell, arg, &i, env, s);//TD--Done
+			part = copy_double_quoted_text_ini(arg, &i, env, s);//TD--Done
 		}
 		else if (arg[i] == '\\' && arg[i + 1] == '$')
 		{
@@ -186,7 +224,7 @@ char	*ft_expand_arg_ini(t_minishell *minishell, char *arg, t_env *env, int s)
 			i += 2;
 		}
 		else if (arg[i] == '$')
-		 	part = expand_variable_ini(minishell, arg, &i, env, s);//TD--Done
+		 	part = expand_variable_ini(arg, &i, env, s);//TD--Done
 		else
 		{
 			part = copy_plain_text_ini(arg, &i);//TD--Done
@@ -196,4 +234,30 @@ char	*ft_expand_arg_ini(t_minishell *minishell, char *arg, t_env *env, int s)
 		result = ft_strjoin_free(result, part);
 	}
 	return (result);
+}
+void	expand_before_executor(t_token **tokens, t_env *env, int status)
+{
+    t_token *cur = *tokens;
+    char *expanded;
+
+    while (cur)
+    {
+        // Si el token es una variable a expandir
+        if (cur->type == TOKEN_WORD && check_expansion(cur->value))
+        {
+            expanded = ft_expand_arg_ini(cur->value, env, status);
+            if (expanded)
+            {
+                free(cur->value);
+                cur->value = expanded;
+            }
+            else
+            {
+                // Si la expansión devuelve NULL, reemplaza por cadena vacía
+                free(cur->value);
+                cur->value = ft_strdup("");
+            }
+        }
+        cur = cur->next;
+    }
 }

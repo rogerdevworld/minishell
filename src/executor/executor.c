@@ -4,10 +4,8 @@ int	execute_command(t_command *cmd, char **envp, t_myenv *myenv,
 		t_minishell *minishell, int status)
 {
 	int		builtin_id;
-	int 	i = 0;
 	pid_t	pid;
 	char	**clean_args;
-	char *expanded ;
 
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (1);

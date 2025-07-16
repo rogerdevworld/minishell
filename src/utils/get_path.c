@@ -20,6 +20,8 @@ char	*get_path(char *cmd, char **env)
 	char	**s_cmd;
 	char	*path_env;
 
+	if (!cmd || cmd[0] == '\0')
+        return NULL;
 	i = -1;
 	path_env = ft_getenv("PATH", env);
 	if (!path_env)

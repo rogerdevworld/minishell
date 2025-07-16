@@ -40,7 +40,7 @@ void main_loop(t_myenv *myenv)
 	tokens = NULL;
 	while (1)
 	{
-		line = readline("minishell > ");
+		line = readline("mini > ");
 		//line = readline(ft_desing(myenv->env, status));
 		status = verify_sigint(status);
 		if (!line)
@@ -48,6 +48,8 @@ void main_loop(t_myenv *myenv)
 		if (*line)
 			add_history(line);
 		tokens = lexer(line);
+		//exec = init_exec(myenv);
+		expand_before_executor(&tokens, myenv->list_env, status);
 		if (validate_syntax(tokens) || check_unclosed_quotes(line))
 			status = 2;
 		else if (ft_strcmp(line, "./minishell") == 0)
