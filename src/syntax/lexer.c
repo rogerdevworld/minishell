@@ -17,13 +17,13 @@ t_token	*init_lexer(char *value)
 		token->type = TOKEN_OR;
 	else if (ft_strncmp(value, "|", 2) == 0)
 		token->type = TOKEN_PIPE;
-	else if (ft_strcmp(value, "<") == 0)
-		token->type = TOKEN_REDIR_IN;
+	else if (ft_strncmp(value, "<<", 2) == 0)
+		token->type = TOKEN_HEREDOC;
 	else if (ft_strcmp(value, ">") == 0)
 		token->type = TOKEN_REDIR_OUT;
 	else if (ft_strcmp(value, ">>") == 0)
 		token->type = TOKEN_APPEND;
-	else if (ft_strcmp(value, "<<") == 0)
+	else if (ft_strncmp(value, "<", 1) == 0)
 		token->type = TOKEN_HEREDOC;
 	else if (ft_strcmp(value, "(") == 0)
 		token->type = TOKEN_OPEN_PAREN;

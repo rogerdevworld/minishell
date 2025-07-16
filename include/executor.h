@@ -66,5 +66,6 @@ int							execute_astint(t_minishell *minishell,
 int							execute_ast(t_ast *node, char **envp,
 								t_myenv *myenv, t_minishell *minishell,
 								int status);
+int process_heredoc(t_redir *redir);
 
 #endif

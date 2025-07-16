@@ -7,7 +7,8 @@ int execute_command(t_command *cmd, char **envp, t_myenv *myenv,
 	pid_t pid;
 	char **clean_args;
 
-	ft_wildcards(&(cmd->args));
+	if (!cmd->redir->limiter)
+		ft_wildcards(&(cmd->args));
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (1);
 	builtin_id = get_builtin_cmd(cmd->args[0]);
@@ -21,15 +22,24 @@ int execute_command(t_command *cmd, char **envp, t_myenv *myenv,
 	if (pid == 0)
 	{
 		set_defaul_signals();
-		if (cmd->redir && (cmd->redir->input_file == -1 || cmd->redir->output_file == -1))
+
+		if (cmd->redir)
 		{
-			ft_printf(" No such file or directory\n");
-			exit(1);
+			if (cmd->redir->limiter)
+			{
+				if (process_heredoc(cmd->redir) == -1)
+					exit(1);
+			}
+			if (cmd->redir->input_file == -1 || cmd->redir->output_file == -1)
+			{
+				ft_printf(" No such file or directory\n");
+				exit(1);
+			}
+			if (cmd->redir->input_file != -1)
+				dup2(cmd->redir->input_file, STDIN_FILENO);
+			if (cmd->redir->output_file != -1)
+				dup2(cmd->redir->output_file, STDOUT_FILENO);
 		}
-		if (cmd->redir->input_file != -1)
-			dup2(cmd->redir->input_file, STDIN_FILENO);
-		if (cmd->redir->output_file != -1)
-			dup2(cmd->redir->output_file, STDOUT_FILENO);
 		resolve_command_path(cmd, envp);
 		clean_args = remove_quotes_from_args(cmd->args);
 		free_split(cmd->args);
@@ -122,6 +132,40 @@ int execute_subshell(t_ast *node, char **envp, t_myenv *myenv,
 	// return (WEXITSTATUS(status));
 	return (status);
 }
+
+
+int	process_heredoc(t_redir *redir)
+{
+	int		pipe_fds[2];
+	char	*line;
+
+	if (!redir || !redir->limiter)
+		return (0);
+	if (pipe(pipe_fds) == -1)
+	{
+		perror("pipe");
+		return (-1);
+	}
+	while (1)
+	{
+		line = readline("> ");
+		if (!line)
+			break;
+		if (ft_strncmp(line, redir->limiter, ft_strlen(redir->limiter) + 1) == 0)
+		{
+			free(line);
+			break;
+		}
+		write(pipe_fds[1], line, ft_strlen(line));
+		write(pipe_fds[1], "\n", 1);
+		free(line);
+	}
+	close(pipe_fds[1]);
+	redir->input_file = pipe_fds[0];
+	return (0);
+}
+
+
 
 int execute_ast(t_ast *node, char **envp, t_myenv *myenv,
 				t_minishell *minishell, int status)

@@ -57,9 +57,9 @@ void main_loop(t_myenv *myenv)
         }
         else
         {
-			// print_tokens(tokens);
+			print_tokens(tokens);
 			ast = parse_expression(&tokens, myenv->env);
-			// print_ast(ast, 0);
+			print_ast(ast, 0);
 			exec = init_exec(myenv);
 			minishell = init_minishell(ast, tokens, exec);
 			if (g_signal != S_CANCEL_EXEC)
