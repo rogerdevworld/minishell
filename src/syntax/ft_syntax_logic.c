@@ -14,9 +14,9 @@
 // && y ||
 t_ast	*parse_expression(t_token **tokens, char **envp)
 {
-	t_ast *left;
-	t_ast *new;
-	t_node_type type;
+	t_ast		*left;
+	t_ast		*new;
+	t_node_type	type;
 
 	left = parse_pipeline(tokens, envp);
 	while (*tokens && ((*tokens)->type == TOKEN_AND
