@@ -76,3 +76,42 @@ t_token	*lexer(char *input)
 	}
 	return (tokens);
 }
+
+// Limpia tokens vacíos de la lista enlazada
+void shift_empty_tokens(t_token **head)
+{
+    t_token *curr = *head;
+    t_token *prev = NULL;
+
+    while (curr)
+    {
+        // Verifica si el token está vacío o su value es NULL
+        if (!curr->value || curr->value[0] == '\0')
+        {
+            t_token *to_delete = curr;
+
+            if (prev == NULL)
+            {
+                // Si es el primer nodo
+                *head = curr->next;
+                curr = *head;
+            }
+            else
+            {
+                prev->next = curr->next;
+                curr = curr->next;
+            }
+
+            // Libera memoria del nodo vacío
+            if (to_delete->value)
+                free(to_delete->value);
+            free(to_delete);
+        }
+        else
+        {
+            prev = curr;
+            curr = curr->next;
+        }
+    }
+}
+
