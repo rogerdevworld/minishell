@@ -74,4 +74,8 @@ int							ft_input_redirection(t_redir *redir);
 int							process_all_heredocs(t_redir *redir);
 int							process_single_heredoc(char *limiter, int *fd_out);
 
+// -- ft_subshell -- //
+int							execute_subshell(t_ast *node, char **envp,
+								t_myenv *myenv, t_minishell *minishell);
+
 #endif
