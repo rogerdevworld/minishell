@@ -51,5 +51,6 @@ int					validate_syntax(t_token *tokens);
 int					is_operator(const char *s);
 int					read_operator(const char *s, char **out);
 int					read_word(const char *s, char **out);
+void	next_token(t_token **tokens);
 
 #endif

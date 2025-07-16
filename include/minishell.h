@@ -19,7 +19,6 @@ extern int g_signal;
 #include "../src/utils/libft/libft.h"
 #include "env.h"
 #include "lexer.h"
-#include "parser.h"
 #include "syntax.h"
 #include "builtins.h"
 #include "design.h"
