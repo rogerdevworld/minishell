@@ -36,7 +36,8 @@ int	ft_cd(char **path, t_myenv *env)
 		return (msg(" too many arguments", NULL));
 	if (!path[1])
 	{
-		target_dir = ft_getenv("HOME", env->env);
+		target_dir = ft_echo_expand("HOME", env->list_env);
+		// target_dir = ft_getenv("HOME", env->env);
 		if (!target_dir)
 			return (msg("HOME not set", NULL));
 	}
