@@ -14,7 +14,7 @@
 int	execute_and(t_ast *node, char **envp, t_myenv *myenv,
 		t_minishell *minishell)
 {
-	int status;
+	int	status;
 
 	status = 0;
 	status = execute_ast(node->left, envp, myenv, minishell, status);
