@@ -1,38 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_echo.c                                          :+:      :+:    :+:   */
+/*   expansor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jaacosta <jaacosta@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/01 13:05:47 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/04/01 13:05:50 by rmarrero         ###   ########.fr       */
+/*   Created: 2025/07/14 16:33:19 by jaacosta          #+#    #+#             */
+/*   Updated: 2025/07/14 16:33:21 by jaacosta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../include/minishell.h"
 
-char	*ft_strjoin_free(char *s1, char *s2)
+int	check_expansion(char *str)
 {
-	char	*joined;
-
-	joined = ft_strjoin(s1, s2);
-	free(s1);
-	free(s2);
-	return (joined);
+	if (!str)
+		return (0);
+	if (str[0] == '$' && str[1] != '\0')
+		return (1);
+	if (str[0] == '"' && str[1] == '$')
+		return (1);
+	return (0);
 }
 
-char	*ft_echo_expand(char *str, t_env *env)
-{
-	while (env)
-	{
-		if (ft_strcmp(str, env->key) == 0)
-			return (ft_strdup(env->content));
-		env = env->next;
-	}
-	return (NULL);
-}
-
-char	*copy_plain_text(char *arg, int *i)
+char	*copy_plain_text_ini(char *arg, int *i)
 {
 	int	start;
 
@@ -42,9 +32,34 @@ char	*copy_plain_text(char *arg, int *i)
 	return (ft_substr(arg, start, *i - start));
 }
 
-char	*expand_variable(t_minishell *minishell, const char *arg, int *i, t_env *env, int s)
+void shift_empty_args(char **args)
 {
-	int	start;
+    int i = 0;
+    int j = 0;
+
+    // Avanza mientras haya argumentos vacíos al inicio
+    while (args[i] && args[i][0] == '\0')
+    {
+        free(args[i]); // libera la cadena vacía
+        i++;
+    }
+
+    // Si hay que desplazar
+    if (i > 0)
+    {
+        // Desplaza todo el resto de argumentos hacia el inicio
+        while (args[i])
+        {
+            args[j++] = args[i++];
+        }
+        args[j] = NULL; // termina la lista
+    }
+}
+
+
+char	*expand_variable_ini(t_minishell *minishell, const char *arg, int *i, t_env *env, int s)
+{
+	int		start;
 	char	*var_name;
 	char	*value;
 
@@ -90,7 +105,7 @@ char	*expand_variable(t_minishell *minishell, const char *arg, int *i, t_env *en
 	return (ft_strdup(""));
 }
 
-char	*copy_double_quoted_text(t_minishell *minishell, const char *arg, int *i, t_env *env, int s)
+char	*copy_double_quoted_text_ini(t_minishell *minishell, const char *arg, int *i, t_env *env, int s)
 {
 	char	*result;
 	char	*part;
@@ -114,7 +129,7 @@ char	*copy_double_quoted_text(t_minishell *minishell, const char *arg, int *i, t
 			}
 		}
 		else if (arg[*i] == '$') // variable expansion
-			part = expand_variable(minishell, arg, i, env, s);
+			part = expand_variable_ini(minishell, arg, i, env, s);
 		else
 		{
 			start = *i;
@@ -131,7 +146,7 @@ char	*copy_double_quoted_text(t_minishell *minishell, const char *arg, int *i, t
 	return (result);
 }
 
-char	*copy_single_quoted_text(const char *arg, int *i)
+char	*copy_single_quoted_text_ini(const char *arg, int *i)
 {
 	char	*text;
 	int	start;
@@ -145,7 +160,7 @@ char	*copy_single_quoted_text(const char *arg, int *i)
 	return (text);
 }
 
-char	*ft_expand_arg(t_minishell *minishell, char *arg, t_env *env, int s)
+char	*ft_expand_arg_ini(t_minishell *minishell, char *arg, t_env *env, int s)
 {
 	char	*result;
 	char	*part;
@@ -160,10 +175,10 @@ char	*ft_expand_arg(t_minishell *minishell, char *arg, t_env *env, int s)
 	while(arg[i])
 	{
 		if (arg[i] == '\'')
-			part = copy_single_quoted_text(arg, &i);//TD--Done
+			part = copy_single_quoted_text_ini(arg, &i);//TD--Done
 		else if (arg[i] == '"')
 		{
-			part = copy_double_quoted_text(minishell, arg, &i, env, s);//TD--Done
+			part = copy_double_quoted_text_ini(minishell, arg, &i, env, s);//TD--Done
 		}
 		else if (arg[i] == '\\' && arg[i + 1] == '$')
 		{
@@ -171,10 +186,10 @@ char	*ft_expand_arg(t_minishell *minishell, char *arg, t_env *env, int s)
 			i += 2;
 		}
 		else if (arg[i] == '$')
-		 	part = expand_variable(minishell, arg, &i, env, s);//TD--Done
+		 	part = expand_variable_ini(minishell, arg, &i, env, s);//TD--Done
 		else
 		{
-			part = copy_plain_text(arg, &i);//TD--Done
+			part = copy_plain_text_ini(arg, &i);//TD--Done
 		}
 		if (!part)
 			return (free(result), NULL);
@@ -182,82 +197,3 @@ char	*ft_expand_arg(t_minishell *minishell, char *arg, t_env *env, int s)
 	}
 	return (result);
 }
-
-int	ft_echo(t_minishell *minishsell, char **args, t_env *env, int s)
-{
-	int		i;
-	int		newline;
-	char	*expanded;
-
-	i = 1;
-	newline = 1;
-	if (args[i] && ft_strncmp(args[i], "-n", 3) == 0)
-	{
-		newline = 0;
-		i++;
-	}
-	while (args[i])
-	{
-		expanded = ft_expand_arg(minishsell, args[i], env, s);//TD--Done
-		if (!expanded)
-			return (1);
-		ft_printf("%s", expanded);
-		free(expanded);
-		if (args[i + 1])
-			write(1, " ", 1);
-		i++;
-	}
-	if (newline)
-		write(1, "\n", 1);
-	return (0);
-}
-
-/**
- * version antigua de ft_echo
- * con algunos errores a la hora de hacer el expansor
- * y manejar comillas
- */
-/* void	ft_echo(char **args, t_env *env)
-{
-	int		i;
-	int		newline;
-	char	*expanded;
-
-	i = 1;
-	newline = 1;
-	if (args[i] && ft_strncmp(args[i], "-n", 3) == 0)
-	{
-		newline = 0;
-		i++;
-	}
-	while (args[i])
-	{
-		if (args[i][0] == '$') // variable a expandir
-		{
-			expanded = ft_echo_expand(args[i] + 1, env); // quitar el '$'
-			if (expanded)
-			{
-				ft_printf("%s", expanded);
-				free(expanded);
-			}
-		}
-		else
-			ft_printf("%s", args[i]);
-		if (args[i + 1])
-			write(1, " ", 1);
-		i++;
-	}
-	if (newline)
-		write(1, "\n", 1);
-}
-
-char	*ft_echo_expand(char *str, t_env *env)
-{
-	while (env)
-	{
-		if (ft_strcmp(str, env->key) == 0)
-			return (ft_strdup(env->content));
-		env = env->next;
-	}
-	return (NULL);
-} */

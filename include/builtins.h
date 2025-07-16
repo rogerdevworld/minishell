@@ -41,7 +41,10 @@ int	ft_cd(char **path, t_myenv *env);
 int	ft_exit_builtin(char **args);
 
 // -- local cmd echo -- // 
-int	ft_echo(t_minishell *minishell, char **args, t_env *env, int s);
+int		ft_echo(t_minishell *minishell, char **args, t_env *env, int s);
+char	*ft_echo_expand(char *str, t_env *env);
+char	*ft_expand_arg(t_minishell *minishell, char *arg, t_env *env, int s);
+char	*ft_strjoin_free(char *s1, char *s2);
 void	ft_exit_code(t_minishell *minishell);
 
 int	ft_export(char **args, t_myenv *myenv);

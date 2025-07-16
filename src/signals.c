@@ -26,8 +26,9 @@ static int	handle_normal_exit(int status)
 
 static int	handle_signal_exit(int status)
 {
-	int signo = WTERMSIG(status);
-
+	int signo;
+	
+	signo = WTERMSIG(status);
 	if (signo == SIGPIPE)
 		return 0;
 	else if (signo == SIGINT)
@@ -49,7 +50,6 @@ int	update_exit_status(int status, t_minishell *minishell)
 		status = handle_normal_exit(status);
 	else if (WIFSIGNALED(status))
 		status = handle_signal_exit(status);
-
 	if (g_signal == S_SIGINT_CMD)
 		status = 130;
 
