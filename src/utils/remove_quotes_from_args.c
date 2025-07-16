@@ -28,7 +28,7 @@ char	**remove_quotes_from_args(char **args)
 	j = 0;
 	while (i < count)
 	{
-		args_no_quotes[i] = remove_quotes(args[i]);
+		args_no_quotes[i] = remove_all_quotes(args[i]);
 		if (!args_no_quotes[i])
 		{
 			while (j < i)

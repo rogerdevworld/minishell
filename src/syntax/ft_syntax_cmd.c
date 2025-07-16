@@ -21,7 +21,7 @@ t_ast	*parse_simple_command(t_token **tokens, char **envp)
 	i = 0;
 	while (*tokens)
 	{
-		if ((*tokens)->type == TOKEN_WORD)
+		if ((*tokens)->type == TOKEN_WORD && (*tokens)->value)
 		{
 			cmd->args[i++] = ft_strdup((*tokens)->value);
 			next_token(tokens);
@@ -30,9 +30,7 @@ t_ast	*parse_simple_command(t_token **tokens, char **envp)
 			|| (*tokens)->type == TOKEN_REDIR_OUT
 			|| (*tokens)->type == TOKEN_APPEND
 			|| (*tokens)->type == TOKEN_HEREDOC)
-		{
 			ft_redirects(cmd, tokens);
-		}
 		else
 			break ;
 	}

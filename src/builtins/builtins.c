@@ -31,6 +31,10 @@
 
 int	get_builtin_cmd(char *cmd)
 {
+	char *clean_arg;
+
+	clean_arg = remove_all_quotes(cmd);
+	cmd = clean_arg;
 	if (ft_strcmp(cmd, "cd") == 0)
 		return (CD);
 	if (ft_strncmp(cmd, "exit", 5) == 0)
@@ -47,6 +51,7 @@ int	get_builtin_cmd(char *cmd)
 		//return (CLEAR);
 	if (ft_strncmp(cmd, "env", 3) == 0)
 		return (ENV);
+	free(clean_arg);
 	return (-1);
 }
 

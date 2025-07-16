@@ -24,6 +24,8 @@ int	execute_command(t_command *cmd, char **envp, t_myenv *myenv,
 	builtin_id = get_builtin_cmd(cmd->args[0]);
 	if (builtin_id == -1)
 	{
+		clean_args = remove_quotes_from_args(cmd->args);
+		cmd->args = clean_args;
 		g_signal = S_CMD;
 		pid = fork();
 		if (pid == 0)
@@ -34,20 +36,18 @@ int	execute_command(t_command *cmd, char **envp, t_myenv *myenv,
 				if (process_all_heredocs(cmd->redir) == -1)
 					exit(1);
 				if (ft_output_redirections(cmd->redir) == -1)
-					exit(1);
+					return (1);
 				if (ft_input_redirection(cmd->redir) == -1)
-					exit(1);
+					return (1);
 				if (cmd->redir->input_file != -1)
 					dup2(cmd->redir->input_file, STDIN_FILENO);
 				if (cmd->redir->output_file != -1)
 					dup2(cmd->redir->output_file, STDOUT_FILENO);
 			}
 			resolve_command_path(cmd, envp);
-			clean_args = remove_quotes_from_args(cmd->args);
-			free_split(cmd->args);
-			cmd->args = clean_args;
 			execve(cmd->path, cmd->args, envp);
 			perror("execve");
+			free_split(clean_args);
 			exit(1);
 		}
 		waitpid(pid, &status, 0);
