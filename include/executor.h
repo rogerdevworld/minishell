@@ -66,9 +66,12 @@ int							execute_astint(t_minishell *minishell,
 int							execute_ast(t_ast *node, char **envp,
 								t_myenv *myenv, t_minishell *minishell,
 								int status);
-int	process_all_heredocs(t_redir *redir);
 
-	int ft_output_redirections(t_redir *redir);
+int							ft_output_redirections(t_redir *redir);
 int							ft_input_redirection(t_redir *redir);
+
+// -- here doc's -- //
+int							process_all_heredocs(t_redir *redir);
+int							process_single_heredoc(char *limiter, int *fd_out);
 
 #endif
