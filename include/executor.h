@@ -68,7 +68,7 @@ int							execute_ast(t_ast *node, char **envp,
 								int status);
 int	process_all_heredocs(t_redir *redir);
 
-	int handle_output_redirections(t_redir *redir);
-int							handle_input_redirection(t_redir *redir);
+	int ft_output_redirections(t_redir *redir);
+int							ft_input_redirection(t_redir *redir);
 
 #endif

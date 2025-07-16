@@ -9,6 +9,7 @@ int	execute_command(t_command *cmd, char **envp, t_myenv *myenv,
 
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return (1);
+	ft_wildcards(&(cmd->args));
 	builtin_id = get_builtin_cmd(cmd->args[0]);
 	if (builtin_id == -1)
 	{
@@ -21,9 +22,9 @@ int	execute_command(t_command *cmd, char **envp, t_myenv *myenv,
 			{
 				if (process_all_heredocs(cmd->redir) == -1)
 					exit(1);
-				if (handle_output_redirections(cmd->redir) == -1)
+				if (ft_output_redirections(cmd->redir) == -1)
 					exit(1);
-				if (handle_input_redirection(cmd->redir) == -1)
+				if (ft_input_redirection(cmd->redir) == -1)
 					exit(1);
 				if (cmd->redir->input_file != -1)
 					dup2(cmd->redir->input_file, STDIN_FILENO);
@@ -44,8 +45,8 @@ int	execute_command(t_command *cmd, char **envp, t_myenv *myenv,
 	}
 	else // Es builtin
 	{
-		if (!cmd->redir || (cmd->redir->input_file == -1
-				&& cmd->redir->output_file == -1))
+		if (!cmd->redir || (cmd->redir->input_file == -2
+				&& cmd->redir->output_file == -2))
 		{
 			minishell->executor->builtin_id = builtin_id;
 			return (execute_builtin(minishell, cmd->args, myenv, status));
@@ -59,9 +60,9 @@ int	execute_command(t_command *cmd, char **envp, t_myenv *myenv,
 				set_defaul_signals();
 				if (process_all_heredocs(cmd->redir) == -1)
 					exit(1);
-				if (handle_output_redirections(cmd->redir) == -1)
+				if (ft_output_redirections(cmd->redir) == -1)
 					exit(1);
-				if (handle_input_redirection(cmd->redir) == -1)
+				if (ft_input_redirection(cmd->redir) == -1)
 					exit(1);
 
 				if (cmd->redir->input_file != -1)
@@ -203,7 +204,7 @@ int	process_all_heredocs(t_redir *redir)
 	return (0);
 }
 
-int	handle_output_redirections(t_redir *redir)
+int	ft_output_redirections(t_redir *redir)
 {
 	int		i;
 	int		fd;
@@ -227,7 +228,7 @@ int	handle_output_redirections(t_redir *redir)
 	return (0);
 }
 
-int	handle_input_redirection(t_redir *redir)
+int	ft_input_redirection(t_redir *redir)
 {
 	int		fd;
 	char	**files;
