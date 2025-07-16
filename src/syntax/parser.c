@@ -53,10 +53,10 @@ void	next_token(t_token **tokens)
 }
 
 // Redirecciones
-void	ft_redirects(t_command *cmd, t_token **tokens)
+void ft_redirects(t_command *cmd, t_token **tokens)
 {
-	int		type;
-	char	*filename;
+	int	type;
+	char *filename;
 
 	while (*tokens && ((*tokens)->type == TOKEN_REDIR_IN
 			|| (*tokens)->type == TOKEN_REDIR_OUT
@@ -68,18 +68,30 @@ void	ft_redirects(t_command *cmd, t_token **tokens)
 		if (!*tokens)
 			return ;
 		filename = (*tokens)->value;
+
 		if (type == TOKEN_REDIR_IN)
-			cmd->redir->input_file = ft_open(filename, 0);
-		else if (type == TOKEN_REDIR_OUT)
-			cmd->redir->output_file = ft_open(filename, 1);
-		else if (type == TOKEN_APPEND)
-			cmd->redir->output_file = ft_open(filename, 2);
+		{
+			// Solo guardar UN archivo de entrada (último redirige)
+			if (cmd->redir->in_file)
+				free(cmd->redir->in_file);
+			cmd->redir->in_file = ft_strdup(filename);
+		}
+		else if (type == TOKEN_REDIR_OUT || type == TOKEN_APPEND)
+		{
+			// Agregar archivo a out_file (tendrás que manejar realloc)
+			// Ejemplo simple:
+			cmd->redir->out_file = add_to_array(cmd->redir->out_file, filename);
+		}
 		else if (type == TOKEN_HEREDOC)
+		{
+			if (cmd->redir->limiter)
+				free(cmd->redir->limiter);
 			cmd->redir->limiter = ft_strdup(filename);
-		cmd->redir->file = ft_strdup(filename);
+		}
 		next_token(tokens);
 	}
 }
+
 
 // Comando base (WORD, args, redirs)
 t_ast	*parse_simple_command(t_token **tokens, char **envp)

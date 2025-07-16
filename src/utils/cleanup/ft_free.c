@@ -33,7 +33,8 @@ void	free_command(t_command *cmd)
 	if (cmd->redir)
 	{
 		free(cmd->redir->limiter);
-		free(cmd->redir->file);
+		free(cmd->redir->in_file);
+		free(cmd->redir->out_file);
 		free(cmd->redir);
 	}
 	free(cmd);

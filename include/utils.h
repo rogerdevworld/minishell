@@ -45,4 +45,7 @@ void	print_ast(t_ast *node, int depth);
 void	ft_myenv_free(t_myenv *myenv);
 void	ft_destroyer(t_minishell *minishell);
 
+char	**add_to_array(char **array, const char *value);
+
+
 #endif

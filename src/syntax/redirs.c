@@ -18,7 +18,8 @@ void	init_redir(t_redir *redir)
 	redir->input_file = -2;
 	redir->output_file = -2;
 	redir->limiter = NULL;
-	redir->file = NULL;
+	redir->in_file = ft_calloc(64, sizeof(char *));
+	redir->out_file = ft_calloc(64, sizeof(char *));
 }
 
 void	free_redir(t_redir *redir)
@@ -27,8 +28,10 @@ void	free_redir(t_redir *redir)
 		return ;
 	if (redir->limiter)
 		free(redir->limiter);
-	if (redir->file)
-		free(redir->file);
+	if (redir->in_file)
+		free(redir->in_file);
+	if (redir->out_file)
+		free(redir->out_file);
 	free(redir);
 }
 void	reset_redir(t_redir *redir)
@@ -37,7 +40,9 @@ void	reset_redir(t_redir *redir)
 		return ;
 	if (redir->limiter)
 		free(redir->limiter);
-	if (redir->file)
-		free(redir->file);
+	if (redir->in_file)
+		free(redir->in_file);
+	if (redir->out_file)
+		free(redir->out_file);
 	init_redir(redir);
 }

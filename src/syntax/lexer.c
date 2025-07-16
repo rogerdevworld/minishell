@@ -24,7 +24,7 @@ t_token	*init_lexer(char *value)
 	else if (ft_strcmp(value, ">>") == 0)
 		token->type = TOKEN_APPEND;
 	else if (ft_strncmp(value, "<", 1) == 0)
-		token->type = TOKEN_HEREDOC;
+		token->type = TOKEN_REDIR_IN;
 	else if (ft_strcmp(value, "(") == 0)
 		token->type = TOKEN_OPEN_PAREN;
 	else if (ft_strcmp(value, ")") == 0)

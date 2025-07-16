@@ -26,7 +26,8 @@ typedef struct s_redir
 	int						input_file;
 	int						output_file;
 	char					*limiter;
-	char					*file;
+	char					*in_file;
+	char					**out_file;
 }							t_redir;
 
 typedef struct s_command
