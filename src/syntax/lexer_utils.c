@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/16 20:41:27 by rmarrero          #+#    #+#             */
+/*   Updated: 2025/07/16 20:41:34 by rmarrero         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 #include "../../include/minishell.h"
 
 // Lista de operadores reconocidos
@@ -27,8 +38,8 @@ int	read_operator(const char *s, char **out)
 // Extrae una palabra, incluyendo comillas
 int	read_word(const char *s, char **out)
 {
-	int i;
-	char quote;
+	int		i;
+	char	quote;
 
 	i = 0;
 	quote = 0;
@@ -42,4 +53,11 @@ int	read_word(const char *s, char **out)
 	}
 	*out = ft_substr(s, 0, i);
 	return (i);
+}
+
+// Avanza al siguiente token
+void	next_token(t_token **tokens)
+{
+	if (*tokens)
+		*tokens = (*tokens)->next;
 }

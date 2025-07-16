@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: xviladri <xviladri@student.42barcelon      +#+  +:+       +#+        */
+/*   By: rmarrero <rmarrero@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/01 12:43:57 by xviladri          #+#    #+#             */
-/*   Updated: 2025/04/22 20:24:20 by xviladri         ###   ########.fr       */
+/*   Created: 2025/04/01 12:43:57 by rmarrero          #+#    #+#             */
+/*   Updated: 2025/04/22 20:24:20 by rmarrero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "../../include/minishell.h"
