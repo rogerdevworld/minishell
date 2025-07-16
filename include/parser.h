@@ -25,8 +25,10 @@ typedef struct s_redir
 {
 	int						input_file;
 	int						output_file;
-	char					*limiter;
-	char					*in_file;
+	char					**limiter;
+	int						heredoc_count;
+	int						*heredoc_fds;
+	char					**in_file;
 	char					**out_file;
 }							t_redir;
 

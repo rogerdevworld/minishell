@@ -54,9 +54,9 @@ void						restore_redirections(int saved_stdin,
 								int saved_stdout);
 void						print_args(char **args);
 // void		ft_check_executor_single(t_minishell *minishell, t_executor *exec,
-			//t_command *cmd, char **envp, t_myenv *myenv);
+// t_command *cmd, char **envp, t_myenv *myenv);
 // int			execute_command_list(t_minishell *minishell, t_executor *exec,
-				//t_command *cmd, char **envp, t_myenv *myenv);
+// t_command *cmd, char **envp, t_myenv *myenv);
 void						ft_check_executor_single(t_minishell *minishell,
 								t_command *cmd);
 int							execute_command_list(t_minishell *minishell);
@@ -66,7 +66,9 @@ int							execute_astint(t_minishell *minishell,
 int							execute_ast(t_ast *node, char **envp,
 								t_myenv *myenv, t_minishell *minishell,
 								int status);
-int process_heredoc(t_redir *redir);
-int handle_output_redirections(t_redir *redir);
+int	process_all_heredocs(t_redir *redir);
+
+	int handle_output_redirections(t_redir *redir);
+int							handle_input_redirection(t_redir *redir);
 
 #endif

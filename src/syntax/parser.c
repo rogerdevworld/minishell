@@ -53,10 +53,10 @@ void	next_token(t_token **tokens)
 }
 
 // Redirecciones
-void ft_redirects(t_command *cmd, t_token **tokens)
+void	ft_redirects(t_command *cmd, t_token **tokens)
 {
-	int	type;
-	char *filename;
+	int		type;
+	char	*filename;
 
 	while (*tokens && ((*tokens)->type == TOKEN_REDIR_IN
 			|| (*tokens)->type == TOKEN_REDIR_OUT
@@ -65,32 +65,52 @@ void ft_redirects(t_command *cmd, t_token **tokens)
 	{
 		type = (*tokens)->type;
 		next_token(tokens);
-		if (!*tokens)
+		if (!*tokens || !(*tokens)->value)
 			return ;
 		filename = (*tokens)->value;
 
 		if (type == TOKEN_REDIR_IN)
-		{
-			// Solo guardar UN archivo de entrada (último redirige)
-			if (cmd->redir->in_file)
-				free(cmd->redir->in_file);
-			cmd->redir->in_file = ft_strdup(filename);
-		}
+			cmd->redir->in_file = add_to_array(cmd->redir->in_file, filename);
 		else if (type == TOKEN_REDIR_OUT || type == TOKEN_APPEND)
-		{
-			// Agregar archivo a out_file (tendrás que manejar realloc)
-			// Ejemplo simple:
 			cmd->redir->out_file = add_to_array(cmd->redir->out_file, filename);
-		}
 		else if (type == TOKEN_HEREDOC)
 		{
-			if (cmd->redir->limiter)
-				free(cmd->redir->limiter);
-			cmd->redir->limiter = ft_strdup(filename);
+			cmd->redir->limiter = add_to_array(cmd->redir->limiter, filename);
+			cmd->redir->heredoc_count++;
 		}
 		next_token(tokens);
 	}
 }
+	
+// void ft_redirects(t_command *cmd, t_token **tokens)
+// {
+// 	int	type;
+// 	char *filename;
+
+// 	while (*tokens && ((*tokens)->type == TOKEN_REDIR_IN
+// 			|| (*tokens)->type == TOKEN_REDIR_OUT
+// 			|| (*tokens)->type == TOKEN_APPEND
+// 			|| (*tokens)->type == TOKEN_HEREDOC))
+// 	{
+// 		type = (*tokens)->type;
+// 		next_token(tokens);
+// 		if (!*tokens)
+// 			return ;
+// 		filename = (*tokens)->value;
+
+// 		if (type == TOKEN_REDIR_IN)
+// 			cmd->redir->in_file = add_to_array(cmd->redir->in_file, filename);
+// 		else if (type == TOKEN_REDIR_OUT || type == TOKEN_APPEND)
+// 			cmd->redir->out_file = add_to_array(cmd->redir->out_file, filename);
+// 		else if (type == TOKEN_HEREDOC)
+// 		{
+// 			if (cmd->redir->limiter)
+// 				free(cmd->redir->limiter);
+// 			cmd->redir->limiter = ft_strdup(filename);
+// 		}
+// 		next_token(tokens);
+// 	}
+// }
 
 
 // Comando base (WORD, args, redirs)
