@@ -238,20 +238,21 @@ int	handle_input_redirection(t_redir *redir)
 	files = redir->in_file;
 	i = 0;
 	while (files[i])
-		i++;
-	if (i == 0)
-		return (0);
-	fd = open(files[i - 1], O_RDONLY);
-	if (fd == -1)
 	{
-		perror(files[i - 1]);
-		return (-1);
+		fd = open(files[i], O_RDONLY);
+		if (fd == -1)
+		{
+			perror(files[i]); // Mostrar el error
+			return (-1);      // Error si CUALQUIERA falla
+		}
+		if (redir->input_file != -1)
+			close(redir->input_file);
+		redir->input_file = fd;
+		i++;
 	}
-	if (redir->input_file != -1)
-		close(redir->input_file);
-	redir->input_file = fd;
 	return (0);
 }
+
 
 int	execute_ast(t_ast *node, char **envp, t_myenv *myenv,
 		t_minishell *minishell, int status)

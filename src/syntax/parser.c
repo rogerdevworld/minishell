@@ -81,7 +81,7 @@ void	ft_redirects(t_command *cmd, t_token **tokens)
 		next_token(tokens);
 	}
 }
-	
+
 // void ft_redirects(t_command *cmd, t_token **tokens)
 // {
 // 	int	type;
