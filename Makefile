@@ -29,7 +29,7 @@ SRCS =	$(SRC_DIR)minishell.c $(SRC_DIR)init.c $(SRC_DIR)exit.c \
 		$(SRC_DIR)utils/cleanup/ft_free.c $(SRC_DIR)utils/cleanup/ft_free2.c $(SRC_DIR)utils/cleanup/free_split.c $(SRC_DIR)utils/cleanup/ft_destroyer.c \
 		$(SRC_DIR)utils/remove_quotes.c $(SRC_DIR)utils/remove_quotes_from_args.c $(SRC_DIR)utils/remove_all_quotes.c \
 		$(SRC_DIR)test/print_lexer.c $(SRC_DIR)test/print_commands.c $(SRC_DIR)test/print_ast.c \
-		$(SRC_DIR)executor/executor.c $(SRC_DIR)executor/ft_here_doc.c $(SRC_DIR)executor/ft_subshell.c $(SRC_DIR)executor/init.c
+		$(SRC_DIR)executor/executor.c $(SRC_DIR)executor/ft_here_doc.c $(SRC_DIR)executor/ft_subshell.c $(SRC_DIR)executor/ft_and.c $(SRC_DIR)executor/ft_or.c $(SRC_DIR)executor/init.c
 
 OBJS = $(SRCS:$(SRC_DIR)%.c=$(OBJ_DIR)/%.o)
 

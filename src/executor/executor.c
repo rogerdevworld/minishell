@@ -113,29 +113,6 @@ int	execute_pipe(t_ast *node, char **envp, t_myenv *myenv,
 	return (status);
 }
 
-int	execute_and(t_ast *node, char **envp, t_myenv *myenv,
-		t_minishell *minishell)
-{
-	int	status;
-
-	status = 0;
-	status = execute_ast(node->left, envp, myenv, minishell, status);
-	if (status == 0)
-		status = execute_ast(node->right, envp, myenv, minishell, status);
-	return (status);
-}
-
-int	execute_or(t_ast *node, char **envp, t_myenv *myenv, t_minishell *minishell)
-{
-	int	status;
-
-	status = 0;
-	status = execute_ast(node->left, envp, myenv, minishell, status);
-	if (status != 0)
-		status = execute_ast(node->right, envp, myenv, minishell, status);
-	return (status);
-}
-
 int	ft_output_redirections(t_redir *redir)
 {
 	int		i;
