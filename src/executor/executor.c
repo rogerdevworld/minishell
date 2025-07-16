@@ -45,12 +45,11 @@ int	execute_command(t_command *cmd, char **envp, t_myenv *myenv,
 	}
 	else // Es builtin
 	{
-		if (!cmd->redir || (cmd->redir->input_file == -2
-				&& cmd->redir->output_file == -2))
-		{
-			minishell->executor->builtin_id = builtin_id;
+		minishell->executor->builtin_id = builtin_id;
+		if (!cmd->redir || builtin_id == 0 || builtin_id == 4 || builtin_id == 5
+			|| (cmd->redir->input_file == -1 && cmd->redir->output_file == -1))
+			// hay que agregar todos los que no son de impresion como export y cd
 			return (execute_builtin(minishell, cmd->args, myenv, status));
-		}
 		else
 		{
 			g_signal = S_CMD;
@@ -64,12 +63,10 @@ int	execute_command(t_command *cmd, char **envp, t_myenv *myenv,
 					exit(1);
 				if (ft_input_redirection(cmd->redir) == -1)
 					exit(1);
-
 				if (cmd->redir->input_file != -1)
 					dup2(cmd->redir->input_file, STDIN_FILENO);
 				if (cmd->redir->output_file != -1)
 					dup2(cmd->redir->output_file, STDOUT_FILENO);
-				minishell->executor->builtin_id = builtin_id;
 				exit(execute_builtin(minishell, cmd->args, myenv, status));
 			}
 			waitpid(pid, &status, 0);
@@ -253,7 +250,6 @@ int	ft_input_redirection(t_redir *redir)
 	}
 	return (0);
 }
-
 
 int	execute_ast(t_ast *node, char **envp, t_myenv *myenv,
 		t_minishell *minishell, int status)
