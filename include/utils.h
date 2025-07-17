@@ -33,6 +33,7 @@ void	validate_multiple_expansions(t_token *tokens, int status, char *line);
 int	check_multiple_expansions_at_start(t_token *tokens, t_env *env);
 void	expand_before_executor(t_token **tokens, t_env *env, int status);
 char	*ft_expand_arg_ini(char *arg, t_env *env, int s);
+void    shift_empty_tokens(t_token **head);
 void    shift_empty_args(char **args);
 
 
