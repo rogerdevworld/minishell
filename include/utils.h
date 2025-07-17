@@ -56,5 +56,4 @@ void	ft_destroyer(t_minishell *minishell);
 
 char	**add_to_array(char **array, char *value);
 
-
 #endif

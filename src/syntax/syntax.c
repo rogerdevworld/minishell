@@ -13,8 +13,8 @@
 
 /*
  * check_invalid_tokens:
-
-	* Recorre la lista de tokens y detecta si existe algún token marcado como inválido.
+ * Recorre la lista de tokens y detecta si existe algún token 
+ * marcado como inválido.
  * Si encuentra uno, imprime un mensaje de error con el token y devuelve 1.
  * Si no hay tokens inválidos, devuelve 0.
  */
@@ -105,8 +105,8 @@ int	check_redirection_args(t_token *tokens)
  * check_parentheses_balance:
  * Recorre la lista de tokens contando paréntesis abiertos y cerrados.
  * Detecta paréntesis cerrados sin su correspondiente abierto y viceversa.
-
-	* Imprime error y devuelve 1 si hay desbalance; devuelve 0 si están balanceados.
+ * Imprime error y devuelve 1 si hay desbalance; devuelve 0 si 
+ * están balanceados.
  */
 int	check_parentheses_balance(t_token *tokens)
 {
@@ -152,74 +152,4 @@ int	validate_syntax(t_token *tokens)
 	if (check_parentheses_balance(tokens))
 		return (2);
 	return (0);
-}
-
-/*
- * comillas en la linea
- *
- */
-int	check_unclosed_quotes(char *line)
-{
-	int		i;
-	char	quote;
-
-	i = 0;
-	quote = 0;
-	while (line[i])
-	{
-		if ((line[i] == '\'' || line[i] == '"') && quote == 0)
-			quote = line[i];
-		else if (line[i] == quote)
-			quote = 0;
-		i++;
-	}
-	if (quote)
-	{
-		ft_printf("Syntax error: unclosed quote %c\n", quote);
-		return (2);
-	}
-	return (0);
-}
-/*
-files
-funciona con / pero si pasa mas cosas falla de momento ./ failt
-*/
-
-void	resolve_command_path(t_command *cmd, char **env)
-{
-	struct stat statbuf;
-
-	if (!cmd || !cmd->args || !cmd->args[0])
-		return ;
-	//ft_printf("\nel cmd->arg que llega es %s\n", cmd->args[3]);
-	if (strchr(cmd->args[0], '/'))
-	{
-		if (access(cmd->args[0], F_OK) != 0)
-		{
-			perror(cmd->args[0]);
-			exit(127);
-		}
-		if (stat(cmd->args[0], &statbuf) == 0 && S_ISDIR(statbuf.st_mode))
-		{
-			ft_putstr_fd(cmd->args[0], 2);
-			ft_putstr_fd(": Is a directory\n", 2);
-			exit(126);
-		}
-		if (access(cmd->args[0], X_OK) != 0)
-		{
-			perror(cmd->args[0]);
-			exit(126);
-		}
-		cmd->path = ft_strdup(cmd->args[0]);
-	}
-	else
-	{
-		cmd->path = get_path(cmd->args[0], env);
-		if (!cmd->path)
-		{
-			ft_putstr_fd(cmd->args[0], 2);
-			ft_putstr_fd(": command not found\n", 2);
-			exit(127);
-		}
-	}
 }

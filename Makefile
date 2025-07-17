@@ -18,19 +18,19 @@ OBJ_DIR = ./obj
 OBJ_DIR_BUI = ./obj/builtins/
 OBJ_DIR_LEX = ./obj/lexer/
 
-SRCS =	$(SRC_DIR)minishell.c $(SRC_DIR)init.c $(SRC_DIR)exit.c $(SRC_DIR)expansor.c \
-		$(SRC_DIR)syntax/lexer.c $(SRC_DIR)syntax/lexer_utils.c $(SRC_DIR)syntax/parser.c $(SRC_DIR)syntax/syntax.c $(SRC_DIR)syntax/redirs.c \
+SRCS =	$(SRC_DIR)minishell.c $(SRC_DIR)init.c $(SRC_DIR)exit.c \
+		$(SRC_DIR)syntax/lexer.c $(SRC_DIR)syntax/lexer_utils.c $(SRC_DIR)syntax/syntax.c $(SRC_DIR)syntax/syntax2.c $(SRC_DIR)syntax/redirs.c \
+		$(SRC_DIR)syntax/ft_syntax_redir.c $(SRC_DIR)syntax/ft_syntax_logic.c $(SRC_DIR)syntax/ft_syntax_init.c $(SRC_DIR)syntax/ft_syntax_subshell.c $(SRC_DIR)syntax/ft_syntax_pipes.c $(SRC_DIR)syntax/ft_syntax_cmd.c $(SRC_DIR)syntax/ft_syntax_free.c \
 		$(SRC_DIR_BUI)builtins.c $(SRC_DIR_BUI)pwd.c $(SRC_DIR_BUI)clear.c $(SRC_DIR_BUI)ft_cd.c $(SRC_DIR_BUI)ft_exit_builtin.c $(SRC_DIR_BUI)ft_unset.c $(SRC_DIR_BUI)ft_echo.c $(SRC_DIR_BUI)ft_export.c $(SRC_DIR_BUI)ft_export_utils.c \
 		$(SRC_DIR)signals.c \
 		$(SRC_DIR)design/path_in_shell.c \
-		$(SRC_DIR)here_doc.c \
 		$(SRC_DIR)env.c $(SRC_DIR)env_utils.c \
 		$(SRC_DIR)wildcards.c \
 		$(SRC_DIR)utils/ft_shlvl.c $(SRC_DIR)utils/ft_open.c $(SRC_DIR)utils/get_path.c $(SRC_DIR)utils/ft_split_quotes.c $(SRC_DIR)utils/ft_add_to_array.c \
 		$(SRC_DIR)utils/cleanup/ft_free.c $(SRC_DIR)utils/cleanup/ft_free2.c $(SRC_DIR)utils/cleanup/free_split.c $(SRC_DIR)utils/cleanup/ft_destroyer.c \
 		$(SRC_DIR)utils/remove_quotes.c $(SRC_DIR)utils/remove_quotes_from_args.c $(SRC_DIR)utils/remove_all_quotes.c \
-		$(SRC_DIR)test/print_lexer.c $(SRC_DIR)test/print_commands.c $(SRC_DIR)test/print_ast.c \
-		$(SRC_DIR)executor/executor.c $(SRC_DIR)executor/init.c
+		$(SRC_DIR)test/print_lexer.c $(SRC_DIR)test/print_commands.c $(SRC_DIR)test/print_ast.c $(SRC_DIR)test/ft_print_args.c \
+		$(SRC_DIR)executor/ft_exec.c $(SRC_DIR)executor/ft_pipe.c $(SRC_DIR)executor/ft_here_doc.c $(SRC_DIR)executor/ft_subshell.c $(SRC_DIR)executor/ft_and.c $(SRC_DIR)executor/ft_or.c $(SRC_DIR)executor/ft_cmd.c $(SRC_DIR)executor/ft_in.c $(SRC_DIR)executor/ft_out.c $(SRC_DIR)executor/init.c
 
 OBJS = $(SRCS:$(SRC_DIR)%.c=$(OBJ_DIR)/%.o)
 
