@@ -16,23 +16,27 @@ int	execute_command(t_command *cmd, char **envp, t_myenv *myenv,
 {
 	int		builtin_id;
 	pid_t	pid;
-	char	**clean_args;
+	//char	**clean_args;
 
-	if (!cmd || !cmd->args || !cmd->args[0])
-		return (1);
-	ft_wildcards(&(cmd->args));
-	builtin_id = get_builtin_cmd(cmd->args[0]);
+	//if (!cmd || !cmd->args || !cmd->args[0])
+	//	return (1);
+	//ft_wildcards(&(cmd->args));
+	//printf("ags: %s", cmd->args[0]);
+	//builtin_id = get_builtin_cmd(cmd->args[0]);
+	builtin_id = -1;
 	if (builtin_id == -1)
 	{
-		clean_args = remove_quotes_from_args(cmd->args);
-		cmd->args = clean_args;
+		//clean_args = remove_quotes_from_args(cmd->args);
+		//cmd->args = clean_args;
 		g_signal = S_CMD;
 		pid = fork();
 		if (pid == 0)
 		{
+			printf("hijo\n");
 			set_defaul_signals();
 			if (cmd->redir)
 			{
+				printf("paso redir	\n");
 				if (process_all_heredocs(cmd->redir) == -1)
 					exit (1);
 				if (ft_output_redirections(cmd->redir) == -1)
@@ -47,7 +51,7 @@ int	execute_command(t_command *cmd, char **envp, t_myenv *myenv,
 			resolve_command_path(cmd, envp);
 			execve(cmd->path, cmd->args, envp);
 			perror("execve");
-			free_split(clean_args);
+			//free_split(clean_args);
 			exit(1);
 		}
 		waitpid(pid, &status, 0);

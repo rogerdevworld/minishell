@@ -17,13 +17,14 @@ int	ft_input_redirection(t_redir *redir)
 	char	**files;
 	int		i;
 
+	ft_printf("input\n");
 	if (!redir->in_file)
 		return (0);
 	files = redir->in_file;
 	i = 0;
 	while (files[i])
 	{
-		fd = open(files[i], O_RDONLY);
+		fd =  open(files[i], O_RDONLY);
 		if (fd == -1)
 		{
 			perror(files[i]);
