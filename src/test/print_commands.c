@@ -28,9 +28,9 @@ void print_command(t_command *cmd)
     printf("           input_file fd: %d\n", cmd->redir->input_file);
     printf("           output_file fd: %d\n", cmd->redir->output_file);
 
-    // Imprimir limiter si existe
-    // if (cmd->redir->limiter)
-    //     printf("           limiter: \"%s\"\n", cmd->redir->limiter);
-    // else
-    //     printf("           limiter: (null)\n");
+    //Imprimir limiter si existe
+    if (cmd->redir->limiter)
+        printf("           limiter: \"%s\"\n", cmd->redir->limiter[0]);
+    else
+        printf("           limiter: (null)\n");
 }

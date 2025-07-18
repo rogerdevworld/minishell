@@ -55,6 +55,9 @@ void	print_ast(t_ast *node, int depth);
 void	ft_myenv_free(t_myenv *myenv);
 void	ft_destroyer(t_minishell *minishell);
 
+// -- para files limpios -- //
 char	**add_to_array(char **array, char *value);
+//-- para recibir el limiter del heredoc con comillas -- //
+char	**add_to_array_heredoc(char **array, char *value);
 
 #endif

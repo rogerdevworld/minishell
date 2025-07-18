@@ -19,11 +19,6 @@ void	set_defaul_signals(void)
 	signal(SIGQUIT, SIG_DFL);
 }
 
-// int	handle_normal_exit(int status)
-// {
-// 	return (WEXITSTATUS(status));
-// }
-
 int	handle_signal_exit(int status)
 {
 	int	signo;
@@ -33,7 +28,7 @@ int	handle_signal_exit(int status)
 		return (0);
 	else if (signo == SIGINT)
 	{
-		write(1, "\n", 1);
+		//write(1, "\n", 1);
 		return (130);
 	}
 	else if (signo == SIGQUIT)
@@ -84,13 +79,15 @@ void	ft_sigint(int sig)
 	else if (g_signal == S_CMD)
 	{
 		g_signal = S_SIGINT_CMD;
-		ft_putstr_fd("\n", 1);
+		ft_putstr_fd("\n", 2);
 		rl_on_new_line();
 	}
 	else if (g_signal == S_HEREDOC)
 	{
-		ioctl(0, TIOCSTI, '\n');
-		exit(0);
+
+		g_signal = S_SIGINT_CMD;
+		ft_putstr_fd("\n", 2);
+		rl_on_new_line();
 	}
 	sigint_handler_aux();
 }

@@ -19,6 +19,7 @@ typedef enum e_signal
 	S_HEREDOC_END, // finalización del heredoc
 	S_SIGINT,      // Ctrl + C
 	S_SIGINT_CMD,  // Ctrl + C en medio de una comando
+	S_SIGINT_HEREDOC, // Ctrl + C en medio de heredoc
 	S_CMD,         // se ejecuta un comando
 	S_CANCEL_EXEC, // Ctrl + D en heredoc
 	S_SIZE
@@ -26,6 +27,7 @@ typedef enum e_signal
 
 // -- signals.h -- //
 void	signal_init(void);
+void	ft_sigint(int sig);
 int		update_exit_status(int status, t_minishell *minishell);
 void	set_defaul_signals(void);
 
