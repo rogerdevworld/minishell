@@ -31,27 +31,26 @@
 
 int	get_builtin_cmd(char *cmd)
 {
-	char *clean_arg;
+	char *clean_cmd;
 
-	clean_arg = remove_all_quotes(cmd);
-	cmd = clean_arg;
-	if (ft_strcmp(cmd, "cd") == 0)
+	clean_cmd = remove_all_quotes(cmd);
+	if (ft_strcmp(clean_cmd, "cd") == 0)
 		return (CD);
-	if (ft_strncmp(cmd, "exit", 5) == 0)
+	if (ft_strncmp(clean_cmd, "exit", 5) == 0)
 		return (EXIT);
-	if (ft_strncmp(cmd, "echo", 4) == 0)
+	if (ft_strncmp(clean_cmd, "echo", 4) == 0)
 		return (ECHO);
-	if (ft_strcmp(cmd, "pwd") == 0)
+	if (ft_strcmp(clean_cmd, "pwd") == 0)
 		return (PWD);
-	if (ft_strncmp(cmd, "export", 5) == 0)
+	if (ft_strncmp(clean_cmd, "export", 5) == 0)
 		return (EXPORT);
-	if (ft_strncmp(cmd, "unset", 5) == 0)
+	if (ft_strncmp(clean_cmd, "unset", 5) == 0)
 		return (UNSET);
 	//if (ft_strncmp(cmd, "clear", 5) == 0)
 		//return (CLEAR);
-	if (ft_strncmp(cmd, "env", 3) == 0)
+	if (ft_strncmp(clean_cmd, "env", 3) == 0)
 		return (ENV);
-	free(clean_arg);
+	free(clean_cmd);
 	return (-1);
 }
 

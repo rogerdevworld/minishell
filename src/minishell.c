@@ -22,7 +22,7 @@ static int verify_sigint(status)
 }
 
 /**
- * nueva version de main_loop
+ * nueva version de main_loop	
  */
 // line = readline(ft_agnoster(envp, status));
 // line = readline(ft_agnoster(envp, status));
@@ -40,7 +40,7 @@ void main_loop(t_myenv *myenv)
 	tokens = NULL;
 	while (1)
 	{
-		line = readline("minishell > ");
+		line = readline("mini > ");
 		//line = readline(ft_desing(myenv->env, status));
 		status = verify_sigint(status);
 		if (!line)
@@ -48,6 +48,13 @@ void main_loop(t_myenv *myenv)
 		if (*line)
 			add_history(line);
 		tokens = lexer(line);
+		if (check_multiple_expansions_at_start(tokens, myenv->list_env))
+		{
+			status = 1;
+			continue;
+		}
+		expand_before_executor(&tokens, myenv->list_env, status);
+		shift_empty_tokens(&tokens);
 		if (validate_syntax(tokens) || check_unclosed_quotes(line))
 			status = 2;
 		else if (ft_strcmp(line, "./minishell") == 0)

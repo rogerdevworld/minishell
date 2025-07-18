@@ -34,11 +34,11 @@ int	execute_command(t_command *cmd, char **envp, t_myenv *myenv,
 			if (cmd->redir)
 			{
 				if (process_all_heredocs(cmd->redir) == -1)
-					exit(1);
+					exit (1);
 				if (ft_output_redirections(cmd->redir) == -1)
-					return (1);
+					exit (1);
 				if (ft_input_redirection(cmd->redir) == -1)
-					return (1);
+					exit (1);
 				if (cmd->redir->input_file != -1)
 					dup2(cmd->redir->input_file, STDIN_FILENO);
 				if (cmd->redir->output_file != -1)

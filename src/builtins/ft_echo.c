@@ -48,13 +48,14 @@ char	*expand_variable(t_minishell *minishell, const char *arg, int *i, t_env *en
 	char	*var_name;
 	char	*value;
 
+	// ft_printf("\n al entrar es: %i\n", s);
 	(*i)++;
 	if (!arg[*i] || (!ft_isalpha(arg[*i]) && arg[*i] != '_' && arg[*i] != '?' && arg[*i] != '{'))
 		return (ft_strdup("$"));
 	if (arg[*i] == '?')
 	{
 		(*i)++;
-		return (ft_itoa(s)); // o minishell->exit si es global
+		return (ft_itoa(s));
 	}
 	if (arg[*i] == '{')
 	{
@@ -150,6 +151,7 @@ char	*ft_expand_arg(t_minishell *minishell, char *arg, t_env *env, int s)
 	char	*part;
 	int	i;
 
+	// ft_printf("\n el arg que entra es \n%s", arg);
 	part = NULL;
 	result = ft_calloc(1, sizeof(char));
 	i = 0;
