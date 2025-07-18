@@ -43,10 +43,13 @@ int	execute_command(t_command *cmd, char **envp, t_myenv *myenv,
 					exit (1);
 				if (ft_input_redirection(cmd->redir) == -1)
 					exit (1);
+				
 				if (cmd->redir->input_file != -1)
 					dup2(cmd->redir->input_file, STDIN_FILENO);
 				if (cmd->redir->output_file != -1)
 					dup2(cmd->redir->output_file, STDOUT_FILENO);
+				// todo dentro
+				
 			}
 			resolve_command_path(cmd, envp);
 			execve(cmd->path, cmd->args, envp);

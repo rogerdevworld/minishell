@@ -32,6 +32,25 @@ char	*ft_echo_expand(char *str, t_env *env)
 	return (NULL);
 }
 
+static int is_valid_n_flag(char *str)
+{
+    int i;
+
+    if (!str || str[0] != '-')
+        return (0);
+    i = 1;
+    if (str[i] == '\0') // sólo "-"
+        return (0);
+    while (str[i])
+    {
+        if (str[i] != 'n')
+            return (0);
+        i++;
+    }
+    return (1);
+}
+
+
 char	*copy_plain_text(char *arg, int *i)
 {
 	int	start;
@@ -191,7 +210,7 @@ int	ft_echo(t_minishell *minishsell, char **args, t_env *env, int s)
 
 	i = 1;
 	newline = 1;
-	if (args[i] && ft_strncmp(args[i], "-n", 3) == 0)
+	while (args[i] && is_valid_n_flag(args[i]))
 	{
 		newline = 0;
 		i++;
