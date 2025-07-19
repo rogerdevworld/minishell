@@ -17,7 +17,6 @@ int	ft_input_redirection(t_redir *redir)
 	char	**files;
 	int		i;
 
-	ft_printf("input\n");
 	if (!redir->in_file)
 		return (0);
 	files = redir->in_file;

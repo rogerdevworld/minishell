@@ -17,7 +17,7 @@ int	msg(char *error, char *arg)
 		ft_putstr_fd(error, 2);
 	if (arg)
 	{
-		ft_putstr_fd("cd: ", 2);
+		//ft_putstr_fd("cd: ", 2);
 		ft_putstr_fd(arg, 2);
 		ft_putstr_fd(": ", 2);
 		ft_putstr_fd(error, 2);

@@ -18,7 +18,6 @@ int	ft_output_redirections(t_redir *redir)
 	char	**files;
 
 	i = 0;
-	ft_printf("outfile\n");
 	files = redir->out_file;
 	while (files && files[i])
 	{
