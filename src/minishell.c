@@ -74,7 +74,7 @@ void main_loop(t_myenv *myenv)
 		ast = parse_expression(&tokens, myenv->env);
 		//print_ast(ast, 0);
 		// Procesamos los heredocs una sola vez, ya con el AST listo
-		if (preprocess_heredocs(ast) == -1)
+		if (preprocess_heredocs(ast, status) == -1)
 		{
 			// interrumpido con Ctrl+C en algún heredoc
 			status = 130;
@@ -83,19 +83,33 @@ void main_loop(t_myenv *myenv)
 			free(line);
 			continue;             // vuelve al prompt sin ejecutar nada
 		}
-		exec = init_exec(myenv);
-		minishell = init_minishell(ast, tokens, exec);
-		if (g_signal != S_CANCEL_EXEC)
-			status = execute_ast(ast, myenv->env, myenv, minishell, status);
-		update_exit_status(status, minishell);
+		else if (ft_strcmp(line, "./minishell") == 0)
+        {
+            ft_shlvl(myenv);
+            clear_history();
+        }
+		else
+		{
+			//printf("%i\n", preprocess_heredocs(ast));
+			exec = init_exec(myenv);
+			minishell = init_minishell(ast, tokens, exec);
+			if (g_signal != S_CANCEL_EXEC)
+				status = execute_ast(ast, myenv->env, myenv, minishell, status);
+			update_exit_status(status, minishell);
+		}
+		
 		// Libera memoria
 		// ft_destroyer(minishell); // si ya tienes una función para liberar todo
 		free_ast(ast);
 		free_tokens(tokens);
 		free(line);
+		if (g_signal == SIGQUIT)
+			status = 0;
+		g_signal = S_BASE;
 	}
 
-	g_signal = S_BASE;
+	// g_signal = S_BASE;
+	//status = 0; 
 }
 
 

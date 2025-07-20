@@ -124,4 +124,6 @@ void	ft_unset(char **args, t_myenv *myenv)
 			remove_env_node(&myenv->list_env, args[i]);
 		i++;
 	}
+	free_env_array(myenv->env);
+    myenv->env = build_env_array(myenv->list_env);
 }

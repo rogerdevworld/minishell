@@ -34,21 +34,21 @@ int	get_builtin_cmd(char *cmd)
 	char *clean_cmd;
 
 	clean_cmd = remove_all_quotes(cmd);
-	if (ft_strcmp(clean_cmd, "cd") == 0)
+	if (ft_strncmp(clean_cmd, "cd", 2) == 0 && ft_strlen(clean_cmd) == 2)
 		return (CD);
-	if (ft_strncmp(clean_cmd, "exit", 5) == 0)
+	if (ft_strncmp(clean_cmd, "exit", 4) == 0 && ft_strlen(clean_cmd) == 4)
 		return (EXIT);
-	if (ft_strncmp(clean_cmd, "echo", 4) == 0)
+	if (ft_strncmp(clean_cmd, "echo", 4) == 0 && ft_strlen(clean_cmd) == 4)
 		return (ECHO);
-	if (ft_strcmp(clean_cmd, "pwd") == 0)
+	if (ft_strncmp(clean_cmd, "pwd", 3) == 0 && ft_strlen(clean_cmd) == 3)
 		return (PWD);
-	if (ft_strncmp(clean_cmd, "export", 5) == 0)
+	if (ft_strncmp(clean_cmd, "export", 6) == 0 && ft_strlen(clean_cmd) == 6)
 		return (EXPORT);
-	if (ft_strncmp(clean_cmd, "unset", 5) == 0)
+	if (ft_strncmp(clean_cmd, "unset", 5) == 0 && ft_strlen(clean_cmd) == 5)
 		return (UNSET);
 	//if (ft_strncmp(cmd, "clear", 5) == 0)
 		//return (CLEAR);
-	if (ft_strncmp(clean_cmd, "env", 3) == 0)
+	if (ft_strncmp(clean_cmd, "env", 3) == 0&& ft_strlen(clean_cmd) == 3)
 		return (ENV);
 	free(clean_cmd);
 	return (-1);
@@ -61,16 +61,9 @@ int	execute_builtin(t_minishell *minishell , char **args, t_myenv *myenv, int s)
 	if (minishell->executor->builtin_id == CD)
 		status = ft_cd(args, myenv);
 	if (minishell->executor->builtin_id == EXIT)
-	{
-		//ft_printf("\n PASO \n");
 		status = ft_exit_builtin(args);
-		//ft_printf("\nel estatus de salida es: %i \n", status);
-	}
 	if (minishell->executor->builtin_id == ECHO)
-	{
-		//ft_printf("\n%i\n", s);
 		status = ft_echo(minishell, args, myenv->list_env, s);
-	}
 	if (minishell->executor->builtin_id == PWD)
 		status = pwd();
 	if (minishell->executor->builtin_id == EXPORT)

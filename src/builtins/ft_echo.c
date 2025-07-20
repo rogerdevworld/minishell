@@ -170,7 +170,6 @@ char	*ft_expand_arg(t_minishell *minishell, char *arg, t_env *env, int s)
 	char	*part;
 	int	i;
 
-	// ft_printf("\n el arg que entra es \n%s", arg);
 	part = NULL;
 	result = ft_calloc(1, sizeof(char));
 	i = 0;
@@ -188,6 +187,19 @@ char	*ft_expand_arg(t_minishell *minishell, char *arg, t_env *env, int s)
 		{
 			part = ft_substr(arg, i + 1, 1);
 			i += 2;
+		}
+		else if (arg[i] == '\\') // manejar \ seguido de cualquier cosa
+		{
+			if (arg[i + 1])
+			{
+				part = ft_substr(arg, i + 1, 1);
+				i += 2;
+			}
+			else
+			{
+				part = ft_strdup("\\");
+				i++;
+			}
 		}
 		else if (arg[i] == '$')
 		 	part = expand_variable(minishell, arg, &i, env, s);//TD--Done

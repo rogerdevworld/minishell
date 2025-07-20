@@ -64,6 +64,24 @@ void	sigint_handler_aux(void)
 		g_signal = S_SIGINT;
 }
 
+void	heredoc_sigint_handler(int signo)
+{
+	(void)signo;
+	write(1, "\n", 1);
+	exit(EXIT_SIGINT);
+}
+
+void	signals_heredoc(void)
+{
+	struct sigaction	sa;
+
+	ft_bzero(&sa, sizeof(sa));
+	sa.sa_handler = heredoc_sigint_handler;
+	sigaction(SIGINT, &sa, NULL);
+	sa.sa_handler = SIG_IGN;
+	sigaction(SIGQUIT, &sa, NULL);
+}
+
 void	ft_sigint(int sig)
 {
 	(void)sig;
@@ -85,7 +103,7 @@ void	ft_sigint(int sig)
 	else if (g_signal == S_HEREDOC)
 	{
 
-		g_signal = S_SIGINT_CMD;
+		g_signal = S_SIGINT;
 		ft_putstr_fd("\n", 2);
 		rl_on_new_line();
 	}

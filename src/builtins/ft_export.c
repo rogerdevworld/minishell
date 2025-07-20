@@ -111,6 +111,56 @@ void	print_export(t_env *env)//LA FUNCION NUEVA
 	free(array);
 }
 
+/**
+ * para ir actualizando char **env cada vez que se ejecuta export
+ */
+
+ char	*ft_strjoin_free_env(char *s1, char *s2)
+ {
+	 char	*joined;
+ 
+	 joined = ft_strjoin(s1, s2);
+	 free(s1);
+	 return (joined);
+ }
+
+char **build_env_array(t_env *list_env)
+ {
+	 int count = 0;
+	 t_env *tmp = list_env;
+	 char **env_array;
+	 char *joined;
+ 
+	 // contar variables
+	 while (tmp)
+	 {
+		 count++;
+		 tmp = tmp->next;
+	 }
+ 
+	 env_array = malloc(sizeof(char *) * (count + 1));
+	 if (!env_array)
+		 return NULL;
+ 
+	 tmp = list_env;
+	 count = 0;
+	 while (tmp)
+	 {
+		 // key=value
+		 if (tmp->content)
+		 {
+			 joined = ft_strjoin(tmp->key, "=");
+			 env_array[count] = ft_strjoin_free_env(joined, tmp->content); 
+			 // ft_strjoin_free(a,b): junta y libera a
+			 count++;
+		 }
+		 tmp = tmp->next;
+	 }
+	 env_array[count] = NULL;
+	 return env_array;
+ }
+ 
+
 int	ft_export(char **args, t_myenv *myenv)
 {
 	int	i;
@@ -127,5 +177,7 @@ int	ft_export(char **args, t_myenv *myenv)
 		status = export_add_or_update(&myenv->list_env, args[i]);
 		i++;
 	}
+	free_env_array(myenv->env);
+    myenv->env = build_env_array(myenv->list_env);
 	return  (status);
 }

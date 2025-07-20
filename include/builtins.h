@@ -60,6 +60,7 @@ void ft_unset(char **args, t_myenv *myenv);
 void put_error(char *prefix, char *cmd, char *msg);
 void update_env_array(t_myenv *myenv);
 char *ft_echo_expand(char *str, t_env *env);
+char **build_env_array(t_env *list_env);
 
 // -- error msg -- //
 int msg(char *error, char *arg);
