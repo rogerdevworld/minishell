@@ -15,3 +15,8 @@ shlvl y shlvl +999
 msg: minishell: warning: shell level (1000) too high, resetting to 1
 
 cd tiene que ir a home
+
+
+
+new case:
+(export ROGER=42) && echo $ROGER | (export ROGER=72 && echo $ROGER)
