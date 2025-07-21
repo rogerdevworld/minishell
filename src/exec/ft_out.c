@@ -23,7 +23,7 @@ int	ft_output_redirections(t_redir *redir)
 	{
 		if (redir->output_file != -1)
 			close(redir->output_file);
-		fd = open(files[i], O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		fd = ft_open(files[i], 1);
 		if (fd == -1)
 		{
 			perror("open");

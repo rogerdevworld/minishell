@@ -30,7 +30,7 @@ SRCS =	$(SRC_DIR)minishell.c $(SRC_DIR)init.c $(SRC_DIR)exit.c $(SRC_DIR)expanso
 		$(SRC_DIR)utils/cleanup/ft_free.c $(SRC_DIR)utils/cleanup/ft_free2.c $(SRC_DIR)utils/cleanup/free_split.c $(SRC_DIR)utils/cleanup/ft_destroyer.c \
 		$(SRC_DIR)utils/remove_quotes.c $(SRC_DIR)utils/remove_quotes_from_args.c $(SRC_DIR)utils/remove_all_quotes.c \
 		$(SRC_DIR)test/print_lexer.c $(SRC_DIR)test/print_commands.c $(SRC_DIR)test/print_ast.c $(SRC_DIR)test/ft_print_args.c \
-		$(SRC_DIR)executor/ft_exec.c $(SRC_DIR)executor/ft_pipe.c $(SRC_DIR)executor/ft_here_doc.c $(SRC_DIR)executor/ft_subshell.c $(SRC_DIR)executor/ft_and.c $(SRC_DIR)executor/ft_or.c $(SRC_DIR)executor/ft_cmd.c $(SRC_DIR)executor/ft_in.c $(SRC_DIR)executor/ft_out.c $(SRC_DIR)executor/init.c
+		$(SRC_DIR)exec/ft_exec.c $(SRC_DIR)exec/ft_pipe.c $(SRC_DIR)exec/ft_here_doc.c $(SRC_DIR)exec/ft_subshell.c $(SRC_DIR)exec/ft_and.c $(SRC_DIR)exec/ft_or.c $(SRC_DIR)exec/ft_cmd.c $(SRC_DIR)exec/ft_in.c $(SRC_DIR)exec/ft_out.c $(SRC_DIR)exec/init.c
 
 OBJS = $(SRCS:$(SRC_DIR)%.c=$(OBJ_DIR)/%.o)
 
@@ -43,7 +43,7 @@ BSRCS =	$(BSRC_DIR)pipex_bonus.c $(BSRC_DIR)parse_bonus.c $(BSRC_DIR)cmd_bonus.c
 BOBJS = $(BSRCS:$(BSRC_DIR)%.c=$(OBJ_DIR)/%.o)
 
 CC = cc -g
-CFLAGS = -I./include -Wall -Werror -Wextra -I./include
+CFLAGS = -I./include -Wall -Werror -Wextra -I./include 
 #-fsanitize=leak
 RM = rm -rf
 
@@ -76,7 +76,7 @@ libs:
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
 	mkdir -p ./obj/builtins
-	mkdir -p ./obj/executor
+	mkdir -p ./obj/exec
 	mkdir -p ./obj/design
 	mkdir -p ./obj/syntax
 	mkdir -p ./obj/utils
