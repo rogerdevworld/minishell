@@ -11,24 +11,6 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-// --- this functions is internal execve() -- xenia: para q sirve esta funcion?? No es como la de ft_check_executor??//
-/*void	built(t_command *cmd, char **envp)
-{
-	int	i;
-
-	envp = envp;
-	while (cmd)
-	{
-		i = 0;
-		if (get_builtin_cmd(cmd->args[i]))
-		{
-			execute_builtin(get_builtin_cmd(cmd->args[i]), cmd->args[i + 1],
-				envp);
-			i++;
-		}
-		cmd = cmd->next;
-	}
-}*/
 int	get_builtin_cmd(char *cmd)
 {
 	char *clean_cmd = remove_all_quotes(cmd);
@@ -44,8 +26,6 @@ int	get_builtin_cmd(char *cmd)
 		return (EXPORT);
 	if (ft_strncmp(clean_cmd, "unset", 5) == 0 && ft_strlen(clean_cmd) == 5)
 		return (UNSET);
-	// if (ft_strncmp(cmd, "clear", 5) == 0)
-	// return (CLEAR);
 	if (ft_strncmp(clean_cmd, "env", 3) == 0 && ft_strlen(clean_cmd) == 3)
 		return (ENV);
 	return (-1);
@@ -70,45 +50,11 @@ int	execute_builtin(t_minishell *minishell, char **args, t_myenv *myenv, int s, 
 	if (builtin_id == UNSET)
 	{
 		ft_unset(args, myenv);
-		update_env_array(myenv);
+		//update_env_array(myenv);
 	}
 	if (builtin_id == ENV)
 		print_env(myenv);
 	if (builtin_id == CLEAR)
 		clear();
-	// ft_printf("buitings status: %i", status);
 	return (status);
 }
-/*
-int	execute_builtin(int cmd, char **args, char **envp, t_myenv *myenv)
-{
-	int	status;
-
-	status = 0;
-	if (cmd == CD)
-		status = ft_cd(args[1], envp);
-	else if (cmd == EXIT)
-	{
-		ft_printf("\n PASO \n");
-		status = ft_exit_builtin(args);
-		ft_printf("\nel estatus de salida es: %i \n", status);
-	}
-	else if (cmd == ECHO)
-		ft_echo(args, myenv->list_env);
-	else if (cmd == PWD)
-		status = pwd(envp);
-	else if (cmd == EXPORT)
-		ft_export(args, myenv);
-	else if (cmd == UNSET)
-	{
-		ft_unset(args, myenv);
-		update_env_array(myenv);
-	}
-	else if (cmd == ENV)
-		print_env(myenv);
-	else if (cmd == CLEAR)
-		clear();
-	//ft_printf("buitings status: %i", status);
-	return (status);
-}
-*/
