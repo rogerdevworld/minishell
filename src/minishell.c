@@ -21,6 +21,26 @@ static int verify_sigint(status)
 	return (status);
 }
 
+int is_heredoc_only(t_ast *ast)
+{
+    // Verifica que exista y sea un comando
+    if (!ast || ast->type != NODE_COMMAND)
+        return 0;
+
+    // Verifica que la estructura cmd exista
+    if (!ast->cmd)
+        return 0;
+
+    // Si hay argumentos (args[0] no es NULL), entonces no es solo heredoc
+    if (ast->cmd->args && ast->cmd->args[0])
+        return 0;
+
+    // Si tiene redirecciones y al menos un heredoc
+    if (ast->cmd->redir && ast->cmd->redir->heredoc_count > 0)
+        return 1;
+
+    return 0;
+}
 
 /**
  * estado actual heredocs: recibe el limiter con comillas, 
@@ -46,19 +66,17 @@ void main_loop(t_myenv *myenv)
 	while (1)
 	{
 		line = readline("mini > ");
-		// line = readline(ft_desing(myenv->env, status));
 		status = verify_sigint(status);
 		if (!line)
 			break;
 		if (*line)
 			add_history(line);
 		tokens = lexer(line);
-		//print_tokens(tokens);
 		if (check_multiple_expansions_at_start(tokens, myenv->list_env))
 		{
 			status = 1;
 			free(line);
-			free_tokens(tokens); // libera tokens si corresponde
+			free_tokens(tokens);
 			continue;
 		}
 		expand_before_executor(&tokens, myenv->list_env, status);
@@ -70,18 +88,14 @@ void main_loop(t_myenv *myenv)
 			free_tokens(tokens);
 			continue;
 		}
-		// PARSEAMOS LOS TOKENS A AST
 		ast = parse_expression(&tokens, myenv->env);
-		//print_ast(ast, 0);
-		// Procesamos los heredocs una sola vez, ya con el AST listo
 		if (preprocess_heredocs(ast, status) == -1)
 		{
-			// interrumpido con Ctrl+C en algún heredoc
 			status = 130;
-			free_ast(ast);        // libera AST parcial
-			free_tokens(tokens);  // libera tokens
+			free_ast(ast);
+			free_tokens(tokens);
 			free(line);
-			continue;             // vuelve al prompt sin ejecutar nada
+			continue;
 		}
 		else if (ft_strcmp(line, "./minishell") == 0)
         {
@@ -90,26 +104,19 @@ void main_loop(t_myenv *myenv)
         }
 		else
 		{
-			//printf("%i\n", preprocess_heredocs(ast));
 			exec = init_exec(myenv);
 			minishell = init_minishell(ast, tokens, exec);
-			if (g_signal != S_CANCEL_EXEC)
+			if (is_heredoc_only(ast))
+				status = 0;
+			else if (g_signal != S_CANCEL_EXEC)
 				status = execute_ast(ast, myenv->env, myenv, minishell, status);
-			update_exit_status(status, minishell);
 		}
-		
 		// Libera memoria
-		// ft_destroyer(minishell); // si ya tienes una función para liberar todo
 		free_ast(ast);
 		free_tokens(tokens);
 		free(line);
-		if (g_signal == SIGQUIT)
-			status = 0;
 		g_signal = S_BASE;
 	}
-
-	// g_signal = S_BASE;
-	//status = 0; 
 }
 
 

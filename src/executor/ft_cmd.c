@@ -21,7 +21,7 @@
 		while (str[i])
 		{
 			if (ft_isspace((unsigned char)str[i]))
-				return 1; // contiene espacio/tab
+				return 1;
 			i++;
 		}
 		return 0;
@@ -43,7 +43,6 @@
 			minishell->exit = 127;
 			return (127);
 		}
-		status = update_exit_status(status, minishell);
 		ft_wildcards(&(cmd->args));
 		builtin_id = get_builtin_cmd(cmd->args[0]);
 		if (builtin_id == -1)
@@ -77,7 +76,6 @@
 		}
 		else
 		{
-			// 🔹 BUILTINS
 			minishell->executor->builtin_id = builtin_id;
 			if (!cmd->redir || builtin_id == 0 || builtin_id == 4 || builtin_id == 5
 				|| builtin_id == 1
@@ -85,7 +83,6 @@
 				return (execute_builtin(minishell, cmd->args, myenv, status));
 			else
 			{
-				// necesita fork por redirecciones
 				g_signal = S_CMD;
 				pid = fork();
 				if (pid == 0)
