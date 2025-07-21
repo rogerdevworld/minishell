@@ -11,39 +11,20 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-int	execute_pipe(t_ast *node, char **envp, t_myenv *myenv,
-		t_minishell *minishell)
+int	execute_ast(t_ast *node, char **envp, t_myenv *myenv,
+		t_minishell *minishell, int status)
 {
-	int		fds[2];
-	int		status;
-	pid_t	pid1;
-	pid_t	pid2;
-
-	if (pipe(fds) == -1)
-		return (1);
-	g_signal = S_CMD;
-	pid1 = fork();
-	status = 0;
-	if (pid1 == 0)
-	{
-		set_defaul_signals();
-		close(fds[0]);
-		dup2(fds[1], STDOUT_FILENO);
-		exit(execute_ast(node->left, envp, myenv, minishell, status));
-	}
-	pid2 = fork();
-	if (pid2 == 0)
-	{
-		set_defaul_signals();
-		close(fds[1]);
-		dup2(fds[0], STDIN_FILENO);
-		exit(execute_ast(node->right, envp, myenv, minishell, status));
-	}
-	close(fds[0]);
-	close(fds[1]);
-	waitpid(pid1, &status, 0);
-	update_exit_status(status, minishell);
-	waitpid(pid2, &status, 0);
-	status = update_exit_status(status, minishell);
-	return (status);
+	if (!node)
+		return (0);
+	if (node->type == NODE_COMMAND)
+		return (execute_command(node->cmd, envp, minishell, status));
+	else if (node->type == NODE_PIPE)
+		return (execute_pipe(node, myenv, minishell));
+	else if (node->type == NODE_AND)
+		return (execute_and(node, envp, myenv, minishell));
+	else if (node->type == NODE_OR)
+		return (execute_or(node, envp, myenv, minishell));
+	else if (node->type == NODE_SUBSHELL)
+		return (execute_subshell(node, envp, myenv, minishell));
+	return (1);
 }

@@ -11,16 +11,20 @@
 /* ************************************************************************** */
 #include "../include/minishell.h"
 
-static char *clean_argument(char *arg)
+static char	*clean_argument(char *arg)
 {
-	char *cleaned;
-	int i = 0, j = 0;
+	char	*cleaned;
+	int		i;
+	int		j;
 
+	i = 0;
+	j = 0;
+	cleaned = NULL;
 	if (!arg)
-		return NULL;
+		return (NULL);
 	cleaned = malloc(ft_strlen(arg) + 1);
 	if (!cleaned)
-		return NULL;
+		return (NULL);
 	while (arg[i])
 	{
 		if (arg[i] != '"' && arg[i] != '\'')
@@ -31,34 +35,15 @@ static char *clean_argument(char *arg)
 		i++;
 	}
 	cleaned[j] = '\0';
-	return cleaned;
+	return (cleaned);
 }
-
-/**
- * Elimina comillas simples o dobles alrededor del argumento, si existen.
- */
-// static char	*strip_quotes(char *str)
-// {
-// 	int	len;
-
-// 	if (!str)
-// 		return (NULL);
-// 	len = ft_strlen(str);
-// 	if (len >= 2 && ((str[0] == '"' && str[len - 1] == '"') || (str[0] == '\''
-// 				&& str[len - 1] == '\'')))
-// 	{
-// 		str[len - 1] = '\0';
-// 		return (str + 1);
-// 	}
-// 	return (str);
-// }
 
 /**
  * Verifica si la cadena es un número válido (posiblemente con signo).
  */
-static int is_numeric(const char *str)
+static int	is_numeric(const char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (!str || !*str)
@@ -84,38 +69,40 @@ static int is_numeric(const char *str)
  *    valor numérico si válido
  *    0 si no hay argumento
  */
-static int check_exit(char **args)
+static int	check_exit(char **args)
 {
-	int count_args = 0;
-	char *num;
+	int		count_args;
+	char	*num;
+	int		value;
 
+	count_args = 0;
 	while (args[count_args])
 		count_args++;
 	if (count_args > 2)
-		return -1;
+		return (-1);
 	if (count_args == 2)
 	{
-		num = clean_argument(args[1]); // en lugar de strip_quotes
+		num = clean_argument(args[1]);
 		if (!is_numeric(num))
 		{
 			free(num);
 			return (-2);
 		}
-		int value = ft_atoi(num);
+		value = ft_atoi(num);
 		free(num);
 		return (value);
 	}
-	return 0;
+	return (0);
 }
 
 /**
  * Implementación de la built-in `exit`.
  */
-int ft_exit_builtin(char **args)
+int	ft_exit_builtin(char **args)
 {
-	int status;
+	int	status;
 
-	ft_putstr_fd("exit\n", 1); // Como hace bash
+	ft_putstr_fd("exit\n", 1);
 	status = check_exit(args);
 	if (status == -1)
 	{
@@ -127,7 +114,7 @@ int ft_exit_builtin(char **args)
 		ft_putstr_fd("exit: ", 2);
 		ft_putstr_fd(args[1], 2);
 		ft_putstr_fd(": numeric argument required\n", 2);
-		exit(2); // Bash devuelve 2 para este error
+		exit(2);
 	}
 	else
 	{

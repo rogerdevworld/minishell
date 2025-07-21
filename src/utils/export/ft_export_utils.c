@@ -3,13 +3,45 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: xviladri <xviladri@student.42barcelon      +#+  +:+       +#+        */
+/*   By: jaacosta <jaacosta@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/10 00:25:36 by xviladri          #+#    #+#             */
-/*   Updated: 2025/04/10 00:27:52 by xviladri         ###   ########.fr       */
+/*   Created: 2025/07/22 00:54:37 by jaacosta          #+#    #+#             */
+/*   Updated: 2025/07/22 00:54:39 by jaacosta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../include/minishell.h"
+#include "../../../include/minishell.h"
+
+void	print_export(t_env *env)
+{
+	t_env	**array;
+	int		i;
+
+	array = env_to_array(env);
+	if (!array)
+		return ;
+	sort_env_array(array);
+	i = 0;
+	while (array[i])
+	{
+		if (array[i]->content)
+			ft_printf("declare -x %s=\"%s\"\n", array[i]->key,
+				array[i]->content);
+		else
+			ft_printf("declare -x %s\n", array[i]->key);
+		i++;
+	}
+	free(array);
+}
+
+char	*ft_strjoin_free_env(char *s1, char *s2)
+{
+	char	*joined;
+
+	joined = NULL;
+	joined = ft_strjoin(s1, s2);
+	free(s1);
+	return (joined);
+}
 
 int	env_list_size(t_env *env)
 {
@@ -52,6 +84,7 @@ void	sort_env_array(t_env **array)
 	t_env	*tmp;
 
 	i = 0;
+	j = 0;
 	while (array[i])
 	{
 		j = i + 1;

@@ -17,11 +17,9 @@ int	msg(char *error, char *arg)
 		ft_putstr_fd(error, 2);
 	if (arg)
 	{
-		//ft_putstr_fd("cd: ", 2);
 		ft_putstr_fd(arg, 2);
 		ft_putstr_fd(": ", 2);
 		ft_putstr_fd(error, 2);
-
 	}
 	ft_putstr_fd("\n", 2);
 	return (1);
@@ -37,7 +35,6 @@ int	ft_cd(char **path, t_myenv *env)
 	if (!path[1])
 	{
 		target_dir = ft_echo_expand("HOME", env->list_env);
-		// target_dir = ft_getenv("HOME", env->env);
 		if (!target_dir)
 			return (msg("HOME not set", NULL));
 	}

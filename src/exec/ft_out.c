@@ -11,20 +11,26 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-int	execute_ast(t_ast *node, char **envp, t_myenv *myenv,
-		t_minishell *minishell, int status)
+int	ft_output_redirections(t_redir *redir)
 {
-	if (!node)
-		return (0);
-	if (node->type == NODE_COMMAND)
-		return (execute_command(node->cmd, envp, myenv, minishell, status));
-	else if (node->type == NODE_PIPE)
-		return (execute_pipe(node, envp, myenv, minishell));
-	else if (node->type == NODE_AND)
-		return (execute_and(node, envp, myenv, minishell));
-	else if (node->type == NODE_OR)
-		return (execute_or(node, envp, myenv, minishell));
-	else if (node->type == NODE_SUBSHELL)
-		return (execute_subshell(node, envp, myenv, minishell));
-	return (1);
+	int		i;
+	int		fd;
+	char	**files;
+
+	i = 0;
+	files = redir->out_file;
+	while (files && files[i])
+	{
+		if (redir->output_file != -1)
+			close(redir->output_file);
+		fd = ft_open(files[i], 1);
+		if (fd == -1)
+		{
+			perror("open");
+			return (-1);
+		}
+		redir->output_file = fd;
+		i++;
+	}
+	return (0);
 }

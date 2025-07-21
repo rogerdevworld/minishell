@@ -57,7 +57,7 @@ void	main_loop(t_myenv *myenv)
 	char		*line;
 	t_token		*tokens;
 	t_ast		*ast;
-	t_executor	*exec;
+	//t_executor	*exec;
 	t_minishell	*minishell;
 	int			status;
 
@@ -106,8 +106,7 @@ void	main_loop(t_myenv *myenv)
         }
 		else
 		{
-			exec = init_exec(myenv);
-			minishell = init_minishell(ast, tokens, exec);
+			minishell = init_minishell(ast, tokens, myenv);
 			if (is_heredoc_only(ast))
 				status = 0;
 			else if (g_signal != S_CANCEL_EXEC)

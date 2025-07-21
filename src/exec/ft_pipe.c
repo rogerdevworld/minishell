@@ -11,26 +11,37 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-int	ft_output_redirections(t_redir *redir)
+int	execute_pipe(t_ast *node, t_myenv *myenv, t_minishell *minishell)
 {
-	int		i;
-	int		fd;
-	char	**files;
+	int		fds[2];
+	int		status;
+	pid_t	pid1;
+	pid_t	pid2;
 
-	i = 0;
-	files = redir->out_file;
-	while (files && files[i])
+	if (pipe(fds) == -1)
+		return (1);
+	g_signal = S_CMD;
+	pid1 = fork();
+	status = 0;
+	if (pid1 == 0)
 	{
-		if (redir->output_file != -1)
-			close(redir->output_file);
-		fd = open(files[i], O_CREAT | O_WRONLY | O_TRUNC, 0644);
-		if (fd == -1)
-		{
-			perror("open");
-			return (-1);
-		}
-		redir->output_file = fd;
-		i++;
+		set_defaul_signals();
+		close(fds[0]);
+		dup2(fds[1], STDOUT_FILENO);
+		exit(execute_ast(node->left, myenv->env, myenv, minishell, status));
 	}
-	return (0);
+	pid2 = fork();
+	if (pid2 == 0)
+	{
+		set_defaul_signals();
+		close(fds[1]);
+		dup2(fds[0], STDIN_FILENO);
+		exit(execute_ast(node->right, myenv->env, myenv, minishell, status));
+	}
+	close(fds[0]);
+	close(fds[1]);
+	waitpid(pid1, &status, 0);
+	update_exit_status(status, minishell);
+	waitpid(pid2, &status, 0);
+	return (update_exit_status(status, minishell));
 }

@@ -28,10 +28,7 @@ char	**add_to_array(char **array, char *value)
 		len++;
 	new_array = malloc(sizeof(char *) * (len + 2));
 	if (!new_array)
-	{
-		free(clean_value);
-		return (NULL);
-	}
+		return (free(clean_value), NULL);
 	i = 0;
 	while (i < len)
 	{

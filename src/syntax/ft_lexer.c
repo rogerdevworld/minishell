@@ -47,7 +47,7 @@ t_token	*init_lexer(char *value)
 
 void	add_back(t_token **tokens, t_token *new_token)
 {
-	t_token	*curr;
+	t_token	*tmp;
 
 	if (!new_token)
 		return ;
@@ -56,10 +56,10 @@ void	add_back(t_token **tokens, t_token *new_token)
 		*tokens = new_token;
 		return ;
 	}
-	curr = *tokens;
-	while (curr->next)
-		curr = curr->next;
-	curr->next = new_token;
+	tmp = *tokens;
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = new_token;
 }
 
 t_token	*lexer(char *input)
@@ -88,41 +88,37 @@ t_token	*lexer(char *input)
 	return (tokens);
 }
 
-// Limpia tokens vacíos de la lista enlazada
 void	shift_empty_tokens(t_token **head)
 {
-	t_token	*curr;
+	t_token	*tmp;
 	t_token	*prev;
 	t_token	*to_delete;
 
-	curr = *head;
+	tmp = *head;
 	prev = NULL;
-	while (curr)
+	while (tmp)
 	{
-		// Verifica si el token está vacío o su value es NULL
-		if (!curr->value || curr->value[0] == '\0')
+		if (!tmp->value || tmp->value[0] == '\0')
 		{
-			to_delete = curr;
+			to_delete = tmp;
 			if (prev == NULL)
 			{
-				// Si es el primer nodo
-				*head = curr->next;
-				curr = *head;
+				*head = tmp->next;
+				tmp = *head;
 			}
 			else
 			{
-				prev->next = curr->next;
-				curr = curr->next;
+				prev->next = tmp->next;
+				tmp = tmp->next;
 			}
-			// Libera memoria del nodo vacío
 			if (to_delete->value)
 				free(to_delete->value);
 			free(to_delete);
 		}
 		else
 		{
-			prev = curr;
-			curr = curr->next;
+			prev = tmp;
+			tmp = tmp->next;
 		}
 	}
 }
