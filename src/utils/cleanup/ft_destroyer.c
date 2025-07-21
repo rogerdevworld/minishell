@@ -14,5 +14,4 @@
 void	ft_destroyer(t_minishell *minishell)
 {
 	free_minishell(minishell);
-	ft_myenv_free(minishell->myenv);
 }
