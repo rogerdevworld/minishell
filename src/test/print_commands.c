@@ -22,7 +22,9 @@ void	print_command(t_command *cmd)
 	printf("           path: %s\n", cmd->path ? cmd->path : " (null)");
 	// Imprimir file descriptors
 	printf("           input_file fd: %d\n", cmd->redir->input_file);
+	printf("           input_file ord: %d\n", cmd->redir->input_ord);
 	printf("           output_file fd: %d\n", cmd->redir->output_file);
+	printf("           output_file ord: %d\n", cmd->redir->output_ord);
 	// name redir
 	printf("         Infile:\n");
 	if (cmd->redir->in_file)

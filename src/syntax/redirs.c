@@ -16,6 +16,8 @@ void	init_redir(t_redir *redir)
 	if (!redir)
 		return ;
 	redir->input_file = -2;
+	redir->output_ord = 1;
+	redir->input_ord = 1;
 	redir->output_file = -2;
 	redir->heredoc_count = 0;
 	redir->heredoc_fds = ft_calloc(64, sizeof(int));

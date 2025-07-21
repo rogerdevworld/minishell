@@ -43,7 +43,9 @@ typedef struct s_word
 typedef struct s_redir
 {
 	int						input_file;
+	int						input_ord;
 	int						output_file;
+	int						output_ord;
 	char					**limiter;
 	int						heredoc_count;
 	int						*heredoc_fds;

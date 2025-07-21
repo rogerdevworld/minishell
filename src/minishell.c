@@ -71,7 +71,7 @@ void	main_loop(t_myenv *myenv)
 		}
 		// PARSEAMOS LOS TOKENS A AST
 		ast = parse_expression(&tokens, myenv->env);
-		// print_ast(ast, 0);
+		// /print_ast(ast, 0);
 		// Procesamos los heredocs una sola vez, ya con el AST listo
 		if (preprocess_heredocs(ast, status) == -1)
 		{
