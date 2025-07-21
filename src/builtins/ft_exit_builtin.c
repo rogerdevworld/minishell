@@ -120,7 +120,7 @@ int ft_exit_builtin(char **args)
 	if (status == -1)
 	{
 		ft_putstr_fd("exit: too many arguments\n", 2);
-		return (1);
+		exit(1);
 	}
 	else if (status == -2)
 	{

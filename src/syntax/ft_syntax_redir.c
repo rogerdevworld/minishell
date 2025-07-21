@@ -33,7 +33,8 @@ void	ft_redirects(t_command *cmd, t_token **tokens)
 			cmd->redir->out_file = add_to_array(cmd->redir->out_file, filename);
 		else if (type == TOKEN_HEREDOC)
 		{
-			cmd->redir->limiter = add_to_array_heredoc(cmd->redir->limiter, filename);
+			cmd->redir->limiter = add_to_array_heredoc(cmd->redir->limiter,
+					filename);
 			cmd->redir->heredoc_count++;
 		}
 		next_token(tokens);

@@ -28,6 +28,7 @@ typedef enum e_signal
 // -- signals.h -- //
 void	signal_init(void);
 void	ft_sigint(int sig);
+void	signals_heredoc(void);
 int		update_exit_status(int status, t_minishell *minishell);
 void	set_defaul_signals(void);
 

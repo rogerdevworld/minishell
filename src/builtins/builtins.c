@@ -22,52 +22,47 @@
 		i = 0;
 		if (get_builtin_cmd(cmd->args[i]))
 		{
-			execute_builtin(get_builtin_cmd(cmd->args[i]), cmd->args[i + 1], envp);
+			execute_builtin(get_builtin_cmd(cmd->args[i]), cmd->args[i + 1],
+				envp);
 			i++;
 		}
 		cmd = cmd->next;
 	}
 }*/
-
 int	get_builtin_cmd(char *cmd)
 {
-
-	if (ft_strncmp(remove_all_quotes(cmd), "cd", 2) == 0)
+	char *clean_cmd = remove_all_quotes(cmd);
+	if (ft_strncmp(clean_cmd, "cd", 2) == 0 && ft_strlen(clean_cmd) == 2)
 		return (CD);
-	if (ft_strncmp(remove_all_quotes(cmd), "exit", 5) == 0)
+	if (ft_strncmp(clean_cmd, "exit", 4) == 0 && ft_strlen(clean_cmd) == 4)
 		return (EXIT);
-	if (ft_strncmp(remove_all_quotes(cmd), "echo", 4) == 0)
+	if (ft_strncmp(clean_cmd, "echo", 4) == 0 && ft_strlen(clean_cmd) == 4)
 		return (ECHO);
-	if (ft_strncmp(remove_all_quotes(cmd), "pwd", 3) == 0)
+	if (ft_strncmp(clean_cmd, "pwd", 3) == 0 && ft_strlen(clean_cmd) == 3)
 		return (PWD);
-	if (ft_strncmp(remove_all_quotes(cmd), "export", 5) == 0)
+	if (ft_strncmp(clean_cmd, "export", 6) == 0 && ft_strlen(clean_cmd) == 6)
 		return (EXPORT);
-	if (ft_strncmp(remove_all_quotes(cmd), "unset", 5) == 0)
+	if (ft_strncmp(clean_cmd, "unset", 5) == 0 && ft_strlen(clean_cmd) == 5)
 		return (UNSET);
-	//if (ft_strncmp(cmd, "clear", 5) == 0)
-		//return (CLEAR);
-	if (ft_strncmp(remove_all_quotes(cmd), "env", 3) == 0)
+	// if (ft_strncmp(cmd, "clear", 5) == 0)
+	// return (CLEAR);
+	if (ft_strncmp(clean_cmd, "env", 3) == 0 && ft_strlen(clean_cmd) == 3)
 		return (ENV);
 	return (-1);
 }
 
 // -- design -- //
-int	execute_builtin(t_minishell *minishell , char **args, t_myenv *myenv, int s)
+int	execute_builtin(t_minishell *minishell, char **args, t_myenv *myenv, int s)
 {
-	int status = 0;
+	int	status;
+
+	status = 0;
 	if (minishell->executor->builtin_id == CD)
 		status = ft_cd(args, myenv);
 	if (minishell->executor->builtin_id == EXIT)
-	{
-		//ft_printf("\n PASO \n");
 		status = ft_exit_builtin(args);
-		//ft_printf("\nel estatus de salida es: %i \n", status);
-	}
 	if (minishell->executor->builtin_id == ECHO)
-	{
-		//ft_printf("\n%i\n", s);
 		status = ft_echo(minishell, args, myenv->list_env, s);
-	}
 	if (minishell->executor->builtin_id == PWD)
 		status = pwd();
 	if (minishell->executor->builtin_id == EXPORT)
@@ -81,13 +76,15 @@ int	execute_builtin(t_minishell *minishell , char **args, t_myenv *myenv, int s)
 		print_env(myenv);
 	if (minishell->executor->builtin_id == CLEAR)
 		clear();
-	//ft_printf("buitings status: %i", status);
+	// ft_printf("buitings status: %i", status);
 	return (status);
 }
 /*
 int	execute_builtin(int cmd, char **args, char **envp, t_myenv *myenv)
 {
-	int status = 0;
+	int	status;
+
+	status = 0;
 	if (cmd == CD)
 		status = ft_cd(args[1], envp);
 	else if (cmd == EXIT)

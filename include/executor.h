@@ -81,9 +81,9 @@ int	execute_pipe(t_ast *node, char **envp, t_myenv *myenv,
 	t_minishell *minishell);
 
 // -- here doc's -- //
-int 						preprocess_heredocs(t_ast *node);
-int							process_all_heredocs(t_redir *redir);
-int							process_single_heredoc(char *limiter, int *fd_out);
+int 						preprocess_heredocs(t_ast *node, int status);
+int							process_all_heredocs(t_redir *redir, int status);
+int							process_single_heredoc(char *limiter, int *fd_out, int status);
 
 // -- ft_subshell -- //
 int							execute_subshell(t_ast *node, char **envp,

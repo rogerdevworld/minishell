@@ -65,6 +65,7 @@ int	execute_command(t_command *cmd, char **envp, t_myenv *myenv,
 		// 🔹 BUILTINS
 		minishell->executor->builtin_id = builtin_id;
 		if (!cmd->redir || builtin_id == 0 || builtin_id == 4 || builtin_id == 5
+			|| builtin_id == 1
 			|| (cmd->redir->input_file == -1 && cmd->redir->output_file == -1))
 			return (execute_builtin(minishell, cmd->args, myenv, status));
 		else
