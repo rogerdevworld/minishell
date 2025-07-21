@@ -77,8 +77,7 @@ void	main_loop(t_myenv *myenv)
 		{
 			// interrumpido con Ctrl+C en algún heredoc
 			status = 130;
-			free_ast(ast);       // libera AST parcial
-			free_tokens(tokens); // libera tokens
+			ft_destroyer(minishell);
 			free(line);
 			continue ; // vuelve al prompt sin ejecutar nada
 		}
@@ -96,12 +95,7 @@ void	main_loop(t_myenv *myenv)
 				status = execute_ast(ast, myenv->env, myenv, minishell, status);
 			update_exit_status(status, minishell);
 		}
-		
-		// Libera memoria
-		// ft_destroyer(minishell);
-			// si ya tienes una función para liberar todo
-		free_ast(ast);
-		free_tokens(tokens);
+		ft_destroyer(minishell);
 		free(line);
 		if (g_signal == SIGQUIT)
 			status = 0;
