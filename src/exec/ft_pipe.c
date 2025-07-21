@@ -11,8 +11,7 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-int	execute_pipe(t_ast *node, char **envp, t_myenv *myenv,
-		t_minishell *minishell)
+int	execute_pipe(t_ast *node, t_myenv *myenv, t_minishell *minishell)
 {
 	int		fds[2];
 	int		status;
@@ -29,7 +28,7 @@ int	execute_pipe(t_ast *node, char **envp, t_myenv *myenv,
 		set_defaul_signals();
 		close(fds[0]);
 		dup2(fds[1], STDOUT_FILENO);
-		exit(execute_ast(node->left, envp, myenv, minishell, status));
+		exit(execute_ast(node->left, myenv->env, myenv, minishell, status));
 	}
 	pid2 = fork();
 	if (pid2 == 0)
@@ -37,13 +36,12 @@ int	execute_pipe(t_ast *node, char **envp, t_myenv *myenv,
 		set_defaul_signals();
 		close(fds[1]);
 		dup2(fds[0], STDIN_FILENO);
-		exit(execute_ast(node->right, envp, myenv, minishell, status));
+		exit(execute_ast(node->right, myenv->env, myenv, minishell, status));
 	}
 	close(fds[0]);
 	close(fds[1]);
 	waitpid(pid1, &status, 0);
 	update_exit_status(status, minishell);
 	waitpid(pid2, &status, 0);
-	status = update_exit_status(status, minishell);
-	return (status);
+	return (update_exit_status(status, minishell));
 }

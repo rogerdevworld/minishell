@@ -17,8 +17,7 @@ int	execute_ast(t_ast *node, char **envp, t_myenv *myenv,
 		t_minishell *minishell, int status);
 
 // -- ft_pipe -- //
-int	execute_pipe(t_ast *node, char **envp, t_myenv *myenv,
-		t_minishell *minishell);
+int	execute_pipe(t_ast *node, t_myenv *myenv, t_minishell *minishell);
 
 // -- here doc's -- //
 int	preprocess_heredocs(t_ast *node, int status);
