@@ -13,7 +13,9 @@
 
 int	get_builtin_cmd(char *cmd)
 {
-	char *clean_cmd = remove_all_quotes(cmd);
+	char	*clean_cmd;
+
+	clean_cmd = remove_all_quotes(cmd);
 	if (ft_strncmp(clean_cmd, "cd", 2) == 0 && ft_strlen(clean_cmd) == 2)
 		return (CD);
 	if (ft_strncmp(clean_cmd, "exit", 4) == 0 && ft_strlen(clean_cmd) == 4)
@@ -31,29 +33,25 @@ int	get_builtin_cmd(char *cmd)
 	return (-1);
 }
 
-// -- design -- //
-int	execute_builtin(t_minishell *minishell, char **args, t_myenv *myenv, int s, int builtin_id)
+int	execute_builtin(t_minishell *minishell, char **args, int s, int builtin_id)
 {
 	int	status;
 
 	status = 0;
 	if (builtin_id == CD)
-		status = ft_cd(args, myenv);
+		status = ft_cd(args, minishell->myenv);
 	if (builtin_id == EXIT)
 		status = ft_exit_builtin(args);
 	if (builtin_id == ECHO)
-		status = ft_echo(minishell, args, myenv->list_env, s);
+		status = ft_echo(minishell, args, s);
 	if (builtin_id == PWD)
 		status = pwd();
 	if (builtin_id == EXPORT)
-		status = ft_export(args, myenv);
+		status = ft_export(args, minishell->myenv);
 	if (builtin_id == UNSET)
-	{
-		ft_unset(args, myenv);
-		//update_env_array(myenv);
-	}
+		ft_unset(args, minishell->myenv);
 	if (builtin_id == ENV)
-		print_env(myenv);
+		print_env(minishell->myenv);
 	if (builtin_id == CLEAR)
 		clear();
 	return (status);

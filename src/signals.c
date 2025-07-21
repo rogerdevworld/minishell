@@ -13,12 +13,6 @@
 
 int			g_signal;
 
-void	set_defaul_signals(void)
-{
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
-}
-
 int	handle_signal_exit(int status)
 {
 	int	signo;
@@ -27,10 +21,7 @@ int	handle_signal_exit(int status)
 	if (signo == SIGPIPE)
 		return (0);
 	else if (signo == SIGINT)
-	{
-		//write(1, "\n", 1);
 		return (130);
-	}
 	else if (signo == SIGQUIT)
 	{
 		write(1, "Quit (core dumped)\n", 19);
@@ -64,24 +55,6 @@ void	sigint_handler_aux(void)
 		g_signal = S_SIGINT;
 }
 
-void	heredoc_sigint_handler(int signo)
-{
-	(void)signo;
-	write(1, "\n", 1);
-	exit(EXIT_SIGINT);
-}
-
-void	signals_heredoc(void)
-{
-	struct sigaction	sa;
-
-	ft_bzero(&sa, sizeof(sa));
-	sa.sa_handler = heredoc_sigint_handler;
-	sigaction(SIGINT, &sa, NULL);
-	sa.sa_handler = SIG_IGN;
-	sigaction(SIGQUIT, &sa, NULL);
-}
-
 void	ft_sigint(int sig)
 {
 	(void)sig;
@@ -102,7 +75,6 @@ void	ft_sigint(int sig)
 	}
 	else if (g_signal == S_HEREDOC)
 	{
-
 		g_signal = S_SIGINT;
 		ft_putstr_fd("\n", 2);
 		rl_on_new_line();

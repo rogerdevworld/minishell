@@ -39,6 +39,8 @@ int	ft_output_redirections(t_redir *redir);
 int	ft_input_redirection(t_redir *redir);
 
 // -- ft_cmd normal commands + builtings -- //
-int	execute_command(t_command *cmd, char **envp, t_myenv *myenv,
-		t_minishell *minishell, int status);
+// int	execute_command(t_command *cmd, char **envp, t_myenv *myenv,
+// 		t_minishell *minishell, int status);
+int	execute_command(t_command *cmd, char **envp,
+	t_minishell *minishell, int status);
 #endif

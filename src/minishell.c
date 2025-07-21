@@ -94,7 +94,8 @@ void	main_loop(t_myenv *myenv)
 		if (preprocess_heredocs(ast, status) == -1)
 		{
 			status = 130;
-			ft_destroyer(minishell);
+			free_ast(ast);
+			free_tokens(tokens);
 			free(line);
 			continue;
 		}
@@ -111,7 +112,9 @@ void	main_loop(t_myenv *myenv)
 			else if (g_signal != S_CANCEL_EXEC)
 				status = execute_ast(ast, myenv->env, myenv, minishell, status);
 		}
-		//ft_destroyer(minishell);
+		// Libera memoria
+		free_ast(ast);
+		free_tokens(tokens);
 		free(line);
 		g_signal = S_BASE;
 	}

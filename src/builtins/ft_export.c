@@ -11,14 +11,7 @@
 /* ************************************************************************** */
 #include "../include/minishell.h"
 
-// -- ya esta funciona el env para aplciarle al unset y el export 
-// nuestra propia versiond el env y la copia hay funcion para agregar un elemento
-// voy a cear una para expandir las key a su valor algo como:
-// echo $PATH salida my_getenv("PATH") y neustra lista deberia contener adicionales 
-// export a=a seria como add a=a  en t_env con la funcion ft_env_add(key, value);
-// al final de la lista de t_env
-
-int	is_valid_identifier(const char *str)//funcion evita cosas tipo> export 1var=foo (q empieze por un numero).
+int	is_valid_identifier(const char *str)
 {
 	int	i;
 
@@ -45,127 +38,63 @@ t_env	*find_env_var(t_env *env, const char *key)
 	return (NULL);
 }
 
-int	export_add_or_update(t_env **env_list, char *arg)//la tengo que acortar
+int	export_add_or_update(t_env **env_list, char *arg)
 {
-	char	*sep;
 	char	*key;
 	char	*value;
-	t_env	*existing;
+	int		has_equal;
 
-	sep = ft_strchr(arg, '=');
-	if (!sep)
-	{
-		key = ft_strdup(arg);
-		value = NULL;
-	}
-	else
-	{
-		key = ft_substr(arg, 0, sep - arg);
-		value = remove_quotes(sep + 1);
-	}
+	if (!parse_export_arg(arg, &key, &value, &has_equal))
+		return (1);
 	if (!is_valid_identifier(key))
 	{
-		ft_putstr_fd("export: `", 2);
-		ft_putstr_fd(arg, 2);
-		ft_putstr_fd("': not a valid identifier\n", 2);
+		print_invalid_identifier_error(arg);
 		free(key);
 		free(value);
 		return (1);
 	}
-	existing = find_env_var(*env_list, key);
-	if (existing)
-	{
-		if (sep)
-		{
-			free(existing->content);
-			existing->content = value;
-		}
-		else
-			free(value);
-	}
-	else
-		ft_env_add_back(env_list, ft_env_new(key, value));
+	update_or_add_env(env_list, key, value, has_equal);
 	free(key);
 	return (0);
-}
-
-void	print_export(t_env *env)//LA FUNCION NUEVA
-{
-	t_env	**array;
-	int		i;
-
-	array = env_to_array(env);
-	if (!array)
-		return ;
-	sort_env_array(array);
-	i = 0;
-	while (array[i])
-	{
-		if (array[i]->content)
-			ft_printf("declare -x %s=\"%s\"\n",
-				array[i]->key, array[i]->content);
-		else
-			ft_printf("declare -x %s\n", array[i]->key);
-		i++;
-	}
-	free(array);
 }
 
 /**
  * para ir actualizando char **env cada vez que se ejecuta export
  */
+char	**build_env_array(t_env *list_env)
+{
+	int		count;
+	char	**env_array;
+	char	*joined;
+	int		i;
+	t_env	*tmp;
 
- char	*ft_strjoin_free_env(char *s1, char *s2)
- {
-	 char	*joined;
- 
-	 joined = ft_strjoin(s1, s2);
-	 free(s1);
-	 return (joined);
- }
-
-char **build_env_array(t_env *list_env)
- {
-	 int count = 0;
-	 t_env *tmp = list_env;
-	 char **env_array;
-	 char *joined;
- 
-	 // contar variables
-	 while (tmp)
-	 {
-		 count++;
-		 tmp = tmp->next;
-	 }
- 
-	 env_array = malloc(sizeof(char *) * (count + 1));
-	 if (!env_array)
-		 return NULL;
- 
-	 tmp = list_env;
-	 count = 0;
-	 while (tmp)
-	 {
-		 // key=value
-		 if (tmp->content)
-		 {
-			 joined = ft_strjoin(tmp->key, "=");
-			 env_array[count] = ft_strjoin_free_env(joined, tmp->content); 
-			 // ft_strjoin_free(a,b): junta y libera a
-			 count++;
-		 }
-		 tmp = tmp->next;
-	 }
-	 env_array[count] = NULL;
-	 return env_array;
- }
- 
+	count = count_env_items(list_env);
+	env_array = malloc(sizeof(char *) * (count + 1));
+	i = 0;
+	if (!env_array)
+		return (NULL);
+	tmp = list_env;
+	while (tmp)
+	{
+		if (tmp->content)
+		{
+			joined = ft_strjoin(tmp->key, "=");
+			env_array[i] = ft_strjoin_free_env(joined, tmp->content);
+			i++;
+		}
+		tmp = tmp->next;
+	}
+	env_array[i] = NULL;
+	return (env_array);
+}
 
 int	ft_export(char **args, t_myenv *myenv)
 {
 	int	i;
-	int status = 0;
+	int	status;
 
+	status = 0;
 	if (!args[1])
 	{
 		print_export(myenv->list_env);
@@ -178,6 +107,6 @@ int	ft_export(char **args, t_myenv *myenv)
 		i++;
 	}
 	free_env_array(myenv->env);
-    myenv->env = build_env_array(myenv->list_env);
-	return  (status);
+	myenv->env = build_env_array(myenv->list_env);
+	return (status);
 }

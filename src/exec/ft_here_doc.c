@@ -164,16 +164,25 @@ int    handle_fork_error(int *pipefd)
     return (-1);
 }
 
-int     handle_child_exit(int status, int *pipefd)
+int handle_child_exit(int status, int *pipefd)
 {
-    if ((WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
-		|| (WIFEXITED(status) && WEXITSTATUS(status) == 130))
-	{
-		close(pipefd[0]);
-		g_signal = S_HEREDOC;
-		return (EXIT_SIGINT);
-	}
-	return (0);
+    int code = 0;
+
+    if (WIFEXITED(status))
+    {
+        code = WEXITSTATUS(status);
+    }
+    else if (WIFSIGNALED(status))
+    {
+        code = 128 + WTERMSIG(status);
+    }
+    if (code == 130)
+    {
+        close(pipefd[0]);
+        g_signal = S_HEREDOC;
+        return (EXIT_SIGINT);
+    }
+    return code;
 }
 
 int    child_proces_heredoc(char *limiter, int *pipefd, int status)
@@ -215,7 +224,6 @@ int	process_all_heredocs(t_redir *redir, int s)
 {
 	int i;
 	int pipefd[2];
-    int status;
     pid_t   pid;
 
 	if (!redir || redir->heredoc_count <= 0 || !redir->limiter)
@@ -234,19 +242,16 @@ int	process_all_heredocs(t_redir *redir, int s)
         g_signal = S_HEREDOC;
         signal(SIGINT, SIG_IGN);
 	    signal(SIGQUIT, SIG_IGN);
-        //proceso del heredoc en el hijo
         pid = fork();
         if (pid == -1)
             return (handle_fork_error(pipefd));
         if (pid == 0)
             child_proces_heredoc(redir->limiter[i], pipefd, s);
         close(pipefd[1]);
-        waitpid(pid, &status, 0);
+        waitpid(pid, &s, 0);
 		close(pipefd[1]); 
-        //signal_init();
-        //g_signal = S_HEREDOC_END;
         g_signal = S_BASE;
-        if (handle_child_exit(status, pipefd) == EXIT_SIGINT)
+        if (handle_child_exit(s, pipefd) == EXIT_SIGINT)
             return (EXIT_SIGINT);
         redir->heredoc_fds[i] = pipefd[0];
 	}
@@ -264,19 +269,15 @@ int preprocess_heredocs(t_ast *node, int status)
     {
         if (node->cmd && node->cmd->redir && node->cmd->redir->heredoc_count > 0)
         {
-            // activa el modo heredoc
-            
             if (process_all_heredocs(node->cmd->redir, status) == 130)
             {
-                //g_signal = S_HEREDOC_END;
-                return (-1); // interrumpido
+                return (-1);
             }
         }
     }
     else if (node->type == NODE_PIPE || node->type == NODE_AND ||
              node->type == NODE_OR)
     {
-        // procesa heredocs en ambos lados
         if (preprocess_heredocs(node->left, status) == -1)
             return -1;
         if (preprocess_heredocs(node->right, status) == -1)

@@ -17,7 +17,7 @@ int	execute_ast(t_ast *node, char **envp, t_myenv *myenv,
 	if (!node)
 		return (0);
 	if (node->type == NODE_COMMAND)
-		return (execute_command(node->cmd, envp, myenv, minishell, status));
+		return (execute_command(node->cmd, envp, minishell, status));
 	else if (node->type == NODE_PIPE)
 		return (execute_pipe(node, myenv, minishell));
 	else if (node->type == NODE_AND)
