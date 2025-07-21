@@ -32,7 +32,7 @@ typedef struct s_minishell t_minishell;
 // -- internal to execve() -- //
 void built(t_command *cmd, char **envp);
 int get_builtin_cmd(char *cmd);
-int execute_builtin(t_minishell *minishell, char **args, t_myenv *myenv, int s);
+int execute_builtin(t_minishell *minishell, char **args, t_myenv *myenv, int s, int builtin_id);
 
 // -- local commands -- //
 int pwd(void);

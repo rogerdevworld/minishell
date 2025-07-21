@@ -37,7 +37,7 @@ void	main_loop(t_myenv *myenv)
 	char		*line;
 	t_token		*tokens;
 	t_ast		*ast;
-	t_executor	*exec;
+	//t_executor	*exec;
 	t_minishell	*minishell;
 	int			status;
 
@@ -90,8 +90,8 @@ void	main_loop(t_myenv *myenv)
 		else
 		{
 			//printf("%i\n", preprocess_heredocs(ast));
-			exec = init_exec(myenv);
-			minishell = init_minishell(ast, tokens, exec);
+			//exec = init_exec(myenv);
+			minishell = init_minishell(ast, tokens, myenv);
 			if (g_signal != S_CANCEL_EXEC)
 				status = execute_ast(ast, myenv->env, myenv, minishell, status);
 			update_exit_status(status, minishell);

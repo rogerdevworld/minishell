@@ -21,7 +21,7 @@ extern int g_signal;
 #include "syntax.h"
 #include "builtins.h"
 #include "design.h"
-#include "executor.h"
+#include "exec.h"
 #include "redirections.h"
 #include "signals.h"
 #include "utils.h"
@@ -70,10 +70,8 @@ extern int g_signal;
 typedef struct s_minishell
 {
 	t_token *tokens;
-	t_command *cmd;
-	t_myenv *env;
-	t_executor *executor;
 	t_ast *ast;
+	t_myenv *myenv;
 	int exit;
 } t_minishell;
 
@@ -82,7 +80,7 @@ typedef struct s_minishell
 
 // t_minishell	*init_minishell(char *line, char **envp);
 
-t_minishell *init_minishell(t_ast *ast, t_token *tokens, t_executor *exec);
+t_minishell *init_minishell(t_ast *ast, t_token *tokens, t_myenv *myenv);
 
 // -- main loop -- //
 void main_loop(t_myenv *myenv);

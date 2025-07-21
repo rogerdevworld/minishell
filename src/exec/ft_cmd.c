@@ -72,12 +72,12 @@ int	execute_command(t_command *cmd, char **envp, t_myenv *myenv,
 	}
 	else
 	{
-		// 🔹 BUILTINS
-		minishell->executor->builtin_id = builtin_id;
+		// // 🔹 BUILTINS
+		// minishell->executor->builtin_id = builtin_id;
 		if (!cmd->redir || builtin_id == 0 || builtin_id == 4 || builtin_id == 5
 			|| builtin_id == 1 || (cmd->redir->input_file == -1
 				&& cmd->redir->output_file == -1))
-			return (execute_builtin(minishell, cmd->args, myenv, status));
+			return (execute_builtin(minishell, cmd->args, myenv, status, builtin_id));
 		else
 		{
 			// necesita fork por redirecciones
@@ -104,7 +104,7 @@ int	execute_command(t_command *cmd, char **envp, t_myenv *myenv,
 					dup2(cmd->redir->input_file, STDIN_FILENO);
 				if (cmd->redir->output_file != -1)
 					dup2(cmd->redir->output_file, STDOUT_FILENO);
-				exit(execute_builtin(minishell, cmd->args, myenv, status));
+				exit(execute_builtin(minishell, cmd->args, myenv, status, builtin_id));
 			}
 			waitpid(pid, &status, 0);
 			status = update_exit_status(status, minishell);

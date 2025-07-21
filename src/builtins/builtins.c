@@ -52,29 +52,29 @@ int	get_builtin_cmd(char *cmd)
 }
 
 // -- design -- //
-int	execute_builtin(t_minishell *minishell, char **args, t_myenv *myenv, int s)
+int	execute_builtin(t_minishell *minishell, char **args, t_myenv *myenv, int s, int builtin_id)
 {
 	int	status;
 
 	status = 0;
-	if (minishell->executor->builtin_id == CD)
+	if (builtin_id == CD)
 		status = ft_cd(args, myenv);
-	if (minishell->executor->builtin_id == EXIT)
+	if (builtin_id == EXIT)
 		status = ft_exit_builtin(args);
-	if (minishell->executor->builtin_id == ECHO)
+	if (builtin_id == ECHO)
 		status = ft_echo(minishell, args, myenv->list_env, s);
-	if (minishell->executor->builtin_id == PWD)
+	if (builtin_id == PWD)
 		status = pwd();
-	if (minishell->executor->builtin_id == EXPORT)
+	if (builtin_id == EXPORT)
 		status = ft_export(args, myenv);
-	if (minishell->executor->builtin_id == UNSET)
+	if (builtin_id == UNSET)
 	{
 		ft_unset(args, myenv);
 		update_env_array(myenv);
 	}
-	if (minishell->executor->builtin_id == ENV)
+	if (builtin_id == ENV)
 		print_env(myenv);
-	if (minishell->executor->builtin_id == CLEAR)
+	if (builtin_id == CLEAR)
 		clear();
 	// ft_printf("buitings status: %i", status);
 	return (status);
