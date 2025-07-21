@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 #include "../include/minishell.h"
 
-static int verify_sigint(status)
+static int	verify_sigint(status)
 {
 	if (g_signal == S_SIGINT)
 	{
@@ -20,7 +20,6 @@ static int verify_sigint(status)
 	}
 	return (status);
 }
-
 int is_heredoc_only(t_ast *ast)
 {
     // Verifica que exista y sea un comando
@@ -43,24 +42,24 @@ int is_heredoc_only(t_ast *ast)
 }
 
 /**
- * estado actual heredocs: recibe el limiter con comillas, 
+ * estado actual heredocs: recibe el limiter con comillas,
  * lo cual es necesario para hacer la validacion de si es expandible o no
- * 
+ *
  */
 /**
- * nueva version de main_loop	
+ * nueva version de main_loop
  */
 // line = readline(ft_agnoster(envp, status));
 // line = readline(ft_agnoster(envp, status));
 // line = readline(ft_strjoin("mini > ", ft_itoa(status)));
-void main_loop(t_myenv *myenv)
+void	main_loop(t_myenv *myenv)
 {
-	char        *line;
-	t_token     *tokens;
-	t_ast       *ast;
-	t_executor  *exec;
-	t_minishell *minishell;
-	int         status;
+	char		*line;
+	t_token		*tokens;
+	t_ast		*ast;
+	t_executor	*exec;
+	t_minishell	*minishell;
+	int			status;
 
 	status = 0;
 	while (1)
@@ -68,10 +67,11 @@ void main_loop(t_myenv *myenv)
 		line = readline("mini > ");
 		status = verify_sigint(status);
 		if (!line)
-			break;
+			break ;
 		if (*line)
 			add_history(line);
 		tokens = lexer(line);
+		// print_tokens(tokens);
 		if (check_multiple_expansions_at_start(tokens, myenv->list_env))
 		{
 			status = 1;
@@ -86,9 +86,11 @@ void main_loop(t_myenv *myenv)
 			status = 2;
 			free(line);
 			free_tokens(tokens);
-			continue;
+			continue ;
 		}
 		ast = parse_expression(&tokens, myenv->env);
+		// /print_ast(ast, 0);
+		// Procesamos los heredocs una sola vez, ya con el AST listo
 		if (preprocess_heredocs(ast, status) == -1)
 		{
 			status = 130;
@@ -119,7 +121,6 @@ void main_loop(t_myenv *myenv)
 	}
 }
 
-
 // void main_loop(t_myenv *myenv)
 // {
 // 	char *line;
@@ -137,14 +138,14 @@ void main_loop(t_myenv *myenv)
 // 		//line = readline(ft_desing(myenv->env, status));
 // 		status = verify_sigint(status);
 // 		if (!line)
-// 			break;
+// 			break ;
 // 		if (*line)
 // 			add_history(line);
 // 		tokens = lexer(line);
 // 		if (check_multiple_expansions_at_start(tokens, myenv->list_env))
 // 		{
 // 			status = 1;
-// 			continue;
+// 			continue ;
 // 		}
 // 		expand_before_executor(&tokens, myenv->list_env, status);
 // 		shift_empty_tokens(&tokens);
@@ -171,13 +172,13 @@ void main_loop(t_myenv *myenv)
 // 	g_signal = S_BASE;
 // }
 
-int main(int argc, char **argv, char **env)
+int	main(int argc, char **argv, char **env)
 {
 	t_myenv *myenv;
 
 	(void)argc;
 	(void)argv;
-    
+
 	myenv = ft_myenv(env);
 	signal_init();
 	main_loop(myenv);

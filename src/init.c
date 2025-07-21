@@ -13,7 +13,7 @@
 
 t_minishell	*init_minishell(t_ast *ast, t_token *tokens, t_executor *exec)
 {
-	t_minishell *minishell;
+	t_minishell		*minishell;
 
 	minishell = malloc(sizeof(t_minishell));
 	if (!minishell)

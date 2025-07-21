@@ -27,11 +27,11 @@ char	*copy_plain_text_ini(char *arg, int *i)
 	int	start;
 
 	start = *i;
-	while (arg[*i] && arg[*i] != '$' && arg[*i] != '\'' && arg[*i] != '"' && arg[*i] != '\\')
+	while (arg[*i] && arg[*i] != '$' && arg[*i] != '\'' && arg[*i] != '"'
+		&& arg[*i] != '\\')
 		(*i)++;
 	return (ft_substr(arg, start, *i - start));
 }
-
 
 char	*expand_variable_ini(const char *arg, int *i, t_env *env, int s)
 {
@@ -39,9 +39,9 @@ char	*expand_variable_ini(const char *arg, int *i, t_env *env, int s)
 	char	*var_name;
 	char	*value;
 
-	// ft_printf("\n al entrar es: %i\n", s);
 	(*i)++;
-	if (!arg[*i] || (!ft_isalpha(arg[*i]) && arg[*i] != '_' && arg[*i] != '?' && arg[*i] != '{'))
+	if (!arg[*i] || (!ft_isalpha(arg[*i]) && arg[*i] != '_' && arg[*i] != '?'
+			&& arg[*i] != '{'))
 		return (ft_strdup("$"));
 	if (arg[*i] == '?')
 	{
@@ -88,10 +88,10 @@ char	*copy_double_quoted_text_ini(const char *arg, int *i, t_env *env, int s)
 	int		start;
 
 	result = ft_calloc(1, sizeof(char));
-	(*i)++; // skip initial "
+	(*i)++;
 	while (arg[*i] && arg[*i] != '"')
 	{
-		if (arg[*i] == '\\') // escaped $
+		if (arg[*i] == '\\')
 		{
 			if (arg[*i + 1] == '\\' || arg[*i + 1] == '"' || arg[*i + 1] == '$')
 			{
@@ -109,7 +109,8 @@ char	*copy_double_quoted_text_ini(const char *arg, int *i, t_env *env, int s)
 		else
 		{
 			start = *i;
-			while (arg[*i] && arg[*i] != '$' && arg[*i] != '"' && arg[*i] != '\\')
+			while (arg[*i] && arg[*i] != '$' && arg[*i] != '"'
+				&& arg[*i] != '\\')
 				(*i)++;
 			part = ft_substr(arg, start, *i - start);
 		}
@@ -118,14 +119,14 @@ char	*copy_double_quoted_text_ini(const char *arg, int *i, t_env *env, int s)
 		result = ft_strjoin_free(result, part);
 	}
 	if (arg[*i] == '"')
-		(*i)++; // skip closing "
+		(*i)++;
 	return (result);
 }
 
 char	*copy_single_quoted_text_ini(const char *arg, int *i)
 {
 	char	*text;
-	int	start;
+	int		start;
 
 	start = ++(*i);
 	while (arg[*i] && arg[*i] != '\'')
@@ -140,21 +141,20 @@ char	*ft_expand_arg_ini(char *arg, t_env *env, int s)
 {
 	char	*result;
 	char	*part;
-	int	i;
+	int		i;
 
-	// ft_printf("\n el arg que entra es \n%s", arg);
 	part = NULL;
 	result = ft_calloc(1, sizeof(char));
 	i = 0;
 	if (!result)
 		return (NULL);
-	while(arg[i])
+	while (arg[i])
 	{
 		if (arg[i] == '\'')
-			part = copy_single_quoted_text_ini(arg, &i);//TD--Done
+			part = copy_single_quoted_text_ini(arg, &i);
 		else if (arg[i] == '"')
 		{
-			part = copy_double_quoted_text_ini(arg, &i, env, s);//TD--Done
+			part = copy_double_quoted_text_ini(arg, &i, env, s);
 		}
 		else if (arg[i] == '\\' && arg[i + 1] == '$')
 		{
@@ -162,10 +162,10 @@ char	*ft_expand_arg_ini(char *arg, t_env *env, int s)
 			i += 2;
 		}
 		else if (arg[i] == '$')
-		 	part = expand_variable_ini(arg, &i, env, s);//TD--Done
+			part = expand_variable_ini(arg, &i, env, s);
 		else
 		{
-			part = copy_plain_text_ini(arg, &i);//TD--Done
+			part = copy_plain_text_ini(arg, &i);
 		}
 		if (!part)
 			return (free(result), NULL);
@@ -175,95 +175,57 @@ char	*ft_expand_arg_ini(char *arg, t_env *env, int s)
 }
 void	expand_before_executor(t_token **tokens, t_env *env, int status)
 {
-    t_token *cur = *tokens;
-    char *expanded;
+	t_token	*cur;
+	char	*expanded;
 
-    while (cur)
-    {
-        // Si el token es una variable a expandir
-        if (cur->type == TOKEN_WORD && check_expansion(cur->value))
-        {
-            expanded = ft_expand_arg_ini(cur->value, env, status);
-            if (expanded)
-            {
-                free(cur->value);
-                cur->value = expanded;
-            }
-            else
-            {
-                // Si la expansión devuelve NULL, reemplaza por cadena vacía
-                free(cur->value);
-                cur->value = ft_strdup("");
-            }
-        }
-        cur = cur->next;
-    }
+	cur = *tokens;
+	while (cur)
+	{
+		if (cur->type == TOKEN_WORD && check_expansion(cur->value))
+		{
+			expanded = ft_expand_arg_ini(cur->value, env, status);
+			if (expanded)
+			{
+				free(cur->value);
+				cur->value = expanded;
+			}
+			else
+			{
+				free(cur->value);
+				cur->value = ft_strdup("");
+			}
+		}
+		cur = cur->next;
+	}
 }
-
-// int	check_multiple_expansions_at_start(t_token *tokens)
-// {
-// 	int count;
-// 	t_token *cur;
-
-// 	count  = 0;
-// 	cur  = tokens;
-// 	while (cur && cur->type != TOKEN_PIPE) // solo tokens del primer comando antes del pipe
-// 	{
-// 		if (check_expansion(cur->value))
-// 			count++;
-// 		else
-// 			break;
-// 		cur = cur->next;
-// 	}
-// 	if (count > 1)
-// 	{
-// 		ft_printf("bash: too many arguments\n");
-// 		return (1); // error
-// 	}
-// 	return (0); // ok
-// }
 
 int	check_multiple_expansions_at_start(t_token *tokens, t_env *env)
 {
-	t_token *cur = tokens;
-	int non_empty_expansions = 0;
+	t_token *cur;
+	int non_empty_expansions;
+	char *expanded;
 
-	while (cur && cur->type != TOKEN_PIPE) // solo analizamos primer comando
+	cur = tokens;
+	non_empty_expansions = 0;
+	while (cur && cur->type != TOKEN_PIPE)
 	{
 		if (check_expansion(cur->value))
 		{
-			// Expandir para ver si está vacía
-			char *expanded = ft_expand_arg_ini(cur->value, env, 0);
+			expanded = ft_expand_arg_ini(cur->value, env, 0);
 			if (expanded && expanded[0] != '\0')
 			{
 				non_empty_expansions++;
 			}
 			free(expanded);
-
 			if (non_empty_expansions > 1)
 			{
 				ft_printf("bash: too many arguments\n");
 				return (1);
 			}
-			// si está vacía simplemente seguimos
 		}
 		else
-		{
-			// primer token no expansión → no hay problema, cortamos chequeo
-			break;
-		}
+			break ;
 		cur = cur->next;
 	}
 	return (0);
 }
-
-// void	validate_multiple_expansions(t_token *tokens, int status, char *line)
-// {
-// 	if (check_multiple_expansions_at_start(tokens))
-// 	{
-// 		status = 1;
-// 		free(line);
-// 		//free_tokens(tokens);
-// 		// continue;
-// 	}
-// }

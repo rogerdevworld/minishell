@@ -17,7 +17,7 @@ int	msg(char *error, char *arg)
 		ft_putstr_fd(error, 2);
 	if (arg)
 	{
-		ft_putstr_fd("cd: ", 2);
+		//ft_putstr_fd("cd: ", 2);
 		ft_putstr_fd(arg, 2);
 		ft_putstr_fd(": ", 2);
 		ft_putstr_fd(error, 2);
@@ -32,7 +32,7 @@ int	ft_cd(char **path, t_myenv *env)
 	char	*target_dir;
 
 	target_dir = NULL;
-	if (path[2])
+	if (path[1] && path[2])
 		return (msg(" too many arguments", NULL));
 	if (!path[1])
 	{

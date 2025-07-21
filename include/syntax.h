@@ -43,7 +43,9 @@ typedef struct s_word
 typedef struct s_redir
 {
 	int						input_file;
+	int						input_ord;
 	int						output_file;
+	int						output_ord;
 	char					**limiter;
 	int						heredoc_count;
 	int						*heredoc_fds;
@@ -103,6 +105,6 @@ void						reset_redir(t_redir *redir);
 // -- cheker open quotes -- //
 int							check_unclosed_quotes(char *line);
 void						resolve_command_path(t_command *cmd, char **env);
-
+void shift_empty_tokens(t_token **head);
 
 #endif
