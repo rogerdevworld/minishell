@@ -9,7 +9,7 @@
 /*   Updated: 2025/07/15 14:12:35 by rmarrero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../include/minishell.h"
+#include "../../../include/minishell.h"
 
 void	ft_sort_export(t_env *env)
 {

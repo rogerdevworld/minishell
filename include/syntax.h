@@ -105,6 +105,6 @@ void						reset_redir(t_redir *redir);
 // -- cheker open quotes -- //
 int							check_unclosed_quotes(char *line);
 void						resolve_command_path(t_command *cmd, char **env);
-void shift_empty_tokens(t_token **head);
+void						shift_empty_tokens(t_token **head);
 
 #endif

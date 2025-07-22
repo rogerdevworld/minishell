@@ -64,7 +64,7 @@ void	main_loop(t_myenv *myenv)
 	status = 0;
 	while (1)
 	{
-		line = readline("mini > ");
+		line = readline(ft_desing(myenv->env, status));
 		status = verify_sigint(status);
 		if (!line)
 			break ;

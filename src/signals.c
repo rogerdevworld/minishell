@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 #include "../include/minishell.h"
 
-int			g_signal;
+int		g_signal;
 
 int	handle_signal_exit(int status)
 {
