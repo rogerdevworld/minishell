@@ -20,51 +20,32 @@ static int	verify_sigint(status)
 	}
 	return (status);
 }
-int is_heredoc_only(t_ast *ast)
+int	is_heredoc_only(t_ast *ast)
 {
-    // Verifica que exista y sea un comando
-    if (!ast || ast->type != NODE_COMMAND)
-        return 0;
-
-    // Verifica que la estructura cmd exista
-    if (!ast->cmd)
-        return 0;
-
-    // Si hay argumentos (args[0] no es NULL), entonces no es solo heredoc
-    if (ast->cmd->args && ast->cmd->args[0])
-        return 0;
-
-    // Si tiene redirecciones y al menos un heredoc
-    if (ast->cmd->redir && ast->cmd->redir->heredoc_count > 0)
-        return 1;
-
-    return 0;
+	if (!ast || ast->type != NODE_COMMAND)
+		return (0);
+	if (!ast->cmd)
+		return (0);
+	if (ast->cmd->args && ast->cmd->args[0])
+		return (0);
+	if (ast->cmd->redir && ast->cmd->redir->heredoc_count > 0)
+		return (1);
+	return (0);
 }
 
-/**
- * estado actual heredocs: recibe el limiter con comillas,
- * lo cual es necesario para hacer la validacion de si es expandible o no
- *
- */
-/**
- * nueva version de main_loop
- */
-// line = readline(ft_agnoster(envp, status));
-// line = readline(ft_agnoster(envp, status));
-// line = readline(ft_strjoin("mini > ", ft_itoa(status)));
 void	main_loop(t_myenv *myenv)
 {
 	char		*line;
 	t_token		*tokens;
 	t_ast		*ast;
-	//t_executor	*exec;
 	t_minishell	*minishell;
 	int			status;
 
 	status = 0;
 	while (1)
 	{
-		line = readline(ft_desing(myenv->env, status));
+		line = readline(path_terminal());
+		// line = readline(ft_desing(myenv->env, status));
 		status = verify_sigint(status);
 		if (!line)
 			break ;
@@ -77,7 +58,7 @@ void	main_loop(t_myenv *myenv)
 			status = 1;
 			free(line);
 			free_tokens(tokens);
-			continue;
+			continue ;
 		}
 		expand_before_executor(&tokens, myenv->list_env, status);
 		shift_empty_tokens(&tokens);
@@ -96,13 +77,13 @@ void	main_loop(t_myenv *myenv)
 			free_ast(ast);
 			free_tokens(tokens);
 			free(line);
-			continue;
+			continue ;
 		}
 		else if (ft_strcmp(line, "./minishell") == 0)
-        {
-            ft_shlvl(myenv);
-            clear_history();
-        }
+		{
+			ft_shlvl(myenv);
+			clear_history();
+		}
 		else
 		{
 			minishell = init_minishell(ast, tokens, myenv);
@@ -118,57 +99,6 @@ void	main_loop(t_myenv *myenv)
 		g_signal = S_BASE;
 	}
 }
-
-// void main_loop(t_myenv *myenv)
-// {
-// 	char *line;
-// 	t_token *tokens;
-// 	t_ast *ast;
-// 	t_executor *exec;
-// 	t_minishell *minishell;
-// 	int status;
-
-// 	status = 0;
-// 	tokens = NULL;
-// 	while (1)
-// 	{
-// 		line = readline("mini > ");
-// 		//line = readline(ft_desing(myenv->env, status));
-// 		status = verify_sigint(status);
-// 		if (!line)
-// 			break ;
-// 		if (*line)
-// 			add_history(line);
-// 		tokens = lexer(line);
-// 		if (check_multiple_expansions_at_start(tokens, myenv->list_env))
-// 		{
-// 			status = 1;
-// 			continue ;
-// 		}
-// 		expand_before_executor(&tokens, myenv->list_env, status);
-// 		shift_empty_tokens(&tokens);
-// 		if (validate_syntax(tokens) || check_unclosed_quotes(line))
-// 			status = 2;
-// 		else if (ft_strcmp(line, "./minishell") == 0)
-//         {
-//             ft_shlvl(myenv);
-//             clear_history();
-//         }
-//         else
-//         {
-// 			//print_tokens(tokens);
-// 			ast = parse_expression(&tokens, myenv->env);
-// 			//print_ast(ast, 0);
-// 			exec = init_exec(myenv);
-// 			minishell = init_minishell(ast, tokens, exec);
-// 			if (g_signal != S_CANCEL_EXEC)
-// 				status = execute_ast(ast, myenv->env, myenv, minishell, status);
-// 		}
-// 		//ft_destroyer(minishell);
-// 		free(line);
-// 	}
-// 	g_signal = S_BASE;
-// }
 
 int	main(int argc, char **argv, char **env)
 {

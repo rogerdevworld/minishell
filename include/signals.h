@@ -14,14 +14,14 @@
 
 typedef enum e_signal
 {
-	S_BASE,           // señal Base
-	S_HEREDOC,        // entra en el heredoc
-	S_HEREDOC_END,    // finalización del heredoc
-	S_SIGINT,         // Ctrl + C
-	S_SIGINT_CMD,     // Ctrl + C en medio de una comando
-	S_SIGINT_HEREDOC, // Ctrl + C en medio de heredoc
-	S_CMD,            // se ejecuta un comando
-	S_CANCEL_EXEC,    // Ctrl + D en heredoc
+	S_BASE,
+	S_HEREDOC,
+	S_HEREDOC_END,
+	S_SIGINT,
+	S_SIGINT_CMD,
+	S_SIGINT_HEREDOC,
+	S_CMD,
+	S_CANCEL_EXEC,
 	S_SIZE
 }		t_signal;
 

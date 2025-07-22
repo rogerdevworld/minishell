@@ -39,4 +39,5 @@ int	ft_input_redirection(t_redir *redir);
 // int	execute_command(t_command *cmd, char **envp, t_myenv *myenv,
 // 		t_minishell *minishell, int status);
 int	execute_command(t_command *cmd, t_minishell *minishell, int status);
+
 #endif
