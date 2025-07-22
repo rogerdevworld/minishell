@@ -9,7 +9,7 @@
 /*   Updated: 2025/07/15 14:10:46 by rmarrero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../include/minishell.h"
+#include "../../../include/minishell.h"
 
 t_env	*ft_env_new(char *key, char *content)
 {

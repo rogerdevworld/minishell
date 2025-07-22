@@ -13,7 +13,7 @@
 
 /*
  * check_invalid_tokens:
- * Recorre la lista de tokens y detecta si existe algún token 
+ * Recorre la lista de tokens y detecta si existe algún token
  * marcado como inválido.
  * Si encuentra uno, imprime un mensaje de error con el token y devuelve 1.
  * Si no hay tokens inválidos, devuelve 0.
@@ -58,11 +58,8 @@ int	check_operator_positions(t_token *tokens)
 		{
 			if (tokens->type == TOKEN_PIPE || tokens->type == TOKEN_AND
 				|| tokens->type == TOKEN_OR)
-			{
-				ft_printf("Syntax error: unexpected token '%s' after '%s'\n",
-					tokens->value, prev->value);
-				return (2);
-			}
+				return (ft_printf("Syntax error: unexpected token '%s' after '%s'\n",
+						tokens->value, prev->value), 2);
 		}
 		prev = tokens;
 		tokens = tokens->next;
@@ -105,7 +102,7 @@ int	check_redirection_args(t_token *tokens)
  * check_parentheses_balance:
  * Recorre la lista de tokens contando paréntesis abiertos y cerrados.
  * Detecta paréntesis cerrados sin su correspondiente abierto y viceversa.
- * Imprime error y devuelve 1 si hay desbalance; devuelve 0 si 
+ * Imprime error y devuelve 1 si hay desbalance; devuelve 0 si
  * están balanceados.
  */
 int	check_parentheses_balance(t_token *tokens)

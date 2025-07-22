@@ -18,7 +18,7 @@ t_token	*init_lexer(char *value)
 	token = malloc(sizeof(t_token));
 	if (!token)
 		return (NULL);
-	token->value = value;
+	token->value = ft_strdup(value);
 	token->next = NULL;
 	if (!value)
 		token->type = TOKEN_INVALID;

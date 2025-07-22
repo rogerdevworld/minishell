@@ -1,4 +1,53 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   print_commands.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/22 05:20:50 by rmarrero          #+#    #+#             */
+/*   Updated: 2025/07/22 05:20:54 by rmarrero         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 #include "../../include/minishell.h"
+
+static void	print_args(char **args)
+{
+	int	i;
+
+	if (!args || !args[0])
+	{
+		printf("           args: (null)\n");
+		return ;
+	}
+	printf("           args:");
+	i = 0;
+	while (args[i] != NULL)
+	{
+		printf(" \"%s\"", args[i]);
+		i++;
+	}
+	printf("\n");
+}
+
+static void	print_files(char **files, const char *label)
+{
+	int	i;
+
+	if (!files)
+	{
+		printf("           %s: (null)\n", label);
+		return ;
+	}
+	printf("           %s:", label);
+	i = 0;
+	while (files[i] != NULL)
+	{
+		printf(" \"%s\"", files[i]);
+		i++;
+	}
+	printf("\n");
+}
 
 void	print_command(t_command *cmd)
 {
@@ -8,54 +57,19 @@ void	print_command(t_command *cmd)
 		return ;
 	}
 	printf("         Command:\n");
-	// Imprimir args
-	if (cmd->args[0])
-	{
-		printf("           args: ");
-		for (int i = 0; cmd->args[i]; i++)
-			printf(" \"%s\"", cmd->args[i]);
-		printf("\n");
-	}
+	print_args(cmd->args);
+	if (cmd->path)
+		printf("           path: %s\n", cmd->path);
 	else
-		printf("           args: (null)\n");
-	// Imprimir path
-	printf("           path: %s\n", cmd->path ? cmd->path : " (null)");
-	// Imprimir file descriptors
+		printf("           path:  (null)\n");
 	printf("           input_file fd: %d\n", cmd->redir->input_file);
 	printf("           input_file ord: %d\n", cmd->redir->input_ord);
 	printf("           output_file fd: %d\n", cmd->redir->output_file);
 	printf("           output_file ord: %d\n", cmd->redir->output_ord);
-	// name redir
 	printf("         Infile:\n");
-	if (cmd->redir->in_file)
-	{
-		printf("           Infile                               :");
-		for (int i = 0; cmd->redir->in_file[i] != NULL; i++)
-			printf(" \"%s\"", cmd->redir->in_file[i]);
-		printf("\n");
-	}
-	else
-		printf("           Infile: (null)\n");
-	// name redir
+	print_files(cmd->redir->in_file, "Infile");
 	printf("         Outfile:\n");
-	if (cmd->redir->out_file)
-	{
-		printf("           Outfile:");
-		for (int i = 0; cmd->redir->out_file[i] != NULL; i++)
-			printf(" \"%s\"", cmd->redir->out_file[i]);
-		printf("\n");
-	}
-	else
-		printf("           Outfile: (null)\n");
-	// Imprimir limiter si existe
+	print_files(cmd->redir->out_file, "Outfile");
 	printf("         Limiter:\n");
-	if (cmd->redir->limiter)
-	{
-		printf("           args:");
-		for (int i = 0; cmd->redir->limiter[i] != NULL; i++)
-			printf(" \"%s\"", cmd->redir->limiter[i]);
-		printf("\n");
-	}
-	else
-		printf("           Limiter: (null)\n");
+	print_files(cmd->redir->limiter, "Limiter");
 }

@@ -11,13 +11,13 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-int	execute_or(t_ast *node, char **envp, t_myenv *myenv, t_minishell *minishell)
+int	execute_or(t_ast *node, t_myenv *myenv, t_minishell *minishell)
 {
 	int	status;
 
 	status = 0;
-	status = execute_ast(node->left, envp, myenv, minishell, status);
+	status = execute_ast(node->left, myenv, minishell, status);
 	if (status != 0)
-		status = execute_ast(node->right, envp, myenv, minishell, status);
+		status = execute_ast(node->right, myenv, minishell, status);
 	return (status);
 }

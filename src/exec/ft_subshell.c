@@ -11,8 +11,7 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-int	execute_subshell(t_ast *node, char **envp, t_myenv *myenv,
-		t_minishell *minishell)
+int	execute_subshell(t_ast *node, t_myenv *myenv, t_minishell *minishell)
 {
 	pid_t	pid;
 	int		status;
@@ -23,7 +22,7 @@ int	execute_subshell(t_ast *node, char **envp, t_myenv *myenv,
 	if (pid == 0)
 	{
 		set_defaul_signals();
-		exit(execute_ast(node->left, envp, myenv, minishell, status));
+		exit(execute_ast(node->left, myenv, minishell, status));
 	}
 	waitpid(pid, &status, 0);
 	status = update_exit_status(status, minishell);

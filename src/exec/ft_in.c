@@ -23,7 +23,7 @@ int	ft_input_redirection(t_redir *redir)
 	i = 0;
 	while (files[i])
 	{
-		fd =  ft_open(files[i], 0);
+		fd = ft_open(files[i], 0);
 		if (fd == -1)
 		{
 			perror(files[i]);

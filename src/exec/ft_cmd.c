@@ -34,45 +34,77 @@ void	ft_redirect(t_command *cmd)
 		dup2(cmd->redir->output_file, STDOUT_FILENO);
 }
 
-int has_internal_whitespace(const char *str)
-	{
-		int i = 0;
-		if (!str)
-			return 0;
-		while (str[i])
-		{
-			if (ft_isspace((unsigned char)str[i]))
-				return 1;
-			i++;
-		}
-		return 0;
-	}
-
-
-int	execute_command(t_command *cmd, char **envp,
-		t_minishell *minishell, int status)
+int	has_internal_whitespace(const char *str)
 {
-	int		builtin_id;
-	pid_t	pid;
-	char	**clean_args;
+	int	i;
 
-	builtin_id = -1;
+	i = 0;
+	if (!str)
+		return (0);
+	while (str[i])
+	{
+		if (ft_isspace((unsigned char)str[i]))
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+int	validate_and_get_builtin(t_command *cmd)
+{
 	if (has_internal_whitespace(cmd->args[0]))
 	{
 		ft_putstr_fd(cmd->args[0], 2);
 		ft_putstr_fd(": command not found\n", 2);
-		status = 127;
-		return (status);
+		return (-2);
 	}
 	if (cmd && cmd->args && cmd->args[0])
 	{
 		ft_wildcards(&(cmd->args));
-		builtin_id = get_builtin_cmd(cmd->args[0]);
+		return (get_builtin_cmd(cmd->args[0]));
 	}
-	if (builtin_id == -1)
+	return (-1);
+}
+
+int	execute_external_command(t_command *cmd, t_minishell *minishell)
+{
+	pid_t	pid;
+	int		status;
+	char	**clean_args;
+
+	clean_args = remove_quotes_from_args(cmd->args);
+	cmd->args = clean_args;
+	g_signal = S_CMD;
+	pid = fork();
+	if (pid == 0)
 	{
-		clean_args = remove_quotes_from_args(cmd->args);
-		cmd->args = clean_args;
+		set_defaul_signals();
+		if (cmd->redir)
+			ft_redirect(cmd);
+		resolve_command_path(cmd, minishell->myenv->env);
+		execve(cmd->path, cmd->args, minishell->myenv->env);
+		if (cmd->redir && cmd->redir->output_file != 0)
+			exit(0);
+		msg("command not found", cmd->args[0]);
+		exit(1);
+	}
+	waitpid(pid, &status, 0);
+	return (update_exit_status(status, minishell));
+}
+
+int	execute_internal_command(t_minishell *minishell, t_command *cmd, int status,
+		int builtin_id)
+{
+	pid_t	pid;
+
+	if (!cmd->redir || builtin_id == 0 || builtin_id == 4 || builtin_id == 5
+		|| builtin_id == 1 || (cmd->redir->input_file == -1
+			&& cmd->redir->output_file == -1))
+	{
+		return (execute_builtin(minishell, cmd->args, status, builtin_id));
+	}
+	else
+	{
 		g_signal = S_CMD;
 		pid = fork();
 		if (pid == 0)
@@ -80,37 +112,22 @@ int	execute_command(t_command *cmd, char **envp,
 			set_defaul_signals();
 			if (cmd->redir)
 				ft_redirect(cmd);
-			resolve_command_path(cmd, envp);
-			execve(cmd->path, cmd->args, envp);
-			if (cmd->redir->output_file != 0)
-				exit(0);
-			msg("command not found", cmd->args[0]);
-			exit(1);
+			exit(execute_builtin(minishell, cmd->args, status, builtin_id));
 		}
 		waitpid(pid, &status, 0);
-		status = update_exit_status(status, minishell);
-		return (status);
+		return (update_exit_status(status, minishell));
 	}
+}
+
+int	execute_command(t_command *cmd, t_minishell *minishell, int status)
+{
+	int	builtin_id;
+
+	builtin_id = validate_and_get_builtin(cmd);
+	if (builtin_id == -2)
+		return (127);
+	if (builtin_id == -1)
+		return (execute_external_command(cmd, minishell));
 	else
-	{
-		if (!cmd->redir || builtin_id == 0 || builtin_id == 4 || builtin_id == 5
-			|| builtin_id == 1 || (cmd->redir->input_file == -1
-				&& cmd->redir->output_file == -1))
-			return (execute_builtin(minishell, cmd->args, status, builtin_id));
-		else
-		{
-			g_signal = S_CMD;
-			pid = fork();
-			if (pid == 0)
-			{
-				set_defaul_signals();
-				if (cmd->redir)
-					ft_redirect(cmd);
-				exit(execute_builtin(minishell, cmd->args, status, builtin_id));
-			}
-			waitpid(pid, &status, 0);
-			status = update_exit_status(status, minishell);
-			return (status);
-		}
-	}
+		return (execute_internal_command(minishell, cmd, status, builtin_id));
 }
