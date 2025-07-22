@@ -9,7 +9,7 @@
 /*   Updated: 2025/04/22 12:45:57 by xviladri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../../include/minishell.h"
+#include "../../../include/minishell.h"
 
 int	ft_open(char *file, int mode)
 {

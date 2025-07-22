@@ -9,27 +9,23 @@
 /*   Updated: 2025/07/21 02:40:00 by rmarrero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../../include/minishell.h"
+#include "../../../include/minishell.h"
 
-char	**add_to_array(char **array, char *value)
+/**
+ * to clean the files
+ */
+static char	**create_new_array(char **array, char *clean_value, int len)
 {
-	int		len;
 	char	**new_array;
 	int		i;
-	char	*clean_value;
 
-	if (!value)
-		return (array);
-	clean_value = remove_all_quotes(value);
-	if (!clean_value)
-		return (array);
-	len = 0;
-	while (array && array[len])
-		len++;
+	i = 0;
 	new_array = malloc(sizeof(char *) * (len + 2));
 	if (!new_array)
-		return (free(clean_value), NULL);
-	i = 0;
+	{
+		free(clean_value);
+		return (NULL);
+	}
 	while (i < len)
 	{
 		new_array[i] = array[i];
@@ -42,6 +38,25 @@ char	**add_to_array(char **array, char *value)
 	return (new_array);
 }
 
+char	**add_to_array(char **array, char *value)
+{
+	int		len;
+	char	*clean_value;
+
+	len = 0;
+	if (!value)
+		return (array);
+	clean_value = remove_all_quotes(value);
+	if (!clean_value)
+		return (array);
+	while (array && array[len])
+		len++;
+	return (create_new_array(array, clean_value, len));
+}
+
+/**
+ * to recieve the limitter of the heredoc with quotes
+ */
 char	**add_to_array_heredoc(char **array, char *value)
 {
 	int		len;
@@ -50,7 +65,6 @@ char	**add_to_array_heredoc(char **array, char *value)
 
 	if (!value)
 		return (array);
-
 	len = 0;
 	while (array && array[len])
 		len++;

@@ -34,10 +34,7 @@ void				free_env_list(t_env *env);
 void				free_env_array(char **env_array);
 
 void				print_env(t_myenv *myenv);
-void				ft_sort_export(t_env *env);
-char				**ft_dup_env(char **envp);
-void				ft_add_env(t_myenv *myenv, const char *key,
-						const char *value);
-int					env_has_key(t_env *env_list, const char *key);
+
+
 
 #endif

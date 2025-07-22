@@ -9,7 +9,7 @@
 /*   Updated: 2025/07/21 21:01:14 by jaacosta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../include/minishell.h"
+#include "../../../include/minishell.h"
 
 void	set_defaul_signals(void)
 {
@@ -17,7 +17,7 @@ void	set_defaul_signals(void)
 	signal(SIGQUIT, SIG_DFL);
 }
 
-void	heredoc_sigint_handler(int signo)
+static void	heredoc_sigint_handler(int signo)
 {
 	(void)signo;
 	write(1, "\n", 1);

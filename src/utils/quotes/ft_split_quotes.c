@@ -9,7 +9,7 @@
 /*   Updated: 2025/03/27 17:36:53 by rmarrero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../../include/minishell.h"
+#include "../../../include/minishell.h"
 
 static void	ft_quotes(char c, int *in_quotes, char *quote_type)
 {

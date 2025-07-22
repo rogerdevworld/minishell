@@ -13,19 +13,18 @@
 # define UTILS_H
 
 // -- parser and ft_export -- //
-char	*remove_quotes(char *str);
-char	*remove_all_quotes(char *str);
-char	**remove_quotes_from_args(char **args);
+
+
 char	*get_path(char *cmd, char **env);
 
 // -- lexer -- //
-char	**ft_split_quotes(char const *s, char c);
+
 
 // -- builtings -- //
 void	ft_shlvl(t_myenv *myenv);
 
 // -- utils -- //
-int		ft_open(char *file, int mode);
+
 int     check_expansion(char *str);
 // char	*ft_expand_arg_ini(t_minishell *minishell, char *arg, t_env *env, int s);
 void	validate_multiple_expansions(t_token *tokens, int status, char *line);
@@ -55,10 +54,29 @@ void	print_ast(t_ast *node, int depth);
 void	ft_myenv_free(t_myenv *myenv);
 void	ft_destroyer(t_minishell *minishell);
 
-// -- para files limpios -- //
-char	**add_to_array(char **array, char *value);
-//-- para recibir el limiter del heredoc con comillas -- //
-char	**add_to_array_heredoc(char **array, char *value);
+/**
+ * Utils used for ft_env.c
+ */
+void	ft_sort_export(t_env *env);
+char	**ft_dup_env(char **envp);
+void	ft_add_env(t_myenv *myenv, const char *key,
+			const char *value);
+int		env_has_key(t_env *env_list, const char *key);
+
+
+/**
+ * Utils used to handle different cases with quotes
+ */
+char	**ft_split_quotes(char const *s, char c);
+char	*remove_quotes(char *str);
+char	*remove_all_quotes(char *str);
+char	**remove_quotes_from_args(char **args);
+
+/**
+ * Utils used for signals
+ */
+void	set_defaul_signals(void);
+void	signals_heredoc(void);
 
 /**
  * Utils utilizadas en los builtins
@@ -77,19 +95,24 @@ char    *handle_inside_double_quotes(
 char    *get_variable_value(t_minishell *minishell, char *var_name);
 char    *extract_variable_name(const char *arg, int *i);
 
-/**
- * ft_export
- */
+/**ft_export */ 
 int     env_list_size(t_env *env);
 t_env   **env_to_array(t_env *env);
 void    sort_env_array(t_env **array);
 char	*ft_strjoin_free_env(char *s1, char *s2);
 void	print_export(t_env *env);
-int	count_env_items(t_env *list_env);
-int	parse_export_arg(char *arg, char **key, char **value, int *has_equal);
+int     count_env_items(t_env *list_env);
+int     parse_export_arg(char *arg, char **key, char **value, int *has_equal);
 void	print_invalid_identifier_error(char *arg);
 void	update_or_add_env(t_env **env_list, char *key, char *value,
     int has_equal);
+
+/**
+ * Utils used for redirections, heredocs, and appends
+ */
+int		ft_open(char *file, int mode);
+char	**add_to_array(char **array, char *value);
+char	**add_to_array_heredoc(char **array, char *value);
 
 
 #endif
