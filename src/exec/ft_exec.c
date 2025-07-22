@@ -11,20 +11,19 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-int	execute_ast(t_ast *node, char **envp, t_myenv *myenv,
-		t_minishell *minishell, int status)
+int	execute_ast(t_ast *node, t_myenv *myenv, t_minishell *minishell, int status)
 {
 	if (!node)
 		return (0);
 	if (node->type == NODE_COMMAND)
-		return (execute_command(node->cmd, envp, minishell, status));
+		return (execute_command(node->cmd, minishell, status));
 	else if (node->type == NODE_PIPE)
 		return (execute_pipe(node, myenv, minishell));
 	else if (node->type == NODE_AND)
-		return (execute_and(node, envp, myenv, minishell));
+		return (execute_and(node, myenv, minishell));
 	else if (node->type == NODE_OR)
-		return (execute_or(node, envp, myenv, minishell));
+		return (execute_or(node, myenv, minishell));
 	else if (node->type == NODE_SUBSHELL)
-		return (execute_subshell(node, envp, myenv, minishell));
+		return (execute_subshell(node, myenv, minishell));
 	return (1);
 }

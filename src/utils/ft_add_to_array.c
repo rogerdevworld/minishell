@@ -50,7 +50,6 @@ char	**add_to_array_heredoc(char **array, char *value)
 
 	if (!value)
 		return (array);
-
 	len = 0;
 	while (array && array[len])
 		len++;

@@ -58,11 +58,8 @@ int	check_operator_positions(t_token *tokens)
 		{
 			if (tokens->type == TOKEN_PIPE || tokens->type == TOKEN_AND
 				|| tokens->type == TOKEN_OR)
-			{
-				ft_printf("Syntax error: unexpected token '%s' after '%s'\n",
-					tokens->value, prev->value);
-				return (2);
-			}
+				return (ft_printf("Syntax error: unexpected token '%s' after '%s'\n",
+					tokens->value, prev->value), 2);
 		}
 		prev = tokens;
 		tokens = tokens->next;

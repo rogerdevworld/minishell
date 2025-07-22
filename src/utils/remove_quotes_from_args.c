@@ -32,14 +32,10 @@ char	**remove_quotes_from_args(char **args)
 		if (!args_no_quotes[i])
 		{
 			while (j < i)
-			{
-				free(args_no_quotes[j]);
-				j++;
-			}
+				free(args_no_quotes[j++]);
 			return (free(args_no_quotes), NULL);
 		}
 		i++;
 	}
-	args_no_quotes[count] = NULL;
-	return (args_no_quotes);
+	return (args_no_quotes[count] = NULL, args_no_quotes);
 }

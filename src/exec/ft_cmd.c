@@ -34,23 +34,24 @@ void	ft_redirect(t_command *cmd)
 		dup2(cmd->redir->output_file, STDOUT_FILENO);
 }
 
-int has_internal_whitespace(const char *str)
+int	has_internal_whitespace(const char *str)
+{
+	int	i;
+
+	i = 0;
+	if (!str)
+		return (0);
+	while (str[i])
 	{
-		int i = 0;
-		if (!str)
-			return 0;
-		while (str[i])
-		{
-			if (ft_isspace((unsigned char)str[i]))
-				return 1;
-			i++;
-		}
-		return 0;
+		if (ft_isspace((unsigned char)str[i]))
+			return (1);
+		i++;
 	}
+	return (0);
+}
 
-
-int	execute_command(t_command *cmd, char **envp,
-		t_minishell *minishell, int status)
+int	execute_command(t_command *cmd, t_minishell *minishell,
+		int status)
 {
 	int		builtin_id;
 	pid_t	pid;
@@ -80,8 +81,8 @@ int	execute_command(t_command *cmd, char **envp,
 			set_defaul_signals();
 			if (cmd->redir)
 				ft_redirect(cmd);
-			resolve_command_path(cmd, envp);
-			execve(cmd->path, cmd->args, envp);
+			resolve_command_path(cmd, minishell->myenv->env);
+			execve(cmd->path, cmd->args, minishell->myenv->env);
 			if (cmd->redir->output_file != 0)
 				exit(0);
 			msg("command not found", cmd->args[0]);

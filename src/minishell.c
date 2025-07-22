@@ -90,7 +90,6 @@ void	main_loop(t_myenv *myenv)
 		}
 		ast = parse_expression(&tokens, myenv->env);
 		// /print_ast(ast, 0);
-		// Procesamos los heredocs una sola vez, ya con el AST listo
 		if (preprocess_heredocs(ast, status) == -1)
 		{
 			status = 130;
@@ -110,7 +109,7 @@ void	main_loop(t_myenv *myenv)
 			if (is_heredoc_only(ast))
 				status = 0;
 			else if (g_signal != S_CANCEL_EXEC)
-				status = execute_ast(ast, myenv->env, myenv, minishell, status);
+				status = execute_ast(ast, myenv, minishell, status);
 		}
 		// Libera memoria
 		free_ast(ast);
