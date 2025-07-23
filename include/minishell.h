@@ -15,17 +15,6 @@
 // -- variable global signal -- //
 extern int	g_signal;
 
-// -- internal libs -- //
-# include "../src/utils/libft/libft.h"
-# include "syntax.h"
-# include "env.h"
-# include "builtins.h"
-# include "exec.h"
-# include "redirections.h"
-# include "signals.h"
-# include "utils.h"
-// -- system.h -- //
-
 // -- system libs -- //
 # include <ctype.h>
 # include <dirent.h>
@@ -42,6 +31,17 @@ extern int	g_signal;
 // -- readline -- //
 # include <readline/history.h>
 # include <readline/readline.h>
+
+// -- internal libs -- //
+# include "../src/utils/libft/libft.h"
+# include "syntax.h"
+# include "env.h"
+# include "builtins.h"
+# include "exec.h"
+# include "redirections.h"
+# include "signals.h"
+# include "utils.h"
+// -- system.h -- //
 
 // -- minishell exit code -- //
 // Comando ejecutado con éxito

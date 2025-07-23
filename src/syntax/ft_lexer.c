@@ -70,6 +70,7 @@ t_token	*lexer(char *input)
 	int		len;
 
 	tokens = NULL;
+	token_val = NULL;
 	i = 0;
 	len = 0;
 	while (input[i])

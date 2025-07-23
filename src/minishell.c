@@ -36,9 +36,9 @@ int	is_heredoc_only(t_ast *ast)
 void	main_loop(t_myenv *myenv)
 {
 	char		*line;
-	t_token		*tokens;
-	t_ast		*ast;
-	t_minishell	*minishell;
+	t_token		*tokens = NULL;
+	t_ast		*ast = NULL;
+	t_minishell	*minishell = NULL;
 	int			status;
 
 	status = 0;
@@ -47,7 +47,14 @@ void	main_loop(t_myenv *myenv)
 		line = readline("minishell >");
 		status = verify_sigint(status);
 		if (!line)
+		{
+			if (tokens)
+				free_tokens(tokens);
+			if (ast)
+				free_ast(ast);
+			free(line);
 			break ;
+		}
 		if (*line)
 			add_history(line);
 		tokens = lexer(line);
@@ -56,7 +63,8 @@ void	main_loop(t_myenv *myenv)
 		{
 			status = 1;
 			free(line);
-			free_tokens(tokens);
+			if (tokens)
+				free_tokens(tokens);
 			continue ;
 		}
 		expand_before_executor(&tokens, myenv->list_env, status);
@@ -73,8 +81,10 @@ void	main_loop(t_myenv *myenv)
 		if (preprocess_heredocs(ast, status) == -1)
 		{
 			status = 130;
-			free_ast(ast);
-			free_tokens(tokens);
+			if (tokens)
+				free_tokens(tokens);
+			if (ast)
+				free_ast(ast);
 			free(line);
 			continue ;
 		}
@@ -92,6 +102,11 @@ void	main_loop(t_myenv *myenv)
 		free(line);
 		g_signal = S_BASE;
 	}
+	if (tokens)
+		free_tokens(tokens);
+	if (ast)
+		free_ast(ast);
+	free(line);
 }
 
 int	main(int argc, char **argv, char **env)
@@ -101,8 +116,10 @@ int	main(int argc, char **argv, char **env)
 	(void)argc;
 	(void)argv;
 
+	myenv = NULL;
 	myenv = ft_myenv(env);
 	signal_init();
 	main_loop(myenv);
+	free_myenv(myenv);
 	return (0);
 }
