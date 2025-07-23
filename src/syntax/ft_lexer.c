@@ -85,6 +85,7 @@ t_token	*lexer(char *input)
 		add_back(&tokens, init_lexer(token_val));
 		i += len;
 	}
+	free(token_val);
 	return (tokens);
 }
 
