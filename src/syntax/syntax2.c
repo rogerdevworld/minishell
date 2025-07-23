@@ -59,12 +59,12 @@ void	resolve_command_path(t_command *cmd, char **env)
 		{
 			ft_putstr_fd(cmd->args[0], 2);
 			ft_putstr_fd(": Is a directory\n", 2);
-			exit(126);
+			exit(EXIT_NOT_EXECUTABLE);
 		}
 		if (access(cmd->args[0], X_OK) != 0)
 		{
 			perror(cmd->args[0]);
-			exit(126);
+			exit(EXIT_NOT_EXECUTABLE);
 		}
 		cmd->path = ft_strdup(cmd->args[0]);
 	}
