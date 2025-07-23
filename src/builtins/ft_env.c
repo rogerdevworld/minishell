@@ -16,14 +16,13 @@ int	built_env(t_myenv *myenv, char **args)
 	int	i;
 
 	i = 0;
-    printf("entro");
 	while (args[i])
 	{
 		if (ft_strcmp(args[i], "env") != 0)
 		{
-            ft_putstr_fd("env: '", 2);
-            ft_putstr_fd(args[i], 2);
-            ft_putendl_fd("': No such file or directory", 2);
+			ft_putstr_fd("env: '", 2);
+			ft_putstr_fd(args[i], 2);
+			ft_putendl_fd("': No such file or directory", 2);
 			return (127);
 		}
 		i++;
