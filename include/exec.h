@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor.h                                         :+:      :+:    :+:   */
+/*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/27 11:56:13 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/07/03 14:25:59 by rmarrero         ###   ########.fr       */
+/*   Created: 2025/07/23 14:41:56 by rmarrero          #+#    #+#             */
+/*   Updated: 2025/07/23 14:42:01 by rmarrero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#ifndef EXECUTOR_H
-# define EXECUTOR_H
+#ifndef EXEC_H
+# define EXEC_H
 
 // -- exec main all cases -- //
 int	execute_ast(t_ast *node, t_myenv *myenv, t_minishell *minishell,

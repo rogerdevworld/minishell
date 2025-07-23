@@ -14,11 +14,9 @@
 
 // -- parser and ft_export -- //
 
-
 char	*get_path(char *cmd, char **env);
 
 // -- lexer -- //
-
 
 // -- builtings -- //
 void	ft_shlvl(t_myenv *myenv);
@@ -41,7 +39,6 @@ void	free_env_list(t_env *env);
 void	free_env_array(char **env_array);
 void	free_redir(t_redir *redir);
 
-
 // -- test -- //
 void	print_tokens(t_token *tokens);
 void	print_command(t_command *cmd);
@@ -55,10 +52,8 @@ void	ft_destroyer(t_minishell *minishell);
  */
 void	ft_sort_export(t_env *env);
 char	**ft_dup_env(char **envp);
-void	ft_add_env(t_myenv *myenv, const char *key,
-			const char *value);
+void	ft_add_env(t_myenv *myenv, const char *key, const char *value);
 int		env_has_key(t_env *env_list, const char *key);
-
 
 /**
  * Utils used to handle different cases with quotes
@@ -115,10 +110,11 @@ char	**add_to_array_heredoc(char **array, char *value);
 /**
  * Utils used for expansor
  */
-int     check_expansion(char *str);
+int		check_expansion(char *str);
 char	*expand_variable_ini(const char *arg, int *i, t_env *env, int s);
 int		check_multiple_expansions_at_start(t_token *tokens, t_env *env);
-char	*copy_double_quoted_text_ini(const char *arg, int *i, t_env *env, int s);
+char	*copy_double_quoted_text_ini(const char *arg, int *i, t_env *env,
+			int s);
 int		is_non_empty_expansion(char *value, t_env *env);
 char	*get_next_part(char *arg, int *i, t_env *env, int s);
 int		append_part(char **result, char *part);
