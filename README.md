@@ -192,3 +192,10 @@
 - Usar nombres de ramas claros (`feature/parser`, `fix/memory-leak`).
 - Revisar código de los compañeros antes de hacer merge.
 - Mantener `main` siempre estable.
+
+
+## ## -- comandos de test --- ##
+
+si hace una emulaciondel shlvl hay que ver cuantos exit hace por cada ./minishell
+cat <
+

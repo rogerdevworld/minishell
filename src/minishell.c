@@ -44,7 +44,7 @@ void	main_loop(t_myenv *myenv)
 	status = 0;
 	while (1)
 	{
-		line = readline(path_terminal());
+		line = readline("minishell >");
 		// line = readline(ft_desing(myenv->env, status));
 		status = verify_sigint(status);
 		if (!line)
@@ -78,11 +78,6 @@ void	main_loop(t_myenv *myenv)
 			free_tokens(tokens);
 			free(line);
 			continue ;
-		}
-		else if (ft_strcmp(line, "./minishell") == 0)
-		{
-			ft_shlvl(myenv);
-			clear_history();
 		}
 		else
 		{

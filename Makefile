@@ -6,7 +6,7 @@
 #    By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 12:58:52 by rmarrero          #+#    #+#              #
-#    Updated: 2025/07/18 22:49:21 by jaacosta         ###   ########.fr        #
+#    Updated: 2025/07/23 13:58:58 by rmarrero         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 # --- Mandatory --- #
@@ -45,8 +45,7 @@ BSRCS =	$(BSRC_DIR)pipex_bonus.c $(BSRC_DIR)parse_bonus.c $(BSRC_DIR)cmd_bonus.c
 BOBJS = $(BSRCS:$(BSRC_DIR)%.c=$(OBJ_DIR)/%.o)
 
 CC = cc -g
-CFLAGS = -I./include -Wall -Werror -Wextra -I./include
-#-fsanitize=leak
+CFLAGS = -I./include -Wall -Werror -Wextra -I./include -fsanitize=leak
 RM = rm -rf
 
 # --- libft --- #

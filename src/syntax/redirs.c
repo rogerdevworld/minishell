@@ -26,23 +26,6 @@ void	init_redir(t_redir *redir)
 	redir->out_file = ft_calloc(64, sizeof(char *));
 }
 
-void	free_redir(t_redir *redir)
-{
-	int	i;
-
-	if (!redir)
-		return ;
-	i = 0;
-	while (i < redir->heredoc_count)
-	{
-		free(redir->limiter[i]);
-		close(redir->heredoc_fds[i]);
-		i++;
-	}
-	free(redir->limiter);
-	free(redir->heredoc_fds);
-}
-
 void	reset_redir(t_redir *redir)
 {
 	if (!redir)
