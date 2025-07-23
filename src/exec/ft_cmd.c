@@ -125,7 +125,7 @@ int	execute_command(t_command *cmd, t_minishell *minishell, int status)
 
 	builtin_id = validate_and_get_builtin(cmd);
 	if (builtin_id == -2)
-		return (127);
+		return (EXIT_CMD_NOT_FOUND);
 	if (builtin_id == -1)
 		return (execute_external_command(cmd, minishell));
 	else

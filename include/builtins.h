@@ -42,9 +42,7 @@ int							ft_exit_builtin(char **args);
 int							built_env(t_myenv *myenv, char **args);
 
 // -- local cmd echo -- //
-// int		ft_echo(t_minishell *minishell, char **args, t_env *env, int s);
 int							ft_echo(t_minishell *minishell, char **args, int s);
-// char	*ft_expand_arg(t_minishell *minishell, char *arg, t_env *env, int s);
 char						*ft_expand_arg(t_minishell *minishell, char *arg,
 								int s);
 char						*copy_double_quoted_text(t_minishell *minishell,
@@ -60,7 +58,6 @@ t_env						*find_env_var(t_env *env, const char *key);
 int							is_valid_identifier(const char *str);
 void						ft_unset(char **args, t_myenv *myenv);
 void						put_error(char *prefix, char *cmd, char *msg);
-// void update_env_array(t_myenv *myenv); //funcion eliminada
 char						*ft_echo_expand(char *str, t_env *env);
 char						**build_env_array(t_env *list_env);
 

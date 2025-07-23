@@ -14,23 +14,26 @@
 int	get_builtin_cmd(char *cmd)
 {
 	char	*clean_cmd;
+	int		command;
 
+	command = -1;
 	clean_cmd = remove_all_quotes(cmd);
 	if (ft_strncmp(clean_cmd, "cd", 2) == 0 && ft_strlen(clean_cmd) == 2)
-		return (CD);
+		command = CD;
 	if (ft_strncmp(clean_cmd, "exit", 4) == 0 && ft_strlen(clean_cmd) == 4)
-		return (EXIT);
+		command = EXIT;
 	if (ft_strncmp(clean_cmd, "echo", 4) == 0 && ft_strlen(clean_cmd) == 4)
-		return (ECHO);
+		command = ECHO;
 	if (ft_strncmp(clean_cmd, "pwd", 3) == 0 && ft_strlen(clean_cmd) == 3)
-		return (PWD);
+		command = PWD;
 	if (ft_strncmp(clean_cmd, "export", 6) == 0 && ft_strlen(clean_cmd) == 6)
-		return (EXPORT);
+		command = EXPORT;
 	if (ft_strncmp(clean_cmd, "unset", 5) == 0 && ft_strlen(clean_cmd) == 5)
-		return (UNSET);
+		command = UNSET;
 	if (ft_strncmp(clean_cmd, "env", 3) == 0 && ft_strlen(clean_cmd) == 3)
-		return (ENV);
-	return (-1);
+		command = ENV;
+	free(clean_cmd);
+	return (command);
 }
 
 int	execute_builtin(t_minishell *minishell, char **args, int s, int builtin_id)

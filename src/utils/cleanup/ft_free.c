@@ -11,6 +11,19 @@
 /* ************************************************************************** */
 #include "../../../include/minishell.h"
 
+void	free_redir(t_redir *redir)
+{
+	if (!redir)
+		return ;
+	free(redir->heredoc_fds);
+	if (redir->limiter)
+		free_split(redir->limiter);
+	if (redir->in_file)
+		free_split(redir->in_file);
+	if (redir->out_file)
+		free_split(redir->out_file);
+}
+
 void	free_tokens(t_token *tokens)
 {
 	t_token	*tmp;
@@ -31,12 +44,7 @@ void	free_command(t_command *cmd)
 	free_split(cmd->args);
 	free(cmd->path);
 	if (cmd->redir)
-	{
-		free(cmd->redir->limiter);
-		free(cmd->redir->in_file);
-		free(cmd->redir->out_file);
-		free(cmd->redir);
-	}
+		free_redir(cmd->redir);
 	free(cmd);
 }
 

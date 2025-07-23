@@ -6,7 +6,7 @@
 #    By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/16 12:58:52 by rmarrero          #+#    #+#              #
-#    Updated: 2025/07/18 22:49:21 by jaacosta         ###   ########.fr        #
+#    Updated: 2025/07/23 13:58:58 by rmarrero         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 # --- Mandatory --- #
@@ -23,7 +23,6 @@ SRCS =	$(SRC_DIR)minishell.c $(SRC_DIR)init.c $(SRC_DIR)exit.c $(SRC_DIR)expanso
 		$(SRC_DIR)syntax/ft_syntax_redir.c $(SRC_DIR)syntax/ft_syntax_logic.c $(SRC_DIR)syntax/ft_syntax_init.c $(SRC_DIR)syntax/ft_syntax_subshell.c $(SRC_DIR)syntax/ft_syntax_pipes.c $(SRC_DIR)syntax/ft_syntax_cmd.c \
 		$(SRC_DIR_BUI)builtins.c $(SRC_DIR_BUI)pwd.c $(SRC_DIR_BUI)clear.c $(SRC_DIR_BUI)ft_cd.c $(SRC_DIR_BUI)ft_exit_builtin.c $(SRC_DIR_BUI)ft_unset.c $(SRC_DIR_BUI)ft_echo.c $(SRC_DIR_BUI)ft_export.c $(SRC_DIR_BUI)ft_env.c  \
 		$(SRC_DIR)signals.c \
-		$(SRC_DIR)design/path_in_shell.c \
 		$(SRC_DIR)wildcards.c \
 		$(SRC_DIR)utils/ft_shlvl.c $(SRC_DIR)utils/get_path.c \
 		$(SRC_DIR)utils/cleanup/ft_free.c $(SRC_DIR)utils/cleanup/ft_free2.c $(SRC_DIR)utils/cleanup/free_split.c $(SRC_DIR)utils/cleanup/ft_destroyer.c \
@@ -48,8 +47,7 @@ BSRCS =	$(BSRC_DIR)pipex_bonus.c $(BSRC_DIR)parse_bonus.c $(BSRC_DIR)cmd_bonus.c
 BOBJS = $(BSRCS:$(BSRC_DIR)%.c=$(OBJ_DIR)/%.o)
 
 CC = cc -g
-CFLAGS = -I./include -Wall -Werror -Wextra -I./include
-#-fsanitize=leak
+CFLAGS = -I./include -Wall -Werror -Wextra -I./include -fsanitize=leak
 RM = rm -rf
 
 # --- libft --- #

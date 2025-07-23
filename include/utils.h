@@ -39,6 +39,8 @@ void	free_ast(t_ast *node);
 void	free_myenv(t_myenv *myenv);
 void	free_env_list(t_env *env);
 void	free_env_array(char **env_array);
+void	free_redir(t_redir *redir);
+
 
 // -- test -- //
 void	print_tokens(t_token *tokens);
