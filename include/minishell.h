@@ -20,7 +20,6 @@ extern int	g_signal;
 # include "syntax.h"
 # include "env.h"
 # include "builtins.h"
-# include "design.h"
 # include "exec.h"
 # include "redirections.h"
 # include "signals.h"
