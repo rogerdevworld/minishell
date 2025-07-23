@@ -24,12 +24,7 @@ char	*get_path(char *cmd, char **env);
 void	ft_shlvl(t_myenv *myenv);
 
 // -- utils -- //
-
-int     check_expansion(char *str);
-// char	*ft_expand_arg_ini(t_minishell *minishell, char *arg, t_env *env, int s);
 void	validate_multiple_expansions(t_token *tokens, int status, char *line);
-// int	check_multiple_expansions_at_start(t_token *tokens);
-int		check_multiple_expansions_at_start(t_token *tokens, t_env *env);
 void	expand_before_executor(t_token **tokens, t_env *env, int status);
 char	*ft_expand_arg_ini(char *arg, t_env *env, int s);
 void	shift_empty_tokens(t_token **head);
@@ -115,5 +110,20 @@ int		ft_open(char *file, int mode);
 char	**add_to_array(char **array, char *value);
 char	**add_to_array_heredoc(char **array, char *value);
 
+/**
+ * Utils used for expansor
+ */
+int     check_expansion(char *str);
+char	*expand_variable_ini(const char *arg, int *i, t_env *env, int s);
+int		check_multiple_expansions_at_start(t_token *tokens, t_env *env);
+char	*copy_double_quoted_text_ini(const char *arg, int *i, t_env *env, int s);
+int		is_non_empty_expansion(char *value, t_env *env);
+char	*get_next_part(char *arg, int *i, t_env *env, int s);
+int		append_part(char **result, char *part);
+char	*handle_backslash(const char *arg, int *i);
+char	*handle_plain_segment(const char *arg, int *i);
+char	*handle_question_mark(int *i, int s);
+char	*extract_braced_var(const char *arg, int *i);
+char	*extract_simple_var(const char *arg, int *i);
 
 #endif

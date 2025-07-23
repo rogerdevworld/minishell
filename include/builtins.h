@@ -39,6 +39,7 @@ int							pwd(void);
 void						clear(void);
 int							ft_cd(char **path, t_myenv *env);
 int							ft_exit_builtin(char **args);
+int							built_env(t_myenv *myenv, char **args);
 
 // -- local cmd echo -- //
 // int		ft_echo(t_minishell *minishell, char **args, t_env *env, int s);

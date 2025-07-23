@@ -11,28 +11,6 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-/* static int	prepare_path_and_cmd(char *cmd, char **env, char ***allpath,
-		char ***s_cmd)
-{
-	char	*path_env;
-
-	if (!cmd || cmd[0] == '\0')
-		return (0);
-	path_env = ft_getenv("PATH", env);
-	if (!path_env)
-		return (0);
-	*allpath = ft_split(path_env, ':');
-	if (!*allpath)
-		return (0);
-	*s_cmd = ft_split(cmd, ' ');
-	if (!*s_cmd)
-	{
-		free_split(*allpath);
-		return (0);
-	}
-	return (1);
-} */
-
 // Obtiene las rutas del PATH del entorno como un array de strings
 char	**get_all_paths(char **env)
 {

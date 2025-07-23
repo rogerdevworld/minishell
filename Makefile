@@ -21,7 +21,7 @@ OBJ_DIR_LEX = ./obj/lexer/
 SRCS =	$(SRC_DIR)minishell.c $(SRC_DIR)init.c $(SRC_DIR)exit.c $(SRC_DIR)expansor.c  \
 		$(SRC_DIR)syntax/ft_lexer.c $(SRC_DIR)syntax/ft_lexer_utils.c $(SRC_DIR)syntax/syntax.c $(SRC_DIR)syntax/syntax2.c $(SRC_DIR)syntax/redirs.c \
 		$(SRC_DIR)syntax/ft_syntax_redir.c $(SRC_DIR)syntax/ft_syntax_logic.c $(SRC_DIR)syntax/ft_syntax_init.c $(SRC_DIR)syntax/ft_syntax_subshell.c $(SRC_DIR)syntax/ft_syntax_pipes.c $(SRC_DIR)syntax/ft_syntax_cmd.c \
-		$(SRC_DIR_BUI)builtins.c $(SRC_DIR_BUI)pwd.c $(SRC_DIR_BUI)clear.c $(SRC_DIR_BUI)ft_cd.c $(SRC_DIR_BUI)ft_exit_builtin.c $(SRC_DIR_BUI)ft_unset.c $(SRC_DIR_BUI)ft_echo.c $(SRC_DIR_BUI)ft_export.c \
+		$(SRC_DIR_BUI)builtins.c $(SRC_DIR_BUI)pwd.c $(SRC_DIR_BUI)clear.c $(SRC_DIR_BUI)ft_cd.c $(SRC_DIR_BUI)ft_exit_builtin.c $(SRC_DIR_BUI)ft_unset.c $(SRC_DIR_BUI)ft_echo.c $(SRC_DIR_BUI)ft_export.c $(SRC_DIR_BUI)ft_env.c  \
 		$(SRC_DIR)signals.c \
 		$(SRC_DIR)design/path_in_shell.c \
 		$(SRC_DIR)wildcards.c \
@@ -33,6 +33,7 @@ SRCS =	$(SRC_DIR)minishell.c $(SRC_DIR)init.c $(SRC_DIR)exit.c $(SRC_DIR)expanso
 		$(SRC_DIR)utils/signals/signals_utils.c \
 		$(SRC_DIR)utils/env/env.c $(SRC_DIR)utils/env/env_utils.c \
 		$(SRC_DIR)utils/quotes/ft_quotes_utils.c  $(SRC_DIR)utils/quotes/ft_split_quotes.c\
+		$(SRC_DIR)utils/expansor/expansor_utils.c $(SRC_DIR)utils/expansor/expansor_utils2.c \
 		$(SRC_DIR)test/print_lexer.c $(SRC_DIR)test/print_commands.c $(SRC_DIR)test/print_ast.c $(SRC_DIR)test/ft_print_args.c \
 		$(SRC_DIR)exec/ft_exec.c $(SRC_DIR)exec/ft_pipe.c $(SRC_DIR)exec/ft_here_doc.c $(SRC_DIR)exec/ft_subshell.c $(SRC_DIR)exec/ft_and.c $(SRC_DIR)exec/ft_or.c $(SRC_DIR)exec/ft_cmd.c $(SRC_DIR)exec/ft_in.c $(SRC_DIR)exec/ft_out.c
 
@@ -91,6 +92,7 @@ $(OBJ_DIR):
 	mkdir -p ./obj/utils/env
 	mkdir -p ./obj/utils/signals
 	mkdir -p ./obj/utils/quotes
+	mkdir -p ./obj/utils/expansor
 	mkdir -p ./obj/test
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)%.c $(HEADER) Makefile | $(OBJ_DIR)
