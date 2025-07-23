@@ -11,31 +11,8 @@
 /* ************************************************************************** */
 #include "../include/minishell.h"
 
-int	check_expansion(char *str)
-{
-	if (!str)
-		return (0);
-	if (str[0] == '$' && str[1] != '\0')
-		return (1);
-	if (str[0] == '"' && str[1] == '$')
-		return (1);
-	return (0);
-}
-
-char	*copy_plain_text_ini(char *arg, int *i)
-{
-	int	start;
-
-	start = *i;
-	while (arg[*i] && arg[*i] != '$' && arg[*i] != '\'' && arg[*i] != '"'
-		&& arg[*i] != '\\')
-		(*i)++;
-	return (ft_substr(arg, start, *i - start));
-}
-
 char	*expand_variable_ini(const char *arg, int *i, t_env *env, int s)
 {
-	int		start;
 	char	*var_name;
 	char	*value;
 
@@ -44,26 +21,11 @@ char	*expand_variable_ini(const char *arg, int *i, t_env *env, int s)
 			&& arg[*i] != '{'))
 		return (ft_strdup("$"));
 	if (arg[*i] == '?')
-	{
-		(*i)++;
-		return (ft_itoa(s));
-	}
+		return (handle_question_mark(i, s));
 	if (arg[*i] == '{')
-	{
-		start = ++(*i);
-		while (arg[*i] && arg[*i] != '}')
-			(*i)++;
-		var_name = ft_substr(arg, start, *i - start);
-		if (arg[*i] == '}')
-			(*i)++;
-	}
+		var_name = extract_braced_var(arg, i);
 	else
-	{
-		start = *i;
-		while (arg[*i] && (ft_isalnum(arg[*i]) || arg[*i] == '_'))
-			(*i)++;
-		var_name = ft_substr(arg, start, *i - start);
-	}
+		var_name = extract_simple_var(arg, i);
 	if (!var_name)
 		return (ft_strdup(""));
 	if (ft_strcmp(var_name, "?") == 0)
@@ -71,13 +33,10 @@ char	*expand_variable_ini(const char *arg, int *i, t_env *env, int s)
 		free(var_name);
 		return (ft_itoa(s));
 	}
-	if (var_name)
-	{
-		value = ft_echo_expand(var_name, env);
-		free(var_name);
-		if (value)
-			return (value);
-	}
+	value = ft_echo_expand(var_name, env);
+	free(var_name);
+	if (value)
+		return (value);
 	return (ft_strdup(""));
 }
 
@@ -85,56 +44,28 @@ char	*copy_double_quoted_text_ini(const char *arg, int *i, t_env *env, int s)
 {
 	char	*result;
 	char	*part;
-	int		start;
 
 	result = ft_calloc(1, sizeof(char));
+	if (!result)
+		return (NULL);
 	(*i)++;
 	while (arg[*i] && arg[*i] != '"')
 	{
 		if (arg[*i] == '\\')
-		{
-			if (arg[*i + 1] == '\\' || arg[*i + 1] == '"' || arg[*i + 1] == '$')
-			{
-				part = ft_substr(arg, *i + 1, 1);
-				*i += 2;
-			}
-			else
-			{
-				part = ft_substr(arg, *i, 1);
-				(*i)++;
-			}
-		}
-		else if (arg[*i] == '$') // variable expansion
+			part = handle_backslash(arg, i);
+		else if (arg[*i] == '$')
 			part = expand_variable_ini(arg, i, env, s);
 		else
-		{
-			start = *i;
-			while (arg[*i] && arg[*i] != '$' && arg[*i] != '"'
-				&& arg[*i] != '\\')
-				(*i)++;
-			part = ft_substr(arg, start, *i - start);
-		}
+			part = handle_plain_segment(arg, i);
 		if (!part)
 			return (free(result), NULL);
 		result = ft_strjoin_free(result, part);
+		if (!result)
+			return (NULL);
 	}
 	if (arg[*i] == '"')
 		(*i)++;
 	return (result);
-}
-
-char	*copy_single_quoted_text_ini(const char *arg, int *i)
-{
-	char	*text;
-	int		start;
-
-	start = ++(*i);
-	while (arg[*i] && arg[*i] != '\'')
-		(*i)++;
-	text = ft_substr(arg, start, *i - start);
-	if (arg[*i] == '\'')
-		(*i)++;
-	return (text);
 }
 
 char	*ft_expand_arg_ini(char *arg, t_env *env, int s)
@@ -143,42 +74,29 @@ char	*ft_expand_arg_ini(char *arg, t_env *env, int s)
 	char	*part;
 	int		i;
 
-	part = NULL;
 	result = ft_calloc(1, sizeof(char));
-	i = 0;
+	part = NULL;
 	if (!result)
 		return (NULL);
+	i = 0;
 	while (arg[i])
 	{
-		if (arg[i] == '\'')
-			part = copy_single_quoted_text_ini(arg, &i);
-		else if (arg[i] == '"')
-		{
-			part = copy_double_quoted_text_ini(arg, &i, env, s);
-		}
-		else if (arg[i] == '\\' && arg[i + 1] == '$')
-		{
-			part = ft_substr(arg, i + 1, 1);
-			i += 2;
-		}
-		else if (arg[i] == '$')
-			part = expand_variable_ini(arg, &i, env, s);
-		else
-		{
-			part = copy_plain_text_ini(arg, &i);
-		}
+		part = get_next_part(arg, &i, env, s);
 		if (!part)
 			return (free(result), NULL);
-		result = ft_strjoin_free(result, part);
+		if (!append_part(&result, part))
+			return (NULL);
 	}
 	return (result);
 }
+
 void	expand_before_executor(t_token **tokens, t_env *env, int status)
 {
 	t_token	*cur;
 	char	*expanded;
 
 	cur = *tokens;
+	expanded = NULL;
 	while (cur)
 	{
 		if (cur->type == TOKEN_WORD && check_expansion(cur->value))
@@ -201,9 +119,8 @@ void	expand_before_executor(t_token **tokens, t_env *env, int status)
 
 int	check_multiple_expansions_at_start(t_token *tokens, t_env *env)
 {
-	t_token *cur;
-	int non_empty_expansions;
-	char *expanded;
+	t_token	*cur;
+	int		non_empty_expansions;
 
 	cur = tokens;
 	non_empty_expansions = 0;
@@ -211,16 +128,14 @@ int	check_multiple_expansions_at_start(t_token *tokens, t_env *env)
 	{
 		if (check_expansion(cur->value))
 		{
-			expanded = ft_expand_arg_ini(cur->value, env, 0);
-			if (expanded && expanded[0] != '\0')
+			if (is_non_empty_expansion(cur->value, env))
 			{
 				non_empty_expansions++;
-			}
-			free(expanded);
-			if (non_empty_expansions > 1)
-			{
-				ft_printf("bash: too many arguments\n");
-				return (1);
+				if (non_empty_expansions > 1)
+				{
+					ft_printf("bash: too many arguments\n");
+					return (1);
+				}
 			}
 		}
 		else

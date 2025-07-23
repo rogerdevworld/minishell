@@ -54,7 +54,7 @@ int	execute_builtin(t_minishell *minishell, char **args, int s, int builtin_id)
 	if (builtin_id == UNSET)
 		ft_unset(args, minishell->myenv);
 	if (builtin_id == ENV)
-		print_env(minishell->myenv);
+		status = built_env(minishell->myenv, args);
 	if (builtin_id == CLEAR)
 		clear();
 	return (status);

@@ -43,15 +43,23 @@ int	export_add_or_update(t_env **env_list, char *arg)
 	char	*key;
 	char	*value;
 	int		has_equal;
+	char	*expanded;
 
 	if (!parse_export_arg(arg, &key, &value, &has_equal))
 		return (1);
 	if (!is_valid_identifier(key))
 	{
 		print_invalid_identifier_error(arg);
-		free(key);
-		free(value);
-		return (1);
+		return (free(key), free(value), 1);
+	}
+	if (value && check_expansion(value))
+	{
+		expanded = ft_expand_arg_ini(value, *env_list, 0);
+		if (expanded)
+		{
+			free(value);
+			value = expanded;
+		}
 	}
 	update_or_add_env(env_list, key, value, has_equal);
 	free(key);
