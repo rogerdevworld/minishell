@@ -15,6 +15,7 @@ t_token	*init_lexer(char *value)
 {
 	t_token	*token;
 
+	token = NULL;
 	token = malloc(sizeof(t_token));
 	if (!token)
 		return (NULL);
@@ -84,6 +85,8 @@ t_token	*lexer(char *input)
 		else
 			len = read_word(&input[i], &token_val);
 		add_back(&tokens, init_lexer(token_val));
+		free(token_val);
+		token_val = NULL;
 		i += len;
 	}
 	return (tokens);

@@ -99,14 +99,21 @@ void	main_loop(t_myenv *myenv)
 		// Libera memoria
 		free_ast(ast);
 		free_tokens(tokens);
+		// if (minishell)
+		// {
+		// 	printf("cih\n");
+		// 	free_minishell(minishell);
+		// }
 		free(line);
 		g_signal = S_BASE;
 	}
-	if (tokens)
-		free_tokens(tokens);
-	if (ast)
-		free_ast(ast);
+	// if (tokens)
+	// 	free_tokens(tokens);
+	// if (ast)
+	// 	free_ast(ast);
 	free(line);
+	tokens = NULL;
+
 }
 
 int	main(int argc, char **argv, char **env)

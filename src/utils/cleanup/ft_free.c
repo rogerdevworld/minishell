@@ -29,7 +29,9 @@ void	free_redir(t_redir *redir)
 void	free_tokens(t_token *tokens)
 {
 	t_token	*tmp;
-
+	
+	if (tokens)
+		printf("Tokens Liberados\n");
 	while (tokens)
 	{
 		tmp = tokens;
@@ -37,7 +39,7 @@ void	free_tokens(t_token *tokens)
 		free(tmp->value);
 		free(tmp);
 	}
-	printf("Tokens Liberados\n");
+	tokens = NULL;
 }
 
 void	free_command(t_command *cmd)
