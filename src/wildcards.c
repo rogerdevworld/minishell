@@ -95,7 +95,7 @@ void	ft_wildcards(char ***args)
 					ft_strlcpy(full, path, full_len);
 					ft_strlcat(full, "/", full_len);
 					ft_strlcat(full, entry->d_name, full_len);
-					new_args = ft_realloc(new_args, sizeof(char *) * (arg_count
+					new_args = realloc(new_args, sizeof(char *) * (arg_count
 								+ 2));
 					new_args[arg_count++] = full;
 				}
@@ -105,7 +105,7 @@ void	ft_wildcards(char ***args)
 		}
 		else
 		{
-			new_args = ft_realloc(new_args, sizeof(char *) * (arg_count + 2));
+			new_args = realloc(new_args, sizeof(char *) * (arg_count + 2));
 			new_args[arg_count++] = ft_strdup((*args)[j]);
 		}
 		j++;

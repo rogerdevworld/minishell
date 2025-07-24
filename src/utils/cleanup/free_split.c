@@ -25,4 +25,5 @@ void	free_split(char **split)
 		i++;
 	}
 	free(split);
+	printf("splits Liberados");
 }

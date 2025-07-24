@@ -22,6 +22,8 @@ void	free_redir(t_redir *redir)
 		free_split(redir->in_file);
 	if (redir->out_file)
 		free_split(redir->out_file);
+	free(redir);
+	printf("Redirs Liberados\n");
 }
 
 void	free_tokens(t_token *tokens)
@@ -37,6 +39,7 @@ void	free_tokens(t_token *tokens)
 		free(tmp->value);
 		free(tmp);
 	}
+	printf("Tokens Liberados\n");
 }
 
 void	free_command(t_command *cmd)
@@ -48,16 +51,19 @@ void	free_command(t_command *cmd)
 	if (cmd->redir)
 		free_redir(cmd->redir);
 	free(cmd);
+	printf("Commands Liberados\n");
 }
 
 void	free_ast(t_ast *node)
 {
 	if (!node)
 		return ;
-	free_command(node->cmd);
+	if (node->cmd)
+		free_command(node->cmd);
 	free_ast(node->left);
 	free_ast(node->right);
 	free(node);
+	printf("Nodos Ast Liberados\n");
 }
 
 void	free_myenv(t_myenv *myenv)
@@ -67,6 +73,7 @@ void	free_myenv(t_myenv *myenv)
 	free_env_list(myenv->list_env);
 	free_env_array(myenv->env);
 	free(myenv);
+	printf("MyEnv Liberado\n");
 }
 
 void	free_env_list(t_env *env)
@@ -81,4 +88,5 @@ void	free_env_list(t_env *env)
 		free(env);
 		env = tmp;
 	}
+	printf("List de envs Liberados\n");
 }
