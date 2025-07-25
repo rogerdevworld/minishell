@@ -60,7 +60,7 @@ int	validate_and_get_builtin(t_command *cmd)
 	}
 	if (cmd && cmd->args && cmd->args[0])
 	{
-		ft_wildcards(&(cmd->args));
+		// ft_wildcards(&(cmd->args));
 		return (get_builtin_cmd(cmd->args[0]));
 	}
 	return (-1);

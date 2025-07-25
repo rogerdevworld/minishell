@@ -14,23 +14,24 @@
 // Comando base (WORD, args, redirs)
 t_ast	*parse_simple_command(t_token **tokens, char **envp)
 {
-	t_command	*cmd;
-	int			i;
+	t_command *cmd;
+	int i;
+	t_token *tmp;
 
+	tmp = *tokens;
 	cmd = init_command();
 	i = 0;
-	while (*tokens)
+	while (tmp)
 	{
-		if ((*tokens)->type == TOKEN_WORD && (*tokens)->value)
+		if (tmp->type == TOKEN_WORD && tmp->value)
 		{
-			cmd->args[i++] = ft_strdup((*tokens)->value);
-			next_token(tokens);
+			cmd->args[i++] = ft_strdup(tmp->value);
+			tmp = tmp->next;
+			// next_token(tokens);
 		}
-		else if ((*tokens)->type == TOKEN_REDIR_IN
-			|| (*tokens)->type == TOKEN_REDIR_OUT
-			|| (*tokens)->type == TOKEN_APPEND
-			|| (*tokens)->type == TOKEN_HEREDOC)
-			ft_redirects(cmd, tokens);
+		else if (tmp->type == TOKEN_REDIR_IN || tmp->type == TOKEN_REDIR_OUT
+			|| tmp->type == TOKEN_APPEND || tmp->type == TOKEN_HEREDOC)
+			ft_redirects(cmd, &tmp);
 		else
 			break ;
 	}

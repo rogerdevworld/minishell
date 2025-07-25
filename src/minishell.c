@@ -87,8 +87,8 @@ void	main_loop(t_myenv *myenv)
 				status = execute_ast(ast, myenv, minishell, status);
 		}
 		// Libera memoria
-		free_ast(ast);
-		free_tokens(tokens);
+		if (minishell)
+			free_minishell(minishell);
 		free(line);
 		g_signal = S_BASE;
 	}
