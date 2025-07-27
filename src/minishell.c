@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 #include "../include/minishell.h"
 
-static int	verify_sigint(status)
+static int	verify_sigint(int status)
 {
 	if (g_signal == S_SIGINT)
 	{
@@ -101,14 +101,14 @@ void	main_loop(t_myenv *myenv)
 		// free_tokens(tokens);
 		if (minishell)
 			free_minishell(minishell);
-		free(line);
+		if (line)
+			free(line);
 		g_signal = S_BASE;
 	}
 	if (tokens)
 		free_tokens(tokens);
 	if (ast)
 		free_ast(ast);
-	free(line);
 }
 
 int	main(int argc, char **argv, char **env)
