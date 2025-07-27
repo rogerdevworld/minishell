@@ -124,3 +124,36 @@ void	shift_empty_tokens(t_token **head)
 		}
 	}
 }
+
+char	*read_until_balanced(char *initial_line)
+{
+	char	*line;
+	char	*full_line;
+	t_token	*tokens;
+	int		balance;
+	char	*tmp;
+
+	tokens = NULL;
+	full_line = ft_strdup(initial_line);
+	while (1)
+	{
+		tokens = lexer(full_line);
+		balance = check_parentheses_balance(tokens);
+		free_tokens(tokens);
+		if (balance < 0)
+		{
+			free(full_line);
+			return (NULL);
+		}
+		else if (balance == 0)
+			break ;
+		line = readline("> ");
+		if (!line)
+			break ;
+		tmp = full_line;
+		full_line = ft_strjoin(tmp, line);
+		free(tmp);
+		free(line);
+	}
+	return (full_line);
+}

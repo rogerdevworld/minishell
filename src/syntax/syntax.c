@@ -107,9 +107,8 @@ int	check_redirection_args(t_token *tokens)
  */
 int	check_parentheses_balance(t_token *tokens)
 {
-	int	count;
+	int	count = 0;
 
-	count = 0;
 	while (tokens)
 	{
 		if (tokens->type == TOKEN_OPEN_PAREN)
@@ -120,17 +119,12 @@ int	check_parentheses_balance(t_token *tokens)
 			if (count < 0)
 			{
 				ft_printf("Syntax error: unexpected ')'\n");
-				return (1);
+				return (-1);  // Error por cierre inesperado
 			}
 		}
 		tokens = tokens->next;
 	}
-	if (count != 0)
-	{
-		ft_printf("Syntax error: unclosed '('\n");
-		return (1);
-	}
-	return (0);
+	return (count);  // Si es > 0, faltan cierres
 }
 
 /*

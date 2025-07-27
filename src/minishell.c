@@ -36,57 +36,58 @@ int	is_heredoc_only(t_ast *ast)
 void	main_loop(t_myenv *myenv)
 {
 	char		*line;
-	t_token		*tokens = NULL;
-	t_ast		*ast = NULL;
-	t_minishell	*minishell = NULL;
+	char		*full_line;
+	t_token		*tokens;
+	t_ast		*ast;
+	t_minishell	*minishell;
 	int			status;
 
+	tokens = NULL;
+	ast = NULL;
+	minishell = NULL;
 	status = 0;
 	while (1)
 	{
 		line = readline("minishell >");
 		status = verify_sigint(status);
 		if (!line)
-		{
-			if (tokens)
-				free_tokens(tokens);
-			if (ast)
-				free_ast(ast);
-			free(line);
-			break ;
-		}
+			break;
 		if (*line)
 			add_history(line);
-		tokens = lexer(line);
-		// print_tokens(tokens);
+
+		full_line = read_until_balanced(line);
+		free(line);
+		if (!full_line)
+			continue;
+
+		tokens = lexer(full_line);
 		if (check_multiple_expansions_at_start(tokens, myenv->list_env))
 		{
 			status = 1;
-			free(line);
-			if (tokens)
-				free_tokens(tokens);
-			continue ;
+			free(full_line);
+			free_tokens(tokens);
+			continue;
 		}
+
 		expand_before_executor(&tokens, myenv->list_env, status);
 		shift_empty_tokens(&tokens);
-		if (validate_syntax(tokens) || check_unclosed_quotes(line))
+
+		if (validate_syntax(tokens) || check_unclosed_quotes(full_line))
 		{
 			status = 2;
-			free(line);
+			free(full_line);
 			free_tokens(tokens);
-			continue ;
+			continue;
 		}
+
 		ast = parse_expression(&tokens, myenv->env);
-		// /print_ast(ast, 0);
 		if (preprocess_heredocs(ast, status) == -1)
 		{
 			status = 130;
-			if (tokens)
-				free_tokens(tokens);
-			if (ast)
-				free_ast(ast);
-			free(line);
-			continue ;
+			free_tokens(tokens);
+			free_ast(ast);
+			free(full_line);
+			continue;
 		}
 		else
 		{
@@ -96,13 +97,14 @@ void	main_loop(t_myenv *myenv)
 			else if (g_signal != S_CANCEL_EXEC)
 				status = execute_ast(ast, myenv, minishell, status);
 		}
-		// Libera memoria
-		// free_ast(ast);
-		// free_tokens(tokens);
+
 		if (minishell)
 			free_minishell(minishell);
-		if (line)
-			free(line);
+		if (full_line)
+			free(full_line);
+		tokens = NULL;
+		ast = NULL;
+		minishell = NULL;
 		g_signal = S_BASE;
 	}
 	if (tokens)
@@ -110,6 +112,7 @@ void	main_loop(t_myenv *myenv)
 	if (ast)
 		free_ast(ast);
 }
+
 
 int	main(int argc, char **argv, char **env)
 {
