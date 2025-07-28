@@ -11,20 +11,58 @@
 /* ************************************************************************** */
 #include "../../include/minishell.h"
 
-// Comando base (WORD, args, redirs)
+// t_ast	*parse_simple_command(t_token **tokens, char **envp)
+// {
+// 	t_command	*cmd;
+// 	int			i;
+// 	t_token		*tmp;	
+
+// 	tmp = *tokens;
+// 	cmd = init_command();
+// 	i = 0;
+// 	while (tmp)
+// 	{
+// 		if (tmp->type == TOKEN_WORD && tmp->value)
+// 		{
+// 			cmd->args[i++] = ft_strdup(tmp->value);
+// 			tmp = tmp->next;
+// 			//next_token(tokens);
+// 		}
+// 		else if (tmp->type == TOKEN_REDIR_IN
+// 			|| tmp->type == TOKEN_REDIR_OUT
+// 			|| tmp->type == TOKEN_APPEND
+// 			|| tmp->type == TOKEN_HEREDOC)
+// 			ft_redirects(cmd, &tmp);
+// 		else
+// 			break ;
+// 	}
+// 	cmd->args[i] = NULL;
+// 	if (cmd->args[0])
+// 		cmd->path = get_path(cmd->args[0], envp);
+// 	*tokens = tmp;
+// 	return (init_ast_node(NODE_COMMAND, cmd));
+// }
+
+
 t_ast	*parse_simple_command(t_token **tokens, char **envp)
 {
 	t_command	*cmd;
+	// t_token		*tmp;
 	int			i;
+	t_ast	*tmp_node;
 
-	cmd = init_command();
+	cmd =NULL;
+	// tmp = NULL;
+	// tmp = *tokens;
 	i = 0;
+	cmd = init_command();
 	while (*tokens)
 	{
 		if ((*tokens)->type == TOKEN_WORD && (*tokens)->value)
 		{
 			cmd->args[i++] = ft_strdup((*tokens)->value);
-			next_token(tokens);
+			*tokens = (*tokens)->next;
+			// next_token(tokens);
 		}
 		else if ((*tokens)->type == TOKEN_REDIR_IN
 			|| (*tokens)->type == TOKEN_REDIR_OUT
@@ -37,5 +75,9 @@ t_ast	*parse_simple_command(t_token **tokens, char **envp)
 	cmd->args[i] = NULL;
 	if (cmd->args[0])
 		cmd->path = get_path(cmd->args[0], envp);
-	return (init_ast_node(NODE_COMMAND, cmd));
+	//tokens = tmp;
+	tmp_node = init_ast_node(NODE_COMMAND, cmd);
+	//free_command(cmd);
+	// return (init_ast_node(NODE_COMMAND, cmd));
+	return (tmp_node);
 }

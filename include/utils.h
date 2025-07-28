@@ -38,6 +38,7 @@ void	free_myenv(t_myenv *myenv);
 void	free_env_list(t_env *env);
 void	free_env_array(char **env_array);
 void	free_redir(t_redir *redir);
+void	ft_clean(void *ptr);
 
 // -- test -- //
 void	print_tokens(t_token *tokens);

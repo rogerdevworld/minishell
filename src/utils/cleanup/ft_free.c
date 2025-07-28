@@ -23,8 +23,23 @@ void	free_redir(t_redir *redir)
 	if (redir->out_file)
 		free_split(redir->out_file);
 	free(redir);
+	// redir=NULL;
 	// printf("Redirs Liberados\n");
 }
+
+// void free_tokens(t_token *tokens)
+// {
+// 	t_token *tmp;
+
+// 	while (tokens)
+// 	{
+// 		tmp = tokens->next;
+// 		free(tokens->value); // libera la cadena duplicada con strdup
+// 		free(tokens);        // libera el nodo
+// 		tokens = tmp;
+// 	}
+	
+// }
 
 void	free_tokens(t_token *tokens)
 {
@@ -38,7 +53,9 @@ void	free_tokens(t_token *tokens)
 		tokens = tokens->next;
 		free(tmp->value);
 		free(tmp);
+		//tmp->value = NULL;
 	}
+	tmp = NULL;
 	// printf("Tokens Liberados\n");
 }
 
@@ -60,9 +77,16 @@ void	free_ast(t_ast *node)
 		return ;
 	if (node->cmd)
 		free_command(node->cmd);
-	free_ast(node->left);
-	free_ast(node->right);
+	if (node->left)
+		free_ast(node->left);
+	if (node->right)
+		free_ast(node->right);
+	
 	free(node);
+	//node->cmd = NULL;
+	//node->left = NULL;
+	//node->right = NULL;
+	node = NULL;
 	// printf("Nodos Ast Liberados\n");
 }
 

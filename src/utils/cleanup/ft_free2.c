@@ -29,11 +29,14 @@ void	free_minishell(t_minishell *minishell)
 		return ;
 	if (minishell->tokens)
 		free_tokens(minishell->tokens);
+	minishell->tokens = NULL;
 	if (minishell->ast)
 		free_ast(minishell->ast);
+	minishell->ast = NULL;
 	// if (minishell->myenv)
 	// 	free_myenv(minishell->myenv);
 	free(minishell);
+	minishell = NULL;
 }
 
 void	ft_free_env_array(char **env)
@@ -74,4 +77,12 @@ void	ft_myenv_free(t_myenv *myenv)
 	ft_free_env_array(myenv->env);
 	ft_env_free(myenv->list_env);
 	free(myenv);
+}
+
+void	ft_clean(void *ptr)
+{
+	if (!ptr)
+		return ;
+	free(ptr);
+	ptr = NULL;
 }

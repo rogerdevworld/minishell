@@ -81,7 +81,8 @@ typedef struct s_minishell
 	int		exit;
 }			t_minishell;
 
-t_minishell	*init_minishell(t_ast *ast, t_token *tokens, t_myenv *myenv);
+// t_minishell	*init_minishell(t_ast *ast, t_token *tokens, t_myenv *myenv);
+t_minishell	*init_minishell(t_ast *ast, t_myenv *myenv);
 
 // -- main loop -- //
 void		main_loop(t_myenv *myenv);

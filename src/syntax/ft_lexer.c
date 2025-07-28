@@ -19,6 +19,12 @@ t_token	*init_lexer(char *value)
 	if (!token)
 		return (NULL);
 	token->value = ft_strdup(value);
+	if (!token->value)
+	{
+		free(token);
+		return (NULL);
+	}
+	token->quote_type = '\0';
 	token->next = NULL;
 	if (!value)
 		token->type = TOKEN_INVALID;
@@ -85,10 +91,39 @@ t_token	*lexer(char *input)
 			len = read_word(&input[i], &token_val);
 		add_back(&tokens, init_lexer(token_val));
 		i += len;
+		free(token_val);
 	}
-	free(token_val);
 	return (tokens);
 }
+
+// t_token	*lexer(char *input)
+// {
+// 	t_token	*tokens;
+// 	char	*token_val;
+// 	int		i;
+// 	int		len;
+
+// 	tokens = NULL;
+// 	token_val = NULL;
+// 	i = 0;
+// 	len = 0;
+// 	while (input[i])
+// 	{
+// 		while (ft_isspace(input[i]))
+// 			i++;
+// 		if (!input[i])
+// 			break ;
+// 		if (is_operator(&input[i]))
+// 			len = read_operator(&input[i], &token_val);
+// 		else
+// 			len = read_word(&input[i], &token_val);
+// 		add_back(&tokens, init_lexer(token_val));
+// 		i += len;
+// 		free(token_val);
+// 	}
+	
+// 	return (tokens);
+// }
 
 void	shift_empty_tokens(t_token **head)
 {

@@ -40,11 +40,12 @@ void	main_loop(t_myenv *myenv)
 	t_token		*tokens;
 	t_ast		*ast;
 	t_minishell	*minishell;
+	t_token		*tmp;
 	int			status;
 
-	tokens = NULL;
-	ast = NULL;
-	minishell = NULL;
+	tokens = 0;
+	ast = 0;
+	minishell = 0;
 	status = 0;
 	while (1)
 	{
@@ -57,10 +58,12 @@ void	main_loop(t_myenv *myenv)
 
 		full_line = read_until_balanced(line);
 		free(line);
+		line = NULL;
 		if (!full_line)
 			continue;
 
 		tokens = lexer(full_line);
+		
 		if (check_multiple_expansions_at_start(tokens, myenv->list_env))
 		{
 			status = 1;
@@ -79,19 +82,21 @@ void	main_loop(t_myenv *myenv)
 			free_tokens(tokens);
 			continue;
 		}
-
+		tmp = tokens;
 		ast = parse_expression(&tokens, myenv->env);
+		free_tokens(tmp);
 		if (preprocess_heredocs(ast, status) == -1)
 		{
 			status = 130;
-			free_tokens(tokens);
+			// free_tokens(tokens);
 			free_ast(ast);
 			free(full_line);
 			continue;
 		}
 		else
 		{
-			minishell = init_minishell(ast, tokens, myenv);
+			// minishell = init_minishell(ast, tokens, myenv);
+			minishell = init_minishell(ast, myenv);
 			if (is_heredoc_only(ast))
 				status = 0;
 			else if (g_signal != S_CANCEL_EXEC)
@@ -107,10 +112,10 @@ void	main_loop(t_myenv *myenv)
 		minishell = NULL;
 		g_signal = S_BASE;
 	}
-	if (tokens)
-		free_tokens(tokens);
-	if (ast)
-		free_ast(ast);
+	// if (tokens)
+	// 	free_tokens(tokens);
+	// if (ast)
+	// 	free_ast(ast);
 }
 
 
