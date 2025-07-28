@@ -52,57 +52,49 @@ void	main_loop(t_myenv *myenv)
 		line = readline("minishell >");
 		status = verify_sigint(status);
 		if (!line)
-			break;
+			break ;
 		if (*line)
 			add_history(line);
-
 		full_line = read_until_balanced(line);
 		free(line);
 		line = NULL;
 		if (!full_line)
-			continue;
-
+			continue ;
 		tokens = lexer(full_line);
-		
 		if (check_multiple_expansions_at_start(tokens, myenv->list_env))
 		{
 			status = 1;
 			free(full_line);
 			free_tokens(tokens);
-			continue;
+			continue ;
 		}
-
 		expand_before_executor(&tokens, myenv->list_env, status);
 		shift_empty_tokens(&tokens);
-
 		if (validate_syntax(tokens) || check_unclosed_quotes(full_line))
 		{
 			status = 2;
 			free(full_line);
 			free_tokens(tokens);
-			continue;
+			continue ;
 		}
 		tmp = tokens;
 		ast = parse_expression(&tokens, myenv->env);
-		free_tokens(tmp);
 		if (preprocess_heredocs(ast, status) == -1)
 		{
 			status = 130;
-			// free_tokens(tokens);
 			free_ast(ast);
 			free(full_line);
-			continue;
+			continue ;
 		}
 		else
 		{
-			// minishell = init_minishell(ast, tokens, myenv);
 			minishell = init_minishell(ast, myenv);
 			if (is_heredoc_only(ast))
 				status = 0;
 			else if (g_signal != S_CANCEL_EXEC)
 				status = execute_ast(ast, myenv, minishell, status);
 		}
-
+		free_tokens(tmp);
 		if (minishell)
 			free_minishell(minishell);
 		if (full_line)
@@ -117,7 +109,6 @@ void	main_loop(t_myenv *myenv)
 	// if (ast)
 	// 	free_ast(ast);
 }
-
 
 int	main(int argc, char **argv, char **env)
 {

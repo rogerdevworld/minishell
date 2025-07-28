@@ -18,7 +18,6 @@ t_minishell	*init_minishell(t_ast *ast, t_myenv *myenv)
 	minishell = malloc(sizeof(t_minishell));
 	if (!minishell)
 		return (NULL);
-	minishell->tokens = NULL;
 	minishell->ast = ast;
 	minishell->myenv = myenv;
 	minishell->exit = 0;

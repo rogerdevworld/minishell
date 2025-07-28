@@ -75,7 +75,6 @@ extern int	g_signal;
 // -- internal strcts -- //
 typedef struct s_minishell
 {
-	t_token	*tokens;
 	t_ast	*ast;
 	t_myenv	*myenv;
 	int		exit;

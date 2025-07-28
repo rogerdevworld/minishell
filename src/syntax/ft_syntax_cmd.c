@@ -51,7 +51,7 @@ t_ast	*parse_simple_command(t_token **tokens, char **envp)
 	int			i;
 	t_ast	*tmp_node;
 
-	cmd =NULL;
+	cmd = NULL;
 	// tmp = NULL;
 	// tmp = *tokens;
 	i = 0;

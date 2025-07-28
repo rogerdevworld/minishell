@@ -27,9 +27,6 @@ void	free_minishell(t_minishell *minishell)
 {
 	if (!minishell)
 		return ;
-	if (minishell->tokens)
-		free_tokens(minishell->tokens);
-	minishell->tokens = NULL;
 	if (minishell->ast)
 		free_ast(minishell->ast);
 	minishell->ast = NULL;
