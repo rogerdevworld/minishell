@@ -124,6 +124,7 @@ int	main(int argc, char **argv, char **env)
 	myenv = NULL;
 	myenv = ft_myenv(env);
 	signal_init();
+	shelvl(myenv);
 	main_loop(myenv);
 	free_myenv(myenv);
 	return (0);
