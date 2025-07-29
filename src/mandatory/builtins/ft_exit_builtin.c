@@ -11,6 +11,9 @@
 /* ************************************************************************** */
 #include "../../../include/minishell.h"
 
+/**
+ * Cleans the argument by removing single and double quotes.
+ */
 static char	*clean_argument(char *arg)
 {
 	char	*cleaned;
@@ -39,7 +42,7 @@ static char	*clean_argument(char *arg)
 }
 
 /**
- * Verifica si la cadena es un número válido (posiblemente con signo).
+ * Checks if the given string is a valid numeric value.
  */
 static int	is_numeric(const char *str)
 {
@@ -62,12 +65,12 @@ static int	is_numeric(const char *str)
 }
 
 /**
- * Analiza y retorna el código de salida o código de error.
- * Retorna:
- *   -2 si no es numérico
- *   -1 si hay demasiados argumentos
- *    valor numérico si válido
- *    0 si no hay argumento
+ * Determines the exit status based on the provided arguments.
+ * Returns:
+ * -2 if the argument is not numeric.
+ * -1 if there are too many arguments.
+ * The numeric value if the argument is valid.
+ * 0 if no argument is provided.
  */
 static int	check_exit(char **args)
 {
@@ -96,10 +99,8 @@ static int	check_exit(char **args)
 }
 
 /**
- * Implementación de la built-in `exit`.
+ * Implements the built-in 'exit' command for the shell.
  */
-/// src/builtins/ft_exit_builtin.c
-
 int	ft_exit_builtin(char **args, t_minishell *minishell)
 {
 	int		status;
@@ -107,32 +108,20 @@ int	ft_exit_builtin(char **args, t_minishell *minishell)
 
 	ft_putstr_fd("exit\n", 1);
 	status = check_exit(args);
-	if (status == -1) // Caso: "exit arg1 arg2..."
-	{
-		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
-		return (1); // IMPORTANTE: No liberamos nada, el shell continúa.
-	}
-
-	// Guardamos el puntero al entorno antes de cualquier liberación.
+	if (status == -1)
+		return (ft_putstr_fd("minishell: exit: too many arguments\n", 2), 1);
 	myenv_to_free = minishell->myenv;
-
-	// Si el argumento NO es numérico, PRIMERO imprimimos el error.
 	if (status == -2)
 	{
 		ft_putstr_fd("minishell: exit: ", 2);
-		ft_putstr_fd(args[1], 2); // Usamos args[1] ANTES de liberarlo.
+		ft_putstr_fd(args[1], 2);
 		ft_putstr_fd(": numeric argument required\n", 2);
 	}
-
-	// AHORA, después de haber usado todos los datos necesarios, liberamos todo.
 	free_minishell(minishell);
 	free_myenv(myenv_to_free);
-
-	// Y finalmente, salimos del programa con el status correcto.
 	if (status == -2)
 		exit(2);
 	else
 		exit((unsigned char)status);
-
-	return (0); // No se llega aquí.
+	return (0);
 }
