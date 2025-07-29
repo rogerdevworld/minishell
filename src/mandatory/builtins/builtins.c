@@ -11,6 +11,12 @@
 /* ************************************************************************** */
 #include "../../../include/minishell.h"
 
+/**
+ * Determines the type of built-in command from a given string.
+ * It cleans the input command by removing quotes before comparison.
+ * Returns an integer representing the built-in command ID, or
+	-1 if not recognized.
+ */
 int	get_builtin_cmd(char *cmd)
 {
 	char	*clean_cmd;
@@ -36,6 +42,11 @@ int	get_builtin_cmd(char *cmd)
 	return (command);
 }
 
+/**
+ * Executes a built-in shell command based on its ID.
+ * Takes the minishell state, arguments, and command ID as input.
+ * Returns the exit status of the executed built-in command.
+ */
 int	execute_builtin(t_minishell *minishell, char **args, int s, int builtin_id)
 {
 	int	status;
