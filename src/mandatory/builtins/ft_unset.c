@@ -11,11 +11,21 @@
 /* ************************************************************************** */
 #include "../../../include/minishell.h"
 
+/**
+ * Prints an error message to standard error.
+ * Formats the output as "prefix: cmd: msg\n".
+ */
 void	put_error(char *prefix, char *cmd, char *msg)
 {
 	ft_printf("%s: %s: %s\n", prefix, cmd, msg);
 }
 
+/**
+ * Checks if a string is a valid identifier for an unset command.
+ * An identifier cannot start with a digit or '=' and must only contain
+ * alphanumeric characters or underscores. If invalid, it prints an error.
+ * Returns 1 if the identifier is invalid, 0 otherwise.
+ */
 static int	ft_check_wrong_char(char *s)
 {
 	int	i;
@@ -38,6 +48,10 @@ static int	ft_check_wrong_char(char *s)
 	return (0);
 }
 
+/**
+ * Removes an environment variable node from a linked list.
+ * Frees the memory associated with the key, content, and the node itself.
+ */
 static void	remove_env_node(t_env **env_list, const char *key)
 {
 	t_env	*curr;
@@ -63,6 +77,12 @@ static void	remove_env_node(t_env **env_list, const char *key)
 	}
 }
 
+/**
+ * Implements the 'unset' built-in command.
+ * For each argument, it validates the identifier and, if valid, removes
+ * the corresponding environment variable from the list.
+ * It then rebuilds the `char** env` array to reflect the changes.
+ */
 void	ft_unset(char **args, t_myenv *myenv)
 {
 	int	i;
