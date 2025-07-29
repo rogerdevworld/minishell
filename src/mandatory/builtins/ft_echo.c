@@ -13,9 +13,11 @@
 
 /**
  * Expands a shell variable within a string.
- * Handles '$?' for the last exit status, and other variables from the environment.
+ * Handles '$?' for the last exit status,
+	and other variables from the environment.
  * Increments the index 'i' past the expanded variable.
- * Returns a newly allocated string with the variable's value, or an empty string if not found.
+ * Returns a newly allocated string with the variable's value,
+	or an empty string if not found.
  */
 char	*expand_variable(t_minishell *minishell, const char *arg, int *i, int s)
 {
@@ -60,7 +62,8 @@ char	*copy_double_quoted_text(t_minishell *minishell, const char *arg,
 
 /**
  * Expands all variables and handles quotes within a single argument string.
- * Iterates through the argument, processing segments (plain text, variables, quoted text).
+ * Iterates through the argument, processing segments (plain text, variables,
+	quoted text).
  * Returns a newly allocated string with all expansions applied.
  */
 char	*ft_expand_arg(t_minishell *minishell, char *arg, int s)
