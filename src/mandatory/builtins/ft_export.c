@@ -11,6 +11,12 @@
 /* ************************************************************************** */
 #include "../../../include/minishell.h"
 
+/**
+ * Checks if a string is a valid identifier for an environment variable.
+ * An identifier must start with a letter or underscore and contain only
+ * alphanumeric characters or underscores. It cannot start with a digit or '='.
+ * Returns 1 if valid, 0 otherwise.
+ */
 int	is_valid_identifier(const char *str)
 {
 	int	i;
@@ -27,6 +33,10 @@ int	is_valid_identifier(const char *str)
 	return (1);
 }
 
+/**
+ * Searches for an environment variable by its key in a linked list.
+ * Returns a pointer to the t_env node if found, otherwise returns NULL.
+ */
 t_env	*find_env_var(t_env *env, const char *key)
 {
 	while (env)
@@ -38,6 +48,14 @@ t_env	*find_env_var(t_env *env, const char *key)
 	return (NULL);
 }
 
+/**
+
+ * Adds a new environment variable or updates an existing one based 
+ 	on the argument.
+ * Handles parsing the argument into key and value, validates the identifier,
+ * and performs variable expansion on the value if necessary.
+ * Returns 0 on success, or 1 on failure (e.g., invalid identifier).
+ */
 int	export_add_or_update(t_env **env_list, char *arg)
 {
 	char	*key;
@@ -67,7 +85,14 @@ int	export_add_or_update(t_env **env_list, char *arg)
 }
 
 /**
- * para ir actualizando char **env cada vez que se ejecuta export
+
+* Builds a new array of strings (char**) representing the 
+	environment variables.
+* This array is used to update the `environ` global variable 
+	(or similar structure).
+* Each string is in the format "KEY=VALUE".
+* Returns a dynamically allocated array of strings,
+	terminated by a NULL pointer.
  */
 char	**build_env_array(t_env *list_env)
 {
@@ -97,6 +122,13 @@ char	**build_env_array(t_env *list_env)
 	return (env_array);
 }
 
+/**
+ * Implements the 'export' built-in command.
+ * If no arguments are given, it prints all environment variables.
+ * For each argument, it attempts to add or update an environment variable.
+ * It also rebuilds the `char** env` array after any changes.
+ * Returns the status of the last export operation.
+ */
 int	ft_export(char **args, t_myenv *myenv)
 {
 	int	i;
