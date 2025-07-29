@@ -155,5 +155,6 @@ char	*read_until_balanced(char *initial_line)
 		free(tmp);
 		free(line);
 	}
+	add_history(full_line);
 	return (full_line);
 }
