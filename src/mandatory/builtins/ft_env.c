@@ -11,6 +11,12 @@
 /* ************************************************************************** */
 #include "../../../include/minishell.h"
 
+/**
+ * Implements the 'env' built-in command.
+ * It prints the current environment variables.
+ * If any arguments other than "env" are provided, it returns an error.
+ * Returns 0 on success, or 127 if an invalid argument is provided.
+ */
 int	built_env(t_myenv *myenv, char **args)
 {
 	int	i;
