@@ -11,6 +11,19 @@
 /* ************************************************************************** */
 #include "../../../include/minishell.h"
 
+/**
+ * Executes a pipeline of commands.
+ * It creates a pipe and forks two child processes:
+ * - The first child executes the left-hand side of the pipe,
+	directing its stdout to the pipe's write end.
+ * - The second child executes the right-hand side of the pipe,
+	taking its stdin from the pipe's read end.
+ * The parent process closes the pipe ends and waits for both
+	child processes to complete,
+ * updating the shell's exit status with the status of the last 
+ 	command in the pipe.
+ * Returns the exit status of the last command in the pipeline.
+ */
 int	execute_pipe(t_ast *node, t_myenv *myenv, t_minishell *minishell)
 {
 	int		fds[2];
