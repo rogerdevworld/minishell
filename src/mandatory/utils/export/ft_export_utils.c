@@ -12,7 +12,6 @@
 #include "../../../../include/minishell.h"
 
 /**
-
  * Prints the current environment variables in a format 
 	suitable for the 'export' command.
  * It converts the linked list of environment variables to a temporary array,
