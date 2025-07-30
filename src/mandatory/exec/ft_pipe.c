@@ -12,7 +12,7 @@
 #include "../../../include/minishell.h"
 
 /**
- * Executes a pipeline of commands.
+ * Executes a pipeline of commands. 
  * It creates a pipe and forks two child processes:
  * - The first child executes the left-hand side of the pipe,
 	directing its stdout to the pipe's write end.
