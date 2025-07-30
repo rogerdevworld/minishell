@@ -41,3 +41,9 @@ jobs:
 
       - name: Run Makefile
         run: make && make bonus
+
+      - name: Run Tester
+        run: ./tester
+
+      - name: Run Bonus Tester
+        run: ./tester bonus
