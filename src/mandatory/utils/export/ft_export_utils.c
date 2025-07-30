@@ -59,7 +59,8 @@ char	*ft_strjoin_free_env(char *s1, char *s2)
 }
 
 /**
- * Calculates the number of elements in a linked list of environment variables.
+ * Calculates the number of elements in a linked list of environment 
+ 	variables.
  * Returns the total count of nodes in the list.
  */
 int	env_list_size(t_env *env)
