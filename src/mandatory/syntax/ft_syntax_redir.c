@@ -11,8 +11,12 @@
 /* ************************************************************************** */
 #include "../../../include/minishell.h"
 
-// src/syntax/ft_syntax_redir.c
-
+/**
+ * Processes redirection tokens for a command.
+ * It iterates through redirection tokens (like '<', '>', '>>', '<<'),
+ * extracts the associated filenames, and stores them in the command's redirection structure.
+ * It also tracks the order of redirections.
+ */
 void	ft_redirects(t_command *cmd, t_token **tokens)
 {
 	int		type;
@@ -42,7 +46,6 @@ void	ft_redirects(t_command *cmd, t_token **tokens)
 		}
 		else if (type == TOKEN_HEREDOC)
 		{
-			// Asegúrate de que esta línea usa `add_to_array_heredoc`
 			cmd->redir->limiter = add_to_array_heredoc(cmd->redir->limiter,
 					filename);
 			cmd->redir->heredoc_count++;
