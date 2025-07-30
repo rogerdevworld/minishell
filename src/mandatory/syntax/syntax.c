@@ -11,6 +11,22 @@
 /* ************************************************************************** */
 #include "../../../include/minishell.h"
 
+int	ft_msg_syntax(char *error, char *arg)
+{
+	if (!arg)
+		ft_putstr_fd(error, 2);
+	if (arg)
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(error, 2);
+		ft_putstr_fd("`", 2);
+		ft_putstr_fd(arg, 2);
+		ft_putstr_fd("'", 2);
+	}
+	ft_putstr_fd("\n", 2);
+	return (1);
+}
+
 /*
  * check_invalid_tokens:
  * Recorre la lista de tokens y detecta si existe algún token
@@ -24,7 +40,7 @@ int	check_invalid_tokens(t_token *tokens)
 	{
 		if (tokens->type == TOKEN_INVALID)
 		{
-			msg("Syntax error: invalid token ", tokens->value);
+			ft_msg_syntax("Syntax error: invalid token ", tokens->value);
 			return (1);
 		}
 		tokens = tokens->next;
@@ -48,24 +64,26 @@ int	check_operator_positions(t_token *tokens)
 	if (!tokens)
 		return (0);
 	if (tokens->type == TOKEN_PIPE || tokens->type == TOKEN_AND
-		|| tokens->type == TOKEN_OR)
-		return (msg("Syntax error: unexpected token ", tokens->value), 2);
+		|| tokens->type == TOKEN_BG || tokens->type == TOKEN_OR)
+		return (ft_msg_syntax("syntax error near unexpected token ",
+				tokens->value), 2);
 	while (tokens)
 	{
 		if (prev && (prev->type == TOKEN_PIPE || prev->type == TOKEN_AND
-				|| prev->type == TOKEN_OR))
+				|| prev->type == TOKEN_OR || prev->type == TOKEN_BG))
 		{
 			if (tokens->type == TOKEN_PIPE || tokens->type == TOKEN_AND
-				|| tokens->type == TOKEN_OR)
-				return (msg("Syntax error: unexpected token ", tokens->value),
-					2);
+				|| tokens->type == TOKEN_OR || tokens->type == TOKEN_BG)
+				return (ft_msg_syntax("syntax error near unexpected token ",
+						tokens->value), 2);
 		}
 		prev = tokens;
 		tokens = tokens->next;
 	}
 	if (prev && (prev->type == TOKEN_PIPE || prev->type == TOKEN_AND
-			|| prev->type == TOKEN_OR))
-		return (msg("Syntax error: unexpected token ", prev->value), 2);
+			|| prev->type == TOKEN_OR || prev->type == TOKEN_BG))
+		return (ft_msg_syntax("syntax error near unexpected token ",
+				prev->value), 2);
 	return (0);
 }
 
@@ -86,7 +104,8 @@ int	check_redirection_args(t_token *tokens)
 		{
 			if (!tokens->next || tokens->next->type != TOKEN_WORD)
 			{
-				msg("Syntax error: missing filename after ", tokens->value);
+				ft_msg_syntax("syntax error near unexpected token ",
+					tokens->value);
 				return (1);
 			}
 		}
@@ -116,13 +135,13 @@ int	check_parentheses_balance(t_token *tokens)
 			count--;
 			if (count < 0)
 			{
-				ft_printf("Syntax error: unexpected ')'\n");
-				return (-1); // Error por cierre inesperado
+				ft_msg_syntax("Syntax error: unexpected ')'\n", NULL);
+				return (-1);
 			}
 		}
 		tokens = tokens->next;
 	}
-	return (count); // Si es > 0, faltan cierres
+	return (count);
 }
 
 /*
