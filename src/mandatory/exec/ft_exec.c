@@ -11,6 +11,13 @@
 /* ************************************************************************** */
 #include "../../../include/minishell.h"
 
+/**
+ * Recursively executes an Abstract Syntax Tree (AST) node.
+ * It dispatches to specific execution functions based on the node's type.
+ * Supported types include commands, pipes, logical AND/OR, subshells,
+	and background commands.
+ * Returns the exit status of the executed node.
+ */
 int	execute_ast(t_ast *node, t_myenv *myenv, t_minishell *minishell, int status)
 {
 	if (!node)
@@ -25,9 +32,7 @@ int	execute_ast(t_ast *node, t_myenv *myenv, t_minishell *minishell, int status)
 		return (execute_or(node, myenv, minishell));
 	else if (node->type == NODE_SUBSHELL)
 		return (execute_subshell(node, myenv, minishell));
-	// --- INICIO DE LA CORRECCIÓN ---
 	else if (node->type == NODE_BG)
 		return (execute_bg(node, myenv, minishell));
-	// --- FIN DE LA CORRECCIÓN ---
 	return (1);
 }
