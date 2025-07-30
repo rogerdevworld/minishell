@@ -11,6 +11,15 @@
 /* ************************************************************************** */
 #include "../../../include/minishell.h"
 
+/**
+ * Executes a subshell.
+ * It forks a new process to execute the commands within the 
+ 	subshell's Abstract Syntax Tree (AST).
+ * The child process executes the subshell's commands, then exits.
+ * The parent process waits for the child to complete and updates 
+ 	the shell's exit status.
+ * Returns the exit status of the subshell.
+ */
 int	execute_subshell(t_ast *node, t_myenv *myenv, t_minishell *minishell)
 {
 	pid_t	pid;
