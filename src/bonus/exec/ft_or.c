@@ -11,6 +11,13 @@
 /* ************************************************************************** */
 #include "../../../include/minishell.h"
 
+/**
+ * Executes an 'OR' logical operation in the Abstract Syntax Tree (AST).
+ * It executes the left-hand side command first. If that 
+ 	command fails (returns a non-zero status),
+ * it then executes the right-hand side command.
+ * Returns the status of the last executed command.
+ */
 int	execute_or(t_ast *node, t_myenv *myenv, t_minishell *minishell)
 {
 	int	status;

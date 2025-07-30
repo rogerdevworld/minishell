@@ -11,6 +11,14 @@
 /* ************************************************************************** */
 #include "../../../include/minishell.h"
 
+/**
+ * Expands a shell variable within a string.
+ * Handles '$?' for the last exit status,
+	and other variables from the environment.
+ * Increments the index 'i' past the expanded variable.
+ * Returns a newly allocated string with the variable's value,
+	or an empty string if not found.
+ */
 char	*expand_variable(t_minishell *minishell, const char *arg, int *i, int s)
 {
 	char	*var_name;
@@ -31,6 +39,12 @@ char	*expand_variable(t_minishell *minishell, const char *arg, int *i, int s)
 	return (get_variable_value(minishell, var_name));
 }
 
+/**
+ * Copies and expands content within double quotes.
+ * Handles variable expansion inside double-quoted strings.
+ * Increments the index 'i' past the closing double quote.
+ * Returns a newly allocated string with the expanded content.
+ */
 char	*copy_double_quoted_text(t_minishell *minishell, const char *arg,
 		int *i, int s)
 {
@@ -46,6 +60,12 @@ char	*copy_double_quoted_text(t_minishell *minishell, const char *arg,
 	return (result);
 }
 
+/**
+ * Expands all variables and handles quotes within a single argument string.
+ * Iterates through the argument, processing segments (plain text, variables,
+	quoted text).
+ * Returns a newly allocated string with all expansions applied.
+ */
 char	*ft_expand_arg(t_minishell *minishell, char *arg, int s)
 {
 	char	*result;
@@ -71,6 +91,12 @@ char	*ft_expand_arg(t_minishell *minishell, char *arg, int s)
 	return (result);
 }
 
+/**
+ * Implements the 'echo' built-in command.
+ * Processes arguments, handles the '-n' flag for suppressing newlines,
+ * and prints the expanded arguments to standard output.
+ * Returns 0 on success, or 1 on error during printing.
+ */
 int	ft_echo(t_minishell *minishsell, char **args, int s)
 {
 	int	i;

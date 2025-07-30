@@ -12,7 +12,10 @@
 #include "../../../../include/minishell.h"
 
 /**
- * to clean the files
+ * Creates a new string array by adding a `clean_value` to an existing array.
+ * It allocates a new array, copies existing elements, appends the new value,
+ * and NULL-terminates the array. The old array is freed if it exists.
+ * Returns the new, expanded array, or NULL if memory allocation fails.
  */
 static char	**create_new_array(char **array, char *clean_value, int len)
 {
@@ -38,6 +41,12 @@ static char	**create_new_array(char **array, char *clean_value, int len)
 	return (new_array);
 }
 
+/**
+ * Adds a string `value` to a dynamically allocated array of strings.
+ * It first removes all quotes from `value` before adding it.
+ * It handles the resizing and copying of the array.
+ * Returns the updated array with the new value, or NULL if an error occurs.
+ */
 char	**add_to_array(char **array, char *value)
 {
 	int		len;
@@ -55,7 +64,12 @@ char	**add_to_array(char **array, char *value)
 }
 
 /**
- * to recieve the limitter of the heredoc with quotes
+ * Adds a string `value` (specifically a heredoc limiter) to a 
+	dynamically allocated array of strings.
+ * Unlike `add_to_array`, this function does not remove quotes from the `value`
+ * before adding it, preserving the original limiter string.
+ * It handles the resizing and copying of the array.
+ * Returns the updated array with the new value, or NULL if an error occurs.
  */
 char	**add_to_array_heredoc(char **array, char *value)
 {
@@ -77,11 +91,7 @@ char	**add_to_array_heredoc(char **array, char *value)
 		new_array[i] = array[i];
 		i++;
 	}
-	// --- INICIO DE LA CORRECCIÓN ---
-	// Duplicamos el valor para que el heredoc tenga su propia copia
-	// y no dependa de la memoria de los tokens originales.
 	new_array[len] = ft_strdup(value);
-	// --- FIN DE LA CORRECCIÓN ---
 	new_array[len + 1] = NULL;
 	if (array)
 		free(array);

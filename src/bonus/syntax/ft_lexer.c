@@ -11,6 +11,15 @@
 /* ************************************************************************** */
 #include "../../../include/minishell.h"
 
+/**
+ * Initializes a new `t_token` structure with a given string value.
+ * It allocates memory for the token and its value,
+	then determines the token's type
+ * based on the value (e.g., AND, OR, PIPE, REDIRECTION, WORD, PARENTHESES,
+	etc.).
+ * Returns a pointer to the newly created token,
+	or NULL if memory allocation fails.
+ */
 t_token	*init_lexer(char *value)
 {
 	t_token	*token;
@@ -26,33 +35,14 @@ t_token	*init_lexer(char *value)
 	}
 	token->quote_type = '\0';
 	token->next = NULL;
-	if (!value)
-		token->type = TOKEN_INVALID;
-	else if (ft_strcmp(value, "&&") == 0)
-		token->type = TOKEN_AND;
-	else if (ft_strcmp(value, "&") == 0) // <-- AÑADE ESTE BLOQUE
-		token->type = TOKEN_BG;
-	else if (ft_strncmp(value, "||", 2) == 0)
-		token->type = TOKEN_OR;
-	else if (ft_strncmp(value, "|", 2) == 0)
-		token->type = TOKEN_PIPE;
-	else if (ft_strncmp(value, "<<", 2) == 0)
-		token->type = TOKEN_HEREDOC;
-	else if (ft_strcmp(value, ">") == 0)
-		token->type = TOKEN_REDIR_OUT;
-	else if (ft_strcmp(value, ">>") == 0)
-		token->type = TOKEN_APPEND;
-	else if (ft_strncmp(value, "<", 1) == 0)
-		token->type = TOKEN_REDIR_IN;
-	else if (ft_strcmp(value, "(") == 0)
-		token->type = TOKEN_OPEN_PAREN;
-	else if (ft_strcmp(value, ")") == 0)
-		token->type = TOKEN_CLOSE_PAREN;
-	else
-		token->type = TOKEN_WORD;
+	token->type = set_token_type(value);
 	return (token);
 }
 
+/**
+ * Adds a new token to the end of a linked list of tokens.
+ * If the list is empty, the new token becomes the head.
+ */
 void	add_back(t_token **tokens, t_token *new_token)
 {
 	t_token	*tmp;
@@ -70,6 +60,14 @@ void	add_back(t_token **tokens, t_token *new_token)
 	tmp->next = new_token;
 }
 
+/**
+
+ * The main lexer function that takes an input string and converts 
+	it into a linked list of tokens.
+ * It iterates through the input,
+	identifying and extracting operators and words (including quoted sections).
+ * Returns the head of the linked list of tokens.
+ */
 t_token	*lexer(char *input)
 {
 	t_token	*tokens;
@@ -96,101 +94,4 @@ t_token	*lexer(char *input)
 		free(token_val);
 	}
 	return (tokens);
-}
-
-// t_token	*lexer(char *input)
-// {
-// 	t_token	*tokens;
-// 	char	*token_val;
-// 	int		i;
-// 	int		len;
-
-// 	tokens = NULL;
-// 	token_val = NULL;
-// 	i = 0;
-// 	len = 0;
-// 	while (input[i])
-// 	{
-// 		while (ft_isspace(input[i]))
-// 			i++;
-// 		if (!input[i])
-// 			break ;
-// 		if (is_operator(&input[i]))
-// 			len = read_operator(&input[i], &token_val);
-// 		else
-// 			len = read_word(&input[i], &token_val);
-// 		add_back(&tokens, init_lexer(token_val));
-// 		i += len;
-// 		free(token_val);
-// 	}
-	
-// 	return (tokens);
-// }
-
-void	shift_empty_tokens(t_token **head)
-{
-	t_token	*tmp;
-	t_token	*prev;
-	t_token	*to_delete;
-
-	tmp = *head;
-	prev = NULL;
-	while (tmp)
-	{
-		if (!tmp->value || tmp->value[0] == '\0')
-		{
-			to_delete = tmp;
-			if (prev == NULL)
-			{
-				*head = tmp->next;
-				tmp = *head;
-			}
-			else
-			{
-				prev->next = tmp->next;
-				tmp = tmp->next;
-			}
-			if (to_delete->value)
-				free(to_delete->value);
-			free(to_delete);
-		}
-		else
-		{
-			prev = tmp;
-			tmp = tmp->next;
-		}
-	}
-}
-
-char	*read_until_balanced(char *initial_line)
-{
-	char	*line;
-	char	*full_line;
-	t_token	*tokens;
-	int		balance;
-	char	*tmp;
-
-	tokens = NULL;
-	full_line = ft_strdup(initial_line);
-	while (1)
-	{
-		tokens = lexer(full_line);
-		balance = check_parentheses_balance(tokens);
-		free_tokens(tokens);
-		if (balance < 0)
-		{
-			free(full_line);
-			return (NULL);
-		}
-		else if (balance == 0)
-			break ;
-		line = readline("> ");
-		if (!line)
-			break ;
-		tmp = full_line;
-		full_line = ft_strjoin(tmp, line);
-		free(tmp);
-		free(line);
-	}
-	return (full_line);
 }

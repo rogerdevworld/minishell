@@ -11,10 +11,6 @@
 /* ************************************************************************** */
 #include "../../../include/minishell.h"
 
-/*
- * comillas en la linea
- *
- */
 int	check_unclosed_quotes(char *line)
 {
 	int		i;
@@ -37,37 +33,36 @@ int	check_unclosed_quotes(char *line)
 	}
 	return (0);
 }
-/*
-files
-funciona con / pero si pasa mas cosas falla de momento ./ failt
-*/
 
-void	resolve_command_path(t_command *cmd, char **env)
+static void	handle_direct_path(t_command *cmd)
 {
 	struct stat	statbuf;
 
+	if (access(cmd->args[0], F_OK) != 0)
+	{
+		perror(cmd->args[0]);
+		exit(127);
+	}
+	if (stat(cmd->args[0], &statbuf) == 0 && S_ISDIR(statbuf.st_mode))
+	{
+		ft_putstr_fd(cmd->args[0], 2);
+		ft_putstr_fd(": Is a directory\n", 2);
+		exit(EXIT_NOT_EXECUTABLE);
+	}
+	if (access(cmd->args[0], X_OK) != 0)
+	{
+		perror(cmd->args[0]);
+		exit(EXIT_NOT_EXECUTABLE);
+	}
+	cmd->path = ft_strdup(cmd->args[0]);
+}
+
+void	resolve_command_path(t_command *cmd, char **env)
+{
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return ;
-	if (strchr(cmd->args[0], '/'))
-	{
-		if (access(cmd->args[0], F_OK) != 0)
-		{
-			perror(cmd->args[0]);
-			exit(127);
-		}
-		if (stat(cmd->args[0], &statbuf) == 0 && S_ISDIR(statbuf.st_mode))
-		{
-			ft_putstr_fd(cmd->args[0], 2);
-			ft_putstr_fd(": Is a directory\n", 2);
-			exit(EXIT_NOT_EXECUTABLE);
-		}
-		if (access(cmd->args[0], X_OK) != 0)
-		{
-			perror(cmd->args[0]);
-			exit(EXIT_NOT_EXECUTABLE);
-		}
-		cmd->path = ft_strdup(cmd->args[0]);
-	}
+	if (ft_strchr(cmd->args[0], '/'))
+		handle_direct_path(cmd);
 	else
 	{
 		cmd->path = get_path(cmd->args[0], env);

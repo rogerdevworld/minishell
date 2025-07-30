@@ -11,6 +11,13 @@
 /* ************************************************************************** */
 #include "../../../../include/minishell.h"
 
+/**
+ * Counts the number of environment variables that have content (a value).
+ * Iterates through the linked list of environment variables 
+	and increments a counter
+ * for each variable that is not just a key without an assigned value.
+ * Returns the total count of such environment variables.
+ */
 int	count_env_items(t_env *list_env)
 {
 	int		count;
@@ -27,6 +34,13 @@ int	count_env_items(t_env *list_env)
 	return (count);
 }
 
+/**
+ * Parses an argument provided to the 'export' command.
+ * It separates the argument into a key and a value, if an '=' sign is present.
+ * Quotes are removed from the value part. It also indicates 
+ 	whether an '=' was found.
+ * Returns 1 on successful parsing, 0 if memory allocation for the key fails.
+ */
 int	parse_export_arg(char *arg, char **key, char **value, int *has_equal)
 {
 	char	*sep;
@@ -51,6 +65,12 @@ int	parse_export_arg(char *arg, char **key, char **value, int *has_equal)
 	return (1);
 }
 
+/**
+
+ * Prints an error message to standard error indicating an invalid 
+	identifier for 'export'.
+ * The message format is "export: `argument`: not a valid identifier\n".
+ */
 void	print_invalid_identifier_error(char *arg)
 {
 	ft_putstr_fd("export: `", 2);
@@ -58,6 +78,15 @@ void	print_invalid_identifier_error(char *arg)
 	ft_putstr_fd("': not a valid identifier\n", 2);
 }
 
+/**
+ * Updates an existing environment variable or adds a new one to the list.
+ * If the variable `key` already exists:
+ * - If `has_equal` is true, its content is updated with the new `value`.
+ * - If `has_equal` is false,
+	the `value` is freed (as no new value is provided).
+ * If the variable `key` does not exist,
+	a new environment variable node is created and added to the list.
+ */
 void	update_or_add_env(t_env **env_list, char *key, char *value,
 		int has_equal)
 {
@@ -77,8 +106,6 @@ void	update_or_add_env(t_env **env_list, char *key, char *value,
 	else
 	{
 		ft_env_add_back(env_list, ft_env_new(key, value));
-		// AÑADIDO: Liberar 'value' después de que ft_env_new lo duplique.
-		// Esto corrige el leak de 'definitely lost'.
 		if (value)
 			free(value);
 	}

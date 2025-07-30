@@ -11,6 +11,17 @@
 /* ************************************************************************** */
 #include "../../../../include/minishell.h"
 
+/**
+ * Removes outer double quotes from a string if both start and 
+	end with double quotes.
+ * If the string does not meet this condition, or if it's NULL,
+	a duplicate of the original string is returned.
+ * This function specifically targets strings like "hello" to become hello,
+	but 'hello' remains 'hello'.
+ * @param str The input string from which to remove outer double quotes.
+ * @return A newly allocated string with outer double quotes removed,
+	or a duplicate of the original string. Returns NULL if the input is NULL.
+ */
 char	*remove_quotes(char *str)
 {
 	size_t	len;
@@ -23,6 +34,16 @@ char	*remove_quotes(char *str)
 	return (ft_strdup(str));
 }
 
+/**
+ * Removes all single and double quotes from a string.
+ * It iterates through the string,
+	tracking the state of open quotes to correctly
+ * skip the quote characters themselves while including the content within them.
+ * For example, "hello'world'" becomes helloworld.
+ * @param str The input string from which to remove all quotes.
+ * @return A newly allocated string with all quotes removed. 
+	Returns NULL if memory allocation fails.
+ */
 char	*remove_all_quotes(char *str)
 {
 	char	*result;
@@ -51,6 +72,17 @@ char	*remove_all_quotes(char *str)
 	return (result);
 }
 
+/**
+ * Helper function to allocate memory for a new array of strings,
+ * which will hold the quote-removed versions of the original arguments.
+ * It calculates the count of existing arguments and allocates 
+	space for them plus a NULL terminator.
+ * @param args The original array of strings.
+ * @param count A pointer to an integer that will store 
+	the number of strings in `args`.
+ * @return A newly allocated `char**` array initialized to zeros,
+	or NULL if memory allocation fails.
+ */
 static char	**allocate_args_no_quotes(char **args, int *count)
 {
 	char	**args_no_quotes;
@@ -64,6 +96,18 @@ static char	**allocate_args_no_quotes(char **args, int *count)
 	return (args_no_quotes);
 }
 
+/**
+ * Creates a new array of strings where all quotes (single and double) 
+	have been removed from each original argument.
+ * It iterates through the input `args` array,
+	applies `remove_all_quotes` to each string,
+ * and populates a new array with the results. Handles memory allocation 
+	and cleanup in case of failure.
+ * @param args The original null-terminated array of strings.
+ * @return A newly allocated null-terminated `char**` array with all quotes
+	removed from its strings.
+ * Returns NULL if memory allocation fails at any point.
+ */
 char	**remove_quotes_from_args(char **args)
 {
 	int		count;

@@ -11,6 +11,12 @@
 /* ************************************************************************** */
 #include "../../../include/minishell.h"
 
+/**
+ * Prints an error message to standard error.
+ * If 'arg' is provided, it prints 'arg', then ": ", then 'error'.
+ * If 'arg' is NULL, it just prints 'error'.
+ * Returns 1 (typically indicating an error).
+ */
 int	msg(char *error, char *arg)
 {
 	if (!arg)
@@ -25,6 +31,12 @@ int	msg(char *error, char *arg)
 	return (1);
 }
 
+/**
+ * Implements the 'cd' built-in command.
+ * Changes the current directory. Handles cases for no arguments (HOME),
+ * environment variables, and specific paths.
+ * Returns 0 on success, or 1 on error.
+ */
 int	ft_cd(char **path, t_myenv *env)
 {
 	char	*target_dir;

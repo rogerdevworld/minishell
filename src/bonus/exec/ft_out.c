@@ -11,6 +11,16 @@
 /* ************************************************************************** */
 #include "../../../include/minishell.h"
 
+/**
+ * Handles output redirections for a command.
+ * It iterates through the output files, expands any wildcards in their names,
+ * opens each file (creating or truncating for '>' or appending for '>>'),
+ * and sets the last opened file as the standard output for the command.
+ * Closes previously opened output files to ensure only the
+	last one is effective.
+ * Returns 0 on success, or -1 on error (e.g., permission denied,
+	or wildcard expansion failure).
+ */
 int	ft_output_redirections(t_redir *redir)
 {
 	int		fd;
@@ -26,17 +36,10 @@ int	ft_output_redirections(t_redir *redir)
 	{
 		expanded_file = expand_redir_wildcard(files[i]);
 		if (!expanded_file)
-			return (-1); // El error ya fue impreso por expand_redir_wildcard
-		// NOTA: Esta lógica asume que la redirección es de tipo TRUNCATE ('>').
-		// Para soportar APPEND ('>>'), necesitarías guardar el tipo de redirección
-		// durante el parseo.
+			return (-1);
 		fd = ft_open(expanded_file, 1);
 		if (fd == -1)
-		{
-			perror(expanded_file);
-			free(expanded_file);
-			return (-1);
-		}
+			return (perror(expanded_file), free(expanded_file), -1);
 		free(expanded_file);
 		if (redir->output_file > 2)
 			close(redir->output_file);

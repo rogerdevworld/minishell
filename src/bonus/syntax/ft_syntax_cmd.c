@@ -11,16 +11,18 @@
 /* ************************************************************************** */
 #include "../../../include/minishell.h"
 
+/**
+ * Parses a simple command from a stream of tokens.
+ * It extracts command arguments and redirection information.
+ * It also determines the full path to the command if it's executable.
+ * Returns an AST node representing the parsed command.
+ */
 t_ast	*parse_simple_command(t_token **tokens, char **envp)
 {
 	t_command	*cmd;
-	// t_token		*tmp;
 	int			i;
-	t_ast	*tmp_node;
+	t_ast		*tmp_node;
 
-	cmd =NULL;
-	// tmp = NULL;
-	// tmp = *tokens;
 	i = 0;
 	cmd = init_command();
 	while (*tokens)
@@ -29,11 +31,9 @@ t_ast	*parse_simple_command(t_token **tokens, char **envp)
 		{
 			cmd->args[i++] = ft_strdup((*tokens)->value);
 			*tokens = (*tokens)->next;
-			// next_token(tokens);
 		}
-		else if ((*tokens)->type == TOKEN_REDIR_IN
-			|| (*tokens)->type == TOKEN_REDIR_OUT
-			|| (*tokens)->type == TOKEN_APPEND
+		else if ((*tokens)->type == TOKEN_REDIR_IN || (*tokens)->type
+			== TOKEN_REDIR_OUT || (*tokens)->type == TOKEN_APPEND
 			|| (*tokens)->type == TOKEN_HEREDOC)
 			ft_redirects(cmd, tokens);
 		else
@@ -42,9 +42,6 @@ t_ast	*parse_simple_command(t_token **tokens, char **envp)
 	cmd->args[i] = NULL;
 	if (cmd->args[0])
 		cmd->path = get_path(cmd->args[0], envp);
-	//tokens = tmp;
 	tmp_node = init_ast_node(NODE_COMMAND, cmd);
-	//free_command(cmd);
-	// return (init_ast_node(NODE_COMMAND, cmd));
 	return (tmp_node);
 }

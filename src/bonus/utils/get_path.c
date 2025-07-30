@@ -11,7 +11,18 @@
 /* ************************************************************************** */
 #include "../../../include/minishell.h"
 
-// Obtiene las rutas del PATH del entorno como un array de strings
+/**
+ * @brief Retrieves all directories from the PATH environment variable.
+ * This function searches the provided environment array 
+	for the "PATH" variable.
+ * If found, it splits the value of "PATH" by the colon delimiter (':') to
+ * create an array of strings, where each string is a directory path.
+ *
+ * @param env The environment variables as a null-terminated array of strings.
+ * @return A dynamically allocated null-terminated array of strings, where each
+ * string is a directory from the PATH. Returns NULL if "PATH" is not found
+ * or if memory allocation fails.
+ */
 char	**get_all_paths(char **env)
 {
 	char	*path_env;
@@ -22,7 +33,24 @@ char	**get_all_paths(char **env)
 	return (ft_split(path_env, ':'));
 }
 
-// Busca la ruta del ejecutable para el comando usando las rutas en allpath
+/**
+ * @brief Searches for the executable path of a command within a
+	list of directories.
+ * This function takes a command name and an array of directory 
+	paths. It constructs
+ * potential full paths for the executable by joining the directory 
+	paths with the
+ * command name. It then checks if the constructed path points 
+	to an executable file
+ * that exists and has execute permissions.
+ * @param cmd The command name (e.g., "ls", "grep").
+ * @param allpath A null-terminated array of directory paths obtained from PATH.
+ * @return A dynamically allocated string containing the full path to 
+	the executable
+ * if found and accessible. Returns NULL if the command is not found, is empty,
+ * or if memory allocation fails. The caller is responsible for 
+	freeing the returned string.
+ */
 char	*find_executable(char *cmd, char **allpath)
 {
 	int		i;
@@ -52,7 +80,23 @@ char	*find_executable(char *cmd, char **allpath)
 	return (free_split(s_cmd), NULL);
 }
 
-// Función principal que combina ambas
+/**
+
+ * @brief Combines `get_all_paths` and `find_executable` to get 
+	the full path of a command.
+ * This is the main function for resolving a command's executable path.
+ * It first retrieves all directories from the "PATH" environment variable,
+ * then uses these directories to search for the specified command.
+ *
+ * @param cmd The command name to find (e.g., "ls").
+ * @param env The environment variables as a null-terminated array of strings.
+ * @return A dynamically allocated string containing the full 
+ 	path to the executable
+ * if found and accessible. Returns NULL if the command cannot be found or
+ * if memory allocation fails at any stage. The caller 
+	is responsible for freeing
+ * the returned string.
+ */
 char	*get_path(char *cmd, char **env)
 {
 	char	**allpath;

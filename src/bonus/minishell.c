@@ -11,113 +11,59 @@
 /* ************************************************************************** */
 #include "../include/minishell.h"
 
-static int	verify_sigint(int status)
+/**
+ * @brief Initializes the minishell structure.
+ *
+ * This function allocates memory for a `t_minishell` structure and
+ * initializes its members with the provided AST, environment,
+	and full input line.
+ * It sets `tokens` to NULL and the initial `exit` status to 0.
+ *
+ * @param ast A pointer to the Abstract Syntax Tree.
+ * @param myenv A pointer to the custom environment structure.
+ * @param full_line The complete input line read from the user.
+ * @return A pointer to the newly initialized `t_minishell` structure,
+	or NULL if
+ * memory allocation fails.
+ */
+t_minishell	*init_minishell(t_ast *ast, t_myenv *myenv, char *full_line)
 {
-	if (g_signal == S_SIGINT)
-	{
-		status = 130;
-		g_signal = S_BASE;
-	}
-	return (status);
-}
-int	is_heredoc_only(t_ast *ast)
-{
-	if (!ast || ast->type != NODE_COMMAND)
-		return (0);
-	if (!ast->cmd)
-		return (0);
-	if (ast->cmd->args && ast->cmd->args[0])
-		return (0);
-	if (ast->cmd->redir && ast->cmd->redir->heredoc_count > 0)
-		return (1);
-	return (0);
-}
-
-void	main_loop(t_myenv *myenv)
-{
-	char		*line;
-	char		*full_line;
-	t_token		*tokens;
-	t_ast		*ast;
 	t_minishell	*minishell;
-	t_token		*tmp;
-	int			status;
 
-	tokens = 0;
-	ast = 0;
-	minishell = 0;
-	status = 0;
-	while (1)
-	{
-		line = readline("minishell >");
-		status = verify_sigint(status);
-		if (!line)
-			break;
-		if (*line)
-			add_history(line);
-		full_line = read_until_balanced(line);
-		free(line);
-		line = NULL;
-		if (!full_line)
-			continue;
-		tokens = lexer(full_line);
-		if (check_multiple_expansions_at_start(tokens, myenv->list_env))
-		{
-			status = 1;
-			free(full_line);
-			free_tokens(tokens);
-			continue;
-		}
-		expand_before_executor(&tokens, myenv->list_env, status);
-		shift_empty_tokens(&tokens);
-		if (validate_syntax(tokens) || check_unclosed_quotes(full_line))
-		{
-			status = 2;
-			free(full_line);
-			free_tokens(tokens);
-			continue;
-		}
-		tmp = tokens;
-		ast = parse_expression(&tokens, myenv->env);
-		free_tokens(tmp);
-		if (preprocess_heredocs(ast, status) == -1)
-		{
-			status = 130;
-			free_ast(ast);
-			free(full_line);
-			continue;
-		}
-		else
-		{
-			minishell = init_minishell(ast, myenv, full_line);
-			if (is_heredoc_only(ast))
-				status = 0;
-			else if (g_signal != S_CANCEL_EXEC)
-				status = execute_ast(ast, myenv, minishell, status);
-		}
-		// Esta llamada ahora es segura y NECESARIA para limpiar el ciclo.
-		if (minishell)
-			free_minishell(minishell);
-		tokens = NULL;
-		ast = NULL;
-		minishell = NULL;
-		g_signal = S_BASE;
-	}
+	minishell = malloc(sizeof(t_minishell));
+	if (!minishell)
+		return (NULL);
+	minishell->tokens = NULL;
+	minishell->ast = ast;
+	minishell->myenv = myenv;
+	minishell->full_line = full_line;
+	minishell->exit = 0;
+	return (minishell);
 }
 
+/**
+ * @brief The main entry point of the minishell program.
+ *
+ * This function initializes the environment, sets up signal handlers,
+ * updates the shell level, and enters the main command loop. After the loop
+ * exits, it frees the allocated environment memory.
+ *
+ * @param argc The number of command-line arguments.
+ * @param argv An array of command-line argument strings.
+ * @param env An array of environment variables passed from the parent process.
+ * @return Returns 0 on successful execution.
+ */
 int	main(int argc, char **argv, char **env)
 {
-	t_myenv *myenv;
+	t_myenv	*myenv;
 
 	(void)argc;
 	(void)argv;
-
 	myenv = NULL;
 	myenv = ft_myenv(env);
 	signal_init();
 	ft_shlvl(myenv);
 	main_loop(myenv);
-	// Esta es la limpieza final si se sale con Ctrl+D
 	free_myenv(myenv);
 	return (0);
 }

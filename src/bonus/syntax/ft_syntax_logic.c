@@ -11,6 +11,15 @@
 /* ************************************************************************** */
 #include "../../../include/minishell.h"
 
+/**
+ * Parses a shell expression, handling logical AND (`&&`), OR (`||`),
+	and background (`&`) operators.
+
+ * It builds an Abstract Syntax Tree (AST) by recursively parsing
+	pipelines and combining them with
+ * logical operators based on their precedence.
+ * Returns the root of the AST for the parsed expression.
+ */
 t_ast	*parse_expression(t_token **tokens, char **envp)
 {
 	t_ast		*left;
@@ -18,18 +27,15 @@ t_ast	*parse_expression(t_token **tokens, char **envp)
 	t_node_type	type;
 
 	left = parse_pipeline(tokens, envp);
-	// --- INICIO DE LA CORRECCIÓN ---
 	while (*tokens && ((*tokens)->type == TOKEN_AND
-			|| (*tokens)->type == TOKEN_OR
-			|| (*tokens)->type == TOKEN_BG)) // <-- Añade TOKEN_BG
+			|| (*tokens)->type == TOKEN_OR || (*tokens)->type == TOKEN_BG))
 	{
 		if ((*tokens)->type == TOKEN_AND)
 			type = NODE_AND;
 		else if ((*tokens)->type == TOKEN_OR)
 			type = NODE_OR;
 		else
-			type = NODE_BG; // <-- Añade este else
-		// --- FIN DE LA CORRECCIÓN ---
+			type = NODE_BG;
 		next_token(tokens);
 		new = init_ast_node(type, NULL);
 		new->left = left;
@@ -39,6 +45,17 @@ t_ast	*parse_expression(t_token **tokens, char **envp)
 	return (left);
 }
 
+/**
+ * Executes a command in the background.
+ * It forks a new process, and in the child process, it redirects
+	standard input to /dev/null
+ * and then executes the command associated with the left child of the AST node.
+ * The parent process does not wait for the background command to
+	complete and continues execution,
+ * optionally executing a right-hand side command if present.
+ * Returns the status of the right-hand side command if executed,
+	or 0 on successful backgrounding.
+ */
 int	execute_bg(t_ast *node, t_myenv *myenv, t_minishell *minishell)
 {
 	pid_t	pid;
@@ -49,26 +66,20 @@ int	execute_bg(t_ast *node, t_myenv *myenv, t_minishell *minishell)
 	status = 0;
 	if (pid == 0)
 	{
-		// Proceso hijo (trabajo en segundo plano)
 		set_defaul_signals();
-		// Desvincular de la entrada estándar del terminal
 		close(STDIN_FILENO);
 		open("/dev/null", O_RDONLY);
-		// Ejecutar el comando de la izquierda del '&'
 		exit(execute_ast(node->left, myenv, minishell, status));
 	}
 	else if (pid > 0)
 	{
-		// Proceso padre
-		// NO esperar al proceso hijo (waitpid).
-		// Ejecutar inmediatamente el comando de la derecha (si existe).
 		if (node->right)
 			status = execute_ast(node->right, myenv, minishell, status);
-	}
-	else
-	{
-		perror("fork");
-		status = 1;
+		else
+		{
+			perror("fork");
+			status = 1;
+		}
 	}
 	return (status);
 }

@@ -11,8 +11,16 @@
 /* ************************************************************************** */
 #include "../../../include/minishell.h"
 
-// src/exec/ft_in.c
-
+/**
+ * Handles input redirections for a command.
+ * It iterates through the input files, expands any wildcards in their names,
+ * opens each file,
+	and sets the last opened file as the standard input for the command.
+ * Closes previously opened input files to ensure only the
+ 	last one is effective.
+ * Returns 0 on success, or -1 on error (e.g., file not found,
+	permission denied, or wildcard expansion failure).
+ */
 int	ft_input_redirection(t_redir *redir)
 {
 	int		fd;
@@ -28,14 +36,10 @@ int	ft_input_redirection(t_redir *redir)
 	{
 		expanded_file = expand_redir_wildcard(files[i]);
 		if (!expanded_file)
-			return (-1); // El error ya fue impreso por expand_redir_wildcard
+			return (-1);
 		fd = ft_open(expanded_file, 0);
 		if (fd == -1)
-		{
-			perror(expanded_file);
-			free(expanded_file);
-			return (-1);
-		}
+			return (perror(expanded_file), free(expanded_file), -1);
 		free(expanded_file);
 		if (redir->input_file > 2)
 			close(redir->input_file);

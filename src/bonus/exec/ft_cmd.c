@@ -11,6 +11,13 @@
 /* ************************************************************************** */
 #include "../../../include/minishell.h"
 
+/**
+ * Handles input and output redirections for a command.
+ * It determines the correct order of redirections based on 
+ 	`input_ord` and `output_ord`.
+ * Opens specified input/output files and redirects STDIN/STDOUT accordingly.
+ * Exits with status 1 on any redirection error.
+ */
 void	ft_redirect(t_command *cmd)
 {
 	if (cmd->redir->input_ord > cmd->redir->output_ord
@@ -34,22 +41,14 @@ void	ft_redirect(t_command *cmd)
 		dup2(cmd->redir->output_file, STDOUT_FILENO);
 }
 
-int	has_internal_whitespace(const char *str)
-{
-	int	i;
-
-	i = 0;
-	if (!str)
-		return (0);
-	while (str[i])
-	{
-		if (ft_isspace((unsigned char)str[i]))
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
+/**
+ * Validates the command name and determines if it's a built-in command.
+ * Checks for internal whitespace in the command name,
+	treating it as "command not found" if present.
+ * Applies wildcard expansion to command arguments.
+ * Returns the ID of the built-in command, -1 if it's an external command, or
+	-2 for an invalid command name.
+ */
 int	validate_and_get_builtin(t_command *cmd)
 {
 	if (has_internal_whitespace(cmd->args[0]))
@@ -66,6 +65,14 @@ int	validate_and_get_builtin(t_command *cmd)
 	return (-1);
 }
 
+/**
+ * Executes an external (non-built-in) command.
+ * Forks a new process, handles redirections in the child,
+	resolves the command path,
+ * and executes the command using `execve`.
+ * Waits for the child process to complete and updates the shell's exit status.
+ * Returns the exit status of the executed command.
+ */
 int	execute_external_command(t_command *cmd, t_minishell *minishell)
 {
 	pid_t	pid;
@@ -73,13 +80,7 @@ int	execute_external_command(t_command *cmd, t_minishell *minishell)
 	char	**clean_args;
 
 	clean_args = remove_quotes_from_args(cmd->args);
-	
-	// --- INICIO DE LA CORRECCIÓN ---
-	// Liberamos el array de punteros original ANTES de reemplazarlo.
-	// Esto soluciona la fuga "definitely lost" de 512 bytes.
 	free_split(cmd->args);
-	// --- FIN DE LA CORRECCIÓN ---
-	
 	cmd->args = clean_args;
 	g_signal = S_CMD;
 	pid = fork();
@@ -99,6 +100,15 @@ int	execute_external_command(t_command *cmd, t_minishell *minishell)
 	return (update_exit_status(status, minishell));
 }
 
+/**
+ * Executes an internal (built-in) command.
+ * For certain built-ins (cd, exit, export, unset, env),
+	they are executed directly in the parent process.
+ * For other built-ins or if redirections are involved,
+	a child process is forked to execute the built-in,
+ * handling redirections within that child process.
+ * Returns the exit status of the executed built-in command.
+ */
 int	execute_internal_command(t_minishell *minishell, t_command *cmd, int status,
 		int builtin_id)
 {
@@ -126,6 +136,12 @@ int	execute_internal_command(t_minishell *minishell, t_command *cmd, int status,
 	}
 }
 
+/**
+ * Main function to execute a command.
+ * It first determines if the command is a built-in or an external command.
+ * Based on the type, it calls the appropriate execution function.
+ * Returns the exit status of the executed command.
+ */
 int	execute_command(t_command *cmd, t_minishell *minishell, int status)
 {
 	int	builtin_id;

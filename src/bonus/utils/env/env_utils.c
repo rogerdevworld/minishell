@@ -11,6 +11,12 @@
 /* ************************************************************************** */
 #include "../../../../include/minishell.h"
 
+/**
+ * Sorts a linked list of environment variables alphabetically by their keys.
+ * This implementation uses a bubble-sort-like approach, iterating and swapping
+ * adjacent nodes if they are out of order,
+	resetting the traversal after each swap.
+ */
 void	ft_sort_export(t_env *env)
 {
 	t_env	*ini;
@@ -34,6 +40,12 @@ void	ft_sort_export(t_env *env)
 	env = ini;
 }
 
+/**
+ * Creates a deep copy of an array of strings (typically the `envp` array).
+ * Allocates new memory for the array and for each individual string.
+ * Returns a pointer to the newly created copy,
+	or NULL if memory allocation fails.
+ */
 char	**ft_dup_env(char **envp)
 {
 	int		i;
@@ -55,6 +67,11 @@ char	**ft_dup_env(char **envp)
 	return (copy);
 }
 
+/**
+ * Adds or updates an environment variable in the shell's environment list.
+ * It constructs a "key=value" string and then uses `export_add_or_update`
+ * to handle the actual addition or update in the linked list.
+ */
 void	ft_add_env(t_myenv *myenv, const char *key, const char *value)
 {
 	char	*arg;
@@ -74,6 +91,11 @@ void	ft_add_env(t_myenv *myenv, const char *key, const char *value)
 	free(arg);
 }
 
+/**
+ * Checks if a given key exists in the linked list of 
+ 	environment variables.
+ * Returns 1 if the key is found, 0 otherwise.
+ */
 int	env_has_key(t_env *env_list, const char *key)
 {
 	while (env_list)

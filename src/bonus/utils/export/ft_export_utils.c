@@ -11,6 +11,14 @@
 /* ************************************************************************** */
 #include "../../../../include/minishell.h"
 
+/**
+ * Prints the current environment variables in a format 
+	suitable for the 'export' command.
+ * It converts the linked list of environment variables to a temporary array,
+ * sorts them alphabetically by key, and then prints each variable.
+ * Variables with values are printed as "declare -x KEY="VALUE"",
+ * while those without values are printed as "declare -x KEY".
+ */
 void	print_export(t_env *env)
 {
 	t_env	**array;
@@ -33,6 +41,13 @@ void	print_export(t_env *env)
 	free(array);
 }
 
+/**
+ * Joins two strings and frees the first string.
+ * This is a utility function to concatenate a key and a value 
+	for environment variables,
+ * and then free the memory of the key string.
+ * Returns a newly allocated string containing the joined content.
+ */
 char	*ft_strjoin_free_env(char *s1, char *s2)
 {
 	char	*joined;
@@ -43,6 +58,11 @@ char	*ft_strjoin_free_env(char *s1, char *s2)
 	return (joined);
 }
 
+/**
+ * Calculates the number of elements in a linked list of environment 
+ 	variables.
+ * Returns the total count of nodes in the list.
+ */
 int	env_list_size(t_env *env)
 {
 	int	size;
@@ -56,6 +76,12 @@ int	env_list_size(t_env *env)
 	return (size);
 }
 
+/**
+ * Converts a linked list of environment variables into a dynamically
+	allocated array of pointers to `t_env` nodes.
+ * The array is null-terminated.
+ * Returns the newly created array, or NULL if memory allocation fails.
+ */
 t_env	**env_to_array(t_env *env)
 {
 	int		size;
@@ -77,6 +103,11 @@ t_env	**env_to_array(t_env *env)
 	return (array);
 }
 
+/**
+ * Sorts an array of pointers to `t_env` structures alphabetically
+	by their `key` field.
+ * This uses a simple bubble sort algorithm.
+ */
 void	sort_env_array(t_env **array)
 {
 	int		i;

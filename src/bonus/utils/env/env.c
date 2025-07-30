@@ -11,6 +11,12 @@
 /* ************************************************************************** */
 #include "../../../../include/minishell.h"
 
+/**
+ * Creates a new `t_env` node for an environment variable.
+ * Allocates memory for the node, duplicates the key and content strings,
+ * and sets the `next` pointer to NULL.
+ * Returns a pointer to the new node, or NULL if memory allocation fails.
+ */
 t_env	*ft_env_new(char *key, char *content)
 {
 	t_env	*new;
@@ -27,6 +33,11 @@ t_env	*ft_env_new(char *key, char *content)
 	return (new);
 }
 
+/**
+ * Adds a new `t_env` node to the end of a linked list of 
+ 	environment variables.
+ * If the list is empty, the new node becomes the head.
+ */
 void	ft_env_add_back(t_env **lst, t_env *new)
 {
 	t_env	*tmp;
@@ -44,6 +55,14 @@ void	ft_env_add_back(t_env **lst, t_env *new)
 	tmp->next = new;
 }
 
+/**
+
+ * Populates a linked list of `t_env` nodes from a null-terminated 
+	array of strings
+ * (typically `char **envp`).
+ * It parses each "KEY=VALUE" string, creates a new `t_env` node,
+	and adds it to the list.
+ */
 void	ft_env(t_env **env_list, char **env)
 {
 	int		i;
@@ -69,6 +88,13 @@ void	ft_env(t_env **env_list, char **env)
 	}
 }
 
+/**
+
+ * Prints all environment variables stored in the `t_myenv` 
+	structure to standard output.
+ * Each variable is printed in the "KEY=VALUE" format.
+ * Variables without content (only a key) are skipped.
+ */
 void	print_env(t_myenv *myenv)
 {
 	t_env	*tmp;
@@ -84,6 +110,15 @@ void	print_env(t_myenv *myenv)
 	}
 }
 
+/**
+ * Initializes and populates the `t_myenv` structure for the minishell.
+ * It duplicates the initial `envp` array,
+	creates a linked list of environment variables,
+ * and ensures essential environment variables like PATH, PWD, SHLVL,
+	and '_' are set.
+ * Returns a pointer to the newly created `t_myenv` structure,
+	or NULL if memory allocation fails.
+ */
 t_myenv	*ft_myenv(char **env)
 {
 	t_myenv	*myenv;
