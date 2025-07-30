@@ -11,12 +11,6 @@
 /* ************************************************************************** */
 #include "../../../include/minishell.h"
 
-/**
- * Checks a given line for unclosed single or double quotes.
- * It iterates through the string, tracking the state of open quotes.
- * If an unclosed quote is found at the end of the line, it prints a syntax error.
- * Returns 0 if quotes are balanced, or 2 if an unclosed quote is detected.
- */
 int	check_unclosed_quotes(char *line)
 {
 	int		i;
@@ -40,40 +34,35 @@ int	check_unclosed_quotes(char *line)
 	return (0);
 }
 
-/**
- * Resolves the full executable path for a given command.
- * If the command contains a '/', it checks direct file system access and permissions.
- * If it's a directory, it reports an error.
- * If no '/' is present, it searches the PATH environment variable.
- * On failure (e.g., command not found, permission denied, or is a directory), it exits
- * the current process with an appropriate error status.
- */
-void	resolve_command_path(t_command *cmd, char **env)
+static void	handle_direct_path(t_command *cmd)
 {
 	struct stat	statbuf;
 
+	if (access(cmd->args[0], F_OK) != 0)
+	{
+		perror(cmd->args[0]);
+		exit(127);
+	}
+	if (stat(cmd->args[0], &statbuf) == 0 && S_ISDIR(statbuf.st_mode))
+	{
+		ft_putstr_fd(cmd->args[0], 2);
+		ft_putstr_fd(": Is a directory\n", 2);
+		exit(EXIT_NOT_EXECUTABLE);
+	}
+	if (access(cmd->args[0], X_OK) != 0)
+	{
+		perror(cmd->args[0]);
+		exit(EXIT_NOT_EXECUTABLE);
+	}
+	cmd->path = ft_strdup(cmd->args[0]);
+}
+
+void	resolve_command_path(t_command *cmd, char **env)
+{
 	if (!cmd || !cmd->args || !cmd->args[0])
 		return ;
-	if (strchr(cmd->args[0], '/'))
-	{
-		if (access(cmd->args[0], F_OK) != 0)
-		{
-			perror(cmd->args[0]);
-			exit(127);
-		}
-		if (stat(cmd->args[0], &statbuf) == 0 && S_ISDIR(statbuf.st_mode))
-		{
-			ft_putstr_fd(cmd->args[0], 2);
-			ft_putstr_fd(": Is a directory\n", 2);
-			exit(EXIT_NOT_EXECUTABLE);
-		}
-		if (access(cmd->args[0], X_OK) != 0)
-		{
-			perror(cmd->args[0]);
-			exit(EXIT_NOT_EXECUTABLE);
-		}
-		cmd->path = ft_strdup(cmd->args[0]);
-	}
+	if (ft_strchr(cmd->args[0], '/'))
+		handle_direct_path(cmd);
 	else
 	{
 		cmd->path = get_path(cmd->args[0], env);

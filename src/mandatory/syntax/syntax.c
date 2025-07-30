@@ -49,45 +49,6 @@ int	check_invalid_tokens(t_token *tokens)
 }
 
 /*
- * check_operator_positions:
- * Valida la posición de operadores lógicos y pipes.
- * No permite que la línea empiece o termine con operadores |, &&, ||.
- * Tampoco permite operadores consecutivos sin comandos entre ellos.
- * Si encuentra error,
-	imprime mensaje y devuelve 1; si todo está correcto devuelve 0.
- */
-int	check_operator_positions(t_token *tokens)
-{
-	t_token	*prev;
-
-	prev = NULL;
-	if (!tokens)
-		return (0);
-	if (tokens->type == TOKEN_PIPE || tokens->type == TOKEN_AND
-		|| tokens->type == TOKEN_BG || tokens->type == TOKEN_OR)
-		return (ft_msg_syntax("syntax error near unexpected token ",
-				tokens->value), 2);
-	while (tokens)
-	{
-		if (prev && (prev->type == TOKEN_PIPE || prev->type == TOKEN_AND
-				|| prev->type == TOKEN_OR || prev->type == TOKEN_BG))
-		{
-			if (tokens->type == TOKEN_PIPE || tokens->type == TOKEN_AND
-				|| tokens->type == TOKEN_OR || tokens->type == TOKEN_BG)
-				return (ft_msg_syntax("syntax error near unexpected token ",
-						tokens->value), 2);
-		}
-		prev = tokens;
-		tokens = tokens->next;
-	}
-	if (prev && (prev->type == TOKEN_PIPE || prev->type == TOKEN_AND
-			|| prev->type == TOKEN_OR || prev->type == TOKEN_BG))
-		return (ft_msg_syntax("syntax error near unexpected token ",
-				prev->value), 2);
-	return (0);
-}
-
-/*
  * check_redirection_args:
  * Comprueba que cada token de redirección (<, >, >>,
 	<<) esté seguido por un token válido
@@ -142,22 +103,4 @@ int	check_parentheses_balance(t_token *tokens)
 		tokens = tokens->next;
 	}
 	return (count);
-}
-
-/*
- * validate_syntax:
- * Función que ejecuta todas las validaciones anteriores.
- * Devuelve 1 si encuentra algún error de sintaxis, 0 si no.
- */
-int	validate_syntax(t_token *tokens)
-{
-	if (check_invalid_tokens(tokens))
-		return (2);
-	if (check_operator_positions(tokens))
-		return (2);
-	if (check_redirection_args(tokens))
-		return (2);
-	if (check_parentheses_balance(tokens))
-		return (2);
-	return (0);
 }
