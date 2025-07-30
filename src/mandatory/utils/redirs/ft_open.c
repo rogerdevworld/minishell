@@ -11,25 +11,27 @@
 /* ************************************************************************** */
 #include "../../../../include/minishell.h"
 
-// src/utils/redirs/ft_open.c
-
+/**
+ * Opens a file with specified mode (read-only, write/create/truncate, 
+ 	or write/create/append).
+ * It first removes any quotes from the filename to ensure correct 
+ 	path resolution.
+ * Returns the file descriptor on success, or -1 on failure (and sets errno).
+ */
 int	ft_open(char *file, int mode)
 {
 	int		fd;
-	char	*clean_file; // Variable temporal
+	char	*clean_file;
 
-	clean_file = remove_quotes(file); // Guardamos la memoria nueva aquí
+	clean_file = remove_quotes(file);
 	if (!clean_file)
-		return (-1); // Manejo de error si malloc falla
-
+		return (-1);
 	if (mode == 0)
 		fd = open(clean_file, O_RDONLY);
 	if (mode == 1)
 		fd = open(clean_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (mode == 2)
 		fd = open(clean_file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-	
-	free(clean_file); // Liberamos la memoria que ya no necesitamos
-	
+	free(clean_file);
 	return (fd);
 }
