@@ -80,7 +80,7 @@ RM = rm -rf
 # --- libft --- #
 LIBFT = ./src/libft
 EX_LIB = $(LIBFT)/libft.a
-B_LIBFT = ./src/bonus/utils/libft
+B_LIBFT = ./src/libft
 B_EX_LIB = $(B_LIBFT)/libft.a
 
 # Conditional compilation for bonus or mandatory
