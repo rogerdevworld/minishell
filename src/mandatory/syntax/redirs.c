@@ -11,6 +11,13 @@
 /* ************************************************************************** */
 #include "../../../include/minishell.h"
 
+/**
+ * Initializes a `t_redir` structure,
+	setting all its members to their default values.
+ * This includes initializing file descriptors to an invalid state (-2),
+ * order trackers to 1, heredoc count to 0,
+	and allocating memory for file arrays and limiters.
+ */
 void	init_redir(t_redir *redir)
 {
 	if (!redir)
@@ -26,6 +33,11 @@ void	init_redir(t_redir *redir)
 	redir->out_file = ft_calloc(64, sizeof(char *));
 }
 
+/**
+ * Resets a `t_redir` structure by freeing any previously allocated memory for
+ * limiters and file arrays,
+	then re-initializes the structure to its default state.
+ */
 void	reset_redir(t_redir *redir)
 {
 	if (!redir)
