@@ -11,7 +11,14 @@
 /* ************************************************************************** */
 #include "../../../include/minishell.h"
 
-// -- init -- //
+/**
+ * Initializes a new `t_command` structure.
+ * Allocates memory for the command itself, its arguments array,
+	and its redirection structure.
+ * Initializes the redirection structure using `init_redir`.
+ * Returns a pointer to the newly created command,
+	or NULL if memory allocation fails.
+ */
 t_command	*init_command(void)
 {
 	t_command	*cmd;
@@ -32,6 +39,13 @@ t_command	*init_command(void)
 	return (cmd);
 }
 
+/**
+ * Initializes a new Abstract Syntax Tree (AST) node.
+ * Allocates memory for the node and sets its type and associated command.
+ * The left and right child pointers are initialized to NULL.
+ * Returns a pointer to the newly created AST node,
+	or NULL if memory allocation fails.
+ */
 t_ast	*init_ast_node(t_node_type type, t_command *cmd)
 {
 	t_ast	*node;
