@@ -15,9 +15,9 @@
 /**
  * @brief Recursively checks if a string matches a given wildcard pattern.
  * This function implements a basic wildcard matching algorithm
- 	where '*' matches
- * zero or more characters. It works by comparing the pattern 
- 	and string
+	where '*' matches
+ * zero or more characters. It works by comparing the pattern
+	and string
  * character by character, handling the '*' wildcard specifically.
  *
  * @param pattern The wildcard pattern string (e.g., "foo*.txt").
@@ -54,9 +54,8 @@ int	match_pattern(const char *pattern, const char *str)
  * This function finds the last '/' in the pattern string and returns
  * the substring before it. If no '/' is found, it means the pattern
  * is in the current directory, so it returns a duplicate of ".".
- *
- * @param pattern The full pattern string (e.g., "path/to/*.txt").
- * @return A newly allocated string containing the path (e.g., "path/to"),
+ * param pattern The full pattern string
+ * return A newly allocated string containing the path (e.g., "path/to"),
  * or a duplicate of "." if no path is present,
 	or NULL on memory allocation failure.
  */
@@ -78,9 +77,8 @@ char	*extract_path(const char *pattern)
 }
 
 /**
-
- * @brief Extracts the filename pattern component from 
- 	a given full pattern string.
+ * @brief Extracts the filename pattern component from
+	a given full pattern string.
  * This function finds the last '/' in the full pattern string and returns
  * a pointer to the substring immediately after it. If no '/' is found,
  * the entire string is considered the pattern.
