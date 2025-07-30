@@ -1,0 +1,17 @@
+{
+    "files.associations": {
+        "functional": "c",
+        "string": "c",
+        "random": "c",
+        "array": "c",
+        "deque": "c",
+        "list": "c",
+        "unordered_map": "c",
+        "unordered_set": "c",
+        "vector": "c",
+        "iterator": "c",
+        "string_view": "c",
+        "algorithm": "c",
+        "minishell.h": "c"
+    }
+}

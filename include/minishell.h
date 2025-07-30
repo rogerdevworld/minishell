@@ -5,98 +5,89 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/27 17:36:11 by rmarrero          #+#    #+#             */
-/*   Updated: 2025/04/09 22:22:45 by xviladri         ###   ########.fr       */
+/*   Created: 2025/03/27 11:56:13 by rmarrero          #+#    #+#             */
+/*   Updated: 2025/04/09 22:22:59 by xviladri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-// -- variable global signal -- //
-extern int	g_signal;
-
-// -- system libs -- //
-# include <ctype.h>
-# include <dirent.h>
-# include <fcntl.h>
-# include <limits.h>
-# include <signal.h>
+// --- System Libraries ---
 # include <stdio.h>
 # include <stdlib.h>
-# include <sys/ioctl.h>
-# include <sys/stat.h>
-# include <sys/wait.h>
 # include <unistd.h>
+# include <fcntl.h>
+# include <sys/wait.h>
+# include <signal.h>
+# include <sys/stat.h>
+# include <dirent.h>
+# include <sys/ioctl.h>
+# include <limits.h>
+# include <ctype.h>
 
-// -- readline -- //
-# include <readline/history.h>
+// --- Readline Library ---
 # include <readline/readline.h>
+# include <readline/history.h>
 
-// -- internal libs -- //
+// --- Internal Libraries (Order is critical here) ---
 # include "../src/libft/libft.h"
-# include "syntax.h"
 # include "env.h"
+# include "syntax.h" // Must be before other headers that use its structs
 # include "builtins.h"
 # include "exec.h"
 # include "redirections.h"
 # include "signals.h"
 # include "utils.h"
-// -- system.h -- //
 
-// -- minishell exit code -- //
-// Comando ejecutado con éxito
+// -- Global Signal Variable --
+extern int	g_signal;
+
+// -- Shell Exit Codes --
 # define EXIT_SUCCESS 0
-
-// Errores comunes
-# define EXIT_GENERAL_ERROR 1 // Error genérico
-# define EXIT_MISUSE_BUILTIN 2 // Uso incorrecto de un comando builtin
-# define EXIT_CMD_NOT_FOUND 127 // Comando no encontrado
-# define EXIT_NOT_EXECUTABLE 126 // Comando no ejecutable
-
-// Señales comunes
-# define EXIT_SIGINT 130 // Ctrl+C
-# define EXIT_SIGQUIT 131 // Ctrl+\ (quit)
-
-// Código especial al usar 'exit' incorrectamente
-# define EXIT_INVALID_EXIT 128
+# define EXIT_GENERAL_ERROR 1
+# define EXIT_MISUSE_BUILTIN 2
+# define EXIT_CMD_NOT_FOUND 127
+# define EXIT_NOT_EXECUTABLE 126
+# define EXIT_SIGINT 130
+# define EXIT_SIGQUIT 131
 # ifndef PATH_MAX
 #  define PATH_MAX 1024
 # endif
 
-// -- colors in the themes -- //
+// -- Colors for Prompt --
 # define RESET "\001\033[0m\002"
-# define RED "\001\033[0;31m\002"
 # define GREEN "\001\033[0;32m\002"
-# define CYAN "\001\033[0;36m\002"
-# define MAGENTA "\001\033[0;35m\002"
-# define YELLOW "\001\033[0;33m\002"
 
-// -- minishell.h -- //
-// -- internal strcts -- //
+// -- Main Minishell Structure --
 typedef struct s_minishell
 {
-	t_token	*tokens;
-	t_ast	*ast;
-	t_myenv	*myenv;
-	char	*full_line; // <--- AÑADE ESTA LÍNEA
-	int		exit;
-}			t_minishell;
-// t_minishell	*init_minishell(t_ast *ast, t_token *tokens, t_myenv *myenv);
-t_minishell	*init_minishell(t_ast *ast, t_myenv *myenv, char *full_line);
+	t_token		*tokens;
+	t_ast		*ast;
+	t_myenv		*myenv;
+	char		*full_line;
+	int			exit;
+}				t_minishell;
 
-// -- main loop -- //
-void		main_loop(t_myenv *myenv);
+typedef struct s_loop_data
+{
+	char		*full_line;
+	t_token		*tokens;
+	t_ast		*ast;
+	t_minishell	*minishell;
+	int			status;
+}				t_loop_data;
 
-// -- free -- //
-void		free_tokens(t_token *tokens);
-// void			free_command_list(t_command *cmd);
-//  -- exit.h -- //
-void		ft_exit(char *msg);
+// -- Initialization --
+t_minishell		*init_minishell(t_ast *ast, t_myenv *myenv, char *full_line);
 
-// wildcards
-void		ft_wildcards(char ***args);
-char	**add_arg_for_redir(char **arr, int *count, char *value);
-char	*expand_redir_wildcard(char *pattern);
+// -- Main Loop (main_loop.c) --
+void			main_loop(t_myenv *myenv);
 
+// -- Loop Logic (loop_*.c) --
+int				read_and_prepare_line(t_loop_data *data);
+int				process_and_validate_tokens(t_loop_data *data, t_myenv *myenv);
+void			parse_and_execute(t_loop_data *data, t_myenv *myenv);
+int				is_heredoc_only(t_ast *ast);
 
 #endif

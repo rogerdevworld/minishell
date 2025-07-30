@@ -12,8 +12,14 @@
 #ifndef SYNTAX_H
 # define SYNTAX_H
 
-// -- lexer.h -- //
-enum
+// -- Estructuras de Datos del Parser -- //
+typedef struct s_token		t_token;
+typedef struct s_ast		t_ast;
+typedef struct s_command	t_command;
+typedef struct s_redir		t_redir;
+
+// -- Tipos de Token y Nodo -- //
+enum e_token_type
 {
 	TOKEN_WORD,
 	TOKEN_PIPE,
@@ -37,90 +43,84 @@ typedef enum e_node_type
 	NODE_OR,
 	NODE_BG,
 	NODE_SUBSHELL
-}							t_node_type;
+}	t_node_type;
 
-typedef struct s_token
+// -- Estructuras -- //
+struct s_token
 {
-	char					*value;
-	int						type;
-	char					quote_type;
-	struct s_token			*next;
-}							t_token;
+	char			*value;
+	int				type;
+	char			quote_type;
+	struct s_token	*next;
+};
 
-typedef struct s_word
+struct s_redir
 {
-	char					*value;
-	char					quote_type;
-}							t_word;
+	int		input_file;
+	int		input_ord;
+	int		output_file;
+	int		output_ord;
+	char	**limiter;
+	int		heredoc_count;
+	int		*heredoc_fds;
+	char	**in_file;
+	char	**out_file;
+};
 
-typedef struct s_redir
+struct s_command
 {
-	int						input_file;
-	int						input_ord;
-	int						output_file;
-	int						output_ord;
-	char					**limiter;
-	int						heredoc_count;
-	int						*heredoc_fds;
-	char					**in_file;
-	char					**out_file;
-}							t_redir;
+	char	**args;
+	char	*path;
+	t_redir	*redir;
+};
 
-typedef struct s_command
+struct s_ast
 {
-	char					**args;
-	char					*path;
-	t_redir					*redir;
-}							t_command;
+	t_node_type		type;
+	t_command		*cmd;
+	struct s_ast	*left;
+	struct s_ast	*right;
+};
 
-typedef struct s_ast
-{
-	t_node_type				type;
-	t_command				*cmd;
-	struct s_ast			*left;
-	struct s_ast			*right;
-}							t_ast;
+// --- Prototipos de Funciones ---
 
-typedef struct s_minishell	t_minishell;
+// -- Lexer (ft_lexer.c y ft_lexer_2.c) --
+t_token		*lexer(char *str);
+t_token		*init_lexer(char *token);
+void		add_back(t_token **tokens, t_token *token);
+void		shift_empty_tokens(t_token **head);
+char		*read_until_balanced(char *initial_line);
 
-t_token						*lexer(char *str);
-t_token						*init_lexer(char *token);
-// t_token				*init_lexer(char *token, char quote_type);
-void						add_back(t_token **tokens, t_token *token);
-int							validate_syntax(t_token *tokens);
+// -- Utilidades del Lexer (ft_lexer_utils.c) --
+int			is_operator(const char *s);
+int			read_operator(const char *s, char **out);
+int			read_word(const char *s, char **out);
+void		next_token(t_token **tokens);
+int			set_token_type(char *value);
 
-int							is_operator(const char *s);
-int							read_operator(const char *s, char **out);
-int							read_word(const char *s, char **out);
-void						next_token(t_token **tokens);
+// -- Parser (ft_syntax_*.c) --
+t_ast		*parse_expression(t_token **tokens, char **envp);
+t_ast		*parse_pipeline(t_token **tokens, char **envp);
+t_ast		*parse_factor(t_token **tokens, char **envp);
+t_ast		*parse_simple_command(t_token **tokens, char **envp);
+void		ft_redirects(t_command *cmd, t_token **tokens);
 
-// -- init ast & cmd -- //
-t_command					*init_command(void);
-t_ast						*init_ast_node(t_node_type type, t_command *cmd);
+// -- Inicialización de Estructuras (ft_syntax_init.c) --
+t_command	*init_command(void);
+t_ast		*init_ast_node(t_node_type type, t_command *cmd);
 
-// -- parser in ast for cases -- //
-void						ft_redirects(t_command *cmd, t_token **tokens);
-t_ast						*parse_simple_command(t_token **tokens,
-								char **envp);
-t_ast						*parse_factor(t_token **tokens, char **envp);
-t_ast						*parse_pipeline(t_token **tokens, char **envp);
-t_ast						*parse_expression(t_token **tokens, char **envp);
+// -- Validación de Sintaxis (syntax.c, syntax2.c, syntax3.c) --
+int			validate_syntax(t_token *tokens);
+int			check_unclosed_quotes(char *line);
+int			check_operator_positions(t_token *tokens);
+int			check_redirection_args(t_token *tokens);
+int			check_parentheses_balance(t_token *tokens);
+int			check_invalid_tokens(t_token *tokens);
+int			ft_msg_syntax(char *error, char *arg);
+void		resolve_command_path(t_command *cmd, char **env);
 
-// -- checker in syntax >&&  >ls && empty
-void						ft_syntax_check(t_minishell *minishell);
-t_ast						*parse_expression(t_token **tokens, char **envp);
-
-// -- redirs -- //
-void						init_redir(t_redir *redir);
-void						free_redir(t_redir *redir);
-void						reset_redir(t_redir *redir);
-
-// -- cheker open quotes -- //
-int							check_unclosed_quotes(char *line);
-void						resolve_command_path(t_command *cmd, char **env);
-void						shift_empty_tokens(t_token **head);
-
-char *read_until_balanced(char *initial_line);
-int	check_parentheses_balance(t_token *tokens);
+// -- Redirecciones (redirs.c) --
+void		init_redir(t_redir *redir);
+void		reset_redir(t_redir *redir);
 
 #endif

@@ -30,5 +30,4 @@ void	signal_init(void);
 void	ft_sigint(int sig);
 int		update_exit_status(int status, t_minishell *minishell);
 
-
 #endif

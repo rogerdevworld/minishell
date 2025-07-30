@@ -9,6 +9,7 @@
 /*   Updated: 2025/04/09 22:22:59 by xviladri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #ifndef ENV_H
 # define ENV_H
 
@@ -34,7 +35,5 @@ void				free_env_list(t_env *env);
 void				free_env_array(char **env_array);
 
 void				print_env(t_myenv *myenv);
-
-
 
 #endif
