@@ -11,6 +11,12 @@
 /* ************************************************************************** */
 #include "../../../../include/minishell.h"
 
+/**
+ * Extracts a variable name from a string, handling both braced (`${VAR}`)
+ * and unbraced (`$VAR`) formats.
+ * It advances the index `*i` past the extracted variable name.
+ * Returns a newly allocated string containing the variable name.
+ */
 char	*extract_variable_name(const char *arg, int *i)
 {
 	int		start;
@@ -36,6 +42,14 @@ char	*extract_variable_name(const char *arg, int *i)
 	return (var_name);
 }
 
+/**
+ * Retrieves the value of a given environment variable.
+ * Specifically handles the `?` variable for the last exit status.
+ * It searches the shell's environment list for the variable's value.
+ * Returns a newly allocated string with the variable's content,
+ * or an empty string if the variable is not found. The `var_name` 
+	is freed internally.
+ */
 char	*get_variable_value(t_minishell *minishell, char *var_name)
 {
 	char	*value;
@@ -53,6 +67,14 @@ char	*get_variable_value(t_minishell *minishell, char *var_name)
 	return (ft_strdup(""));
 }
 
+/**
+ * Handles backslash escape sequences or extracts a segment of plain text
+ * within a string, particularly for scenarios inside double quotes.
+ * It checks for `\\`, `\"`,
+	or `\$` to treat the subsequent character literally.
+ * Otherwise, it extracts plain text until another special character.
+ * Returns a newly allocated string containing the processed part.
+ */
 static char	*handle_backslash_or_plain(const char *arg, int *i)
 {
 	char	*part;
@@ -82,6 +104,12 @@ static char	*handle_backslash_or_plain(const char *arg, int *i)
 	return (part);
 }
 
+/**
+ * Processes a segment of text specifically within double quotes.
+ * It first attempts to expand variables (`$`). If no variable is found,
+ * it then handles backslash escapes or extracts plain text.
+ * Returns a newly allocated string with the processed segment.
+ */
 static char	*process_double_quote_segment(t_minishell *minishell,
 		const char *arg, int *i, int s)
 {
@@ -95,6 +123,14 @@ static char	*process_double_quote_segment(t_minishell *minishell,
 	return (part);
 }
 
+/**
+ * Processes the content inside double quotes, performing variable expansion
+ * and handling escaped characters.
+ * It iterates through the string until a closing double quote is found,
+ * processing each segment using `process_double_quote_segment`.
+ * Returns a newly allocated string with the fully expanded 
+	and unescaped content.
+ */
 char	*handle_inside_double_quotes(t_minishell *minishell, const char *arg,
 		int *i, int s)
 {
