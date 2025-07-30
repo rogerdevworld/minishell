@@ -11,7 +11,15 @@
 /* ************************************************************************** */
 #include "../../../include/minishell.h"
 
-// Paréntesis o comando base
+/**
+ * Parses a "factor" in the Abstract Syntax Tree (AST),
+	which can be either a subshell
+ * enclosed in parentheses or a simple command.
+ * If an opening parenthesis is encountered,
+	it recursively parses the expression within
+ * the parentheses as a subshell. Otherwise, it parses a simple command.
+ * Returns the root of the AST for the parsed factor.
+ */
 t_ast	*parse_factor(t_token **tokens, char **envp)
 {
 	t_ast	*subtree;
