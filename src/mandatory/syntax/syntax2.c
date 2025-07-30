@@ -11,9 +11,11 @@
 /* ************************************************************************** */
 #include "../../../include/minishell.h"
 
-/*
- * comillas en la linea
- *
+/**
+ * Checks a given line for unclosed single or double quotes.
+ * It iterates through the string, tracking the state of open quotes.
+ * If an unclosed quote is found at the end of the line, it prints a syntax error.
+ * Returns 0 if quotes are balanced, or 2 if an unclosed quote is detected.
  */
 int	check_unclosed_quotes(char *line)
 {
@@ -37,11 +39,15 @@ int	check_unclosed_quotes(char *line)
 	}
 	return (0);
 }
-/*
-files
-funciona con / pero si pasa mas cosas falla de momento ./ failt
-*/
 
+/**
+ * Resolves the full executable path for a given command.
+ * If the command contains a '/', it checks direct file system access and permissions.
+ * If it's a directory, it reports an error.
+ * If no '/' is present, it searches the PATH environment variable.
+ * On failure (e.g., command not found, permission denied, or is a directory), it exits
+ * the current process with an appropriate error status.
+ */
 void	resolve_command_path(t_command *cmd, char **env)
 {
 	struct stat	statbuf;
