@@ -11,7 +11,13 @@
 /* ************************************************************************** */
 #include "../../../include/minishell.h"
 
-// Pipes: a | b | c
+/**
+ * Parses a sequence of piped commands.
+ * It builds an Abstract Syntax Tree (AST) where commands are chained together
+ * by `|` (pipe) operators. It recursively parses individual command "factors"
+ * and connects them with pipe nodes.
+ * Returns the root of the AST representing the pipeline.
+ */
 t_ast	*parse_pipeline(t_token **tokens, char **envp)
 {
 	t_ast	*left;
