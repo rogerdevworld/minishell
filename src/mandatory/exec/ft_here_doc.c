@@ -12,63 +12,21 @@
 #include "../../../include/minishell.h"
 
 /**
- * creo que esto no lo estoy usando para heredocs
- *
+ * Expands wildcard patterns in heredoc limiters.
+ * If the limiter contains wildcards and expands to multiple files,
+	it's considered an ambiguous redirect error.
+ * Otherwise, it updates the limiter with the expanded result.
+ * Returns 0 on success, or -1 on error (e.g.,
+	ambiguous redirect or allocation failure).
  */
-// int	process_single_heredoc(char *limiter, int *fd_out)
-// {
-// 	int		pipe_fds[2];
-// 	char	*line;
-
-// 	if (pipe(pipe_fds) == -1)
-// 	{
-// 		perror("pipe");
-// 		return (-1);
-// 	}
-// 	/**aqui funciona pero no termina de salir del heredoc... */
-// 	while (1)
-// 	{
-// 		line = readline("> ");
-// 		if (g_signal == S_SIGINT_CMD)
-// 		{
-// 			free(line);
-// 			close(pipe_fds[1]);
-// 			close(pipe_fds[0]);
-// 			return (-1);              // error por interrupción
-// 		}
-// 		if (!line || ft_strncmp(line, limiter, ft_strlen(limiter) + 1) == 0)
-// 		{
-// 			free(line);
-// 			break ;
-// 		}
-// 		write(pipe_fds[1], line, ft_strlen(line));
-// 		write(pipe_fds[1], "\n", 1);
-// 		free(line);
-// 	}
-// 	close(pipe_fds[1]);
-// 	*fd_out = pipe_fds[0];
-// 	//*fd_out = 0;
-// 	g_signal = S_BASE;
-// 	return (0);
-// }
-
-/**
- * tratando de hacer las expansiones, funcionan pero cuando estan solas, no con
- * mas palabras
- * ej : >$PWD -> funciona
- * ej : >hola $PWD -> no funciona
- */
-
-// src/exec/ft_here_doc.c
-
 static int	expand_heredoc_limiter(t_redir *redir)
 {
 	char	**temp_args;
 	int		count;
 	char	*pattern_for_msg;
 
-	if (!redir->limiter || !redir->limiter[0]
-		|| !ft_strchr(redir->limiter[0], '*'))
+	if (!redir->limiter || !redir->limiter[0] || !ft_strchr(redir->limiter[0],
+			'*'))
 		return (0);
 	pattern_for_msg = ft_strdup(redir->limiter[0]);
 	if (!pattern_for_msg)
@@ -98,6 +56,12 @@ static int	expand_heredoc_limiter(t_redir *redir)
 	return (0);
 }
 
+/**
+ * Extracts a variable name from a string,
+	handling both braced and unbraced formats.
+ * Increments the pointer 'p' past the variable name.
+ * Returns a newly allocated string containing the variable name.
+ */
 static char	*get_var_name(const char **p)
 {
 	const char	*start = *p;
@@ -106,14 +70,13 @@ static char	*get_var_name(const char **p)
 	len = 0;
 	if (**p == '{')
 	{
-		(*p)++; // saltar '{'
+		(*p)++;
 		start = *p;
 		while (**p && **p != '}')
 		{
 			(*p)++;
 			len++;
 		}
-		// si cierra '}'
 		if (**p == '}')
 			(*p)++;
 	}
@@ -129,7 +92,11 @@ static char	*get_var_name(const char **p)
 }
 
 /**
- * esta funciona para expandir variables con texto
+ * Expands environment variables and the exit status ($?) within 
+	a line read from a heredoc.
+ * It iterates through the line,
+	identifying '$' followed by variable names or '?'.
+ * Returns a newly allocated string with all variables expanded.
  */
 char	*expand_line_heredoc(const char *line, int status)
 {
@@ -141,7 +108,6 @@ char	*expand_line_heredoc(const char *line, int status)
 	char		*var;
 	char		*val;
 
-	// size_t len = strlen(line);
 	result = malloc(1);
 	res_len = 0;
 	result[0] = '\0';
@@ -149,7 +115,7 @@ char	*expand_line_heredoc(const char *line, int status)
 	{
 		if (*p == '$')
 		{
-			p++; // avanzar después de $
+			p++;
 			if (*p == '?')
 			{
 				status_str = ft_itoa(status);
@@ -162,18 +128,16 @@ char	*expand_line_heredoc(const char *line, int status)
 					result[res_len] = '\0';
 					free(status_str);
 				}
-				p++; // saltar '?'
+				p++;
 				continue ;
 			}
 			if (!*p || (!isalpha((unsigned char)*p) && *p != '_' && *p != '{'))
 			{
-				// no es una variable válida, copiar literal '$'
 				result = realloc(result, res_len + 2);
 				result[res_len++] = '$';
 				result[res_len] = '\0';
 				continue ;
 			}
-			// obtener nombre de variable
 			var = get_var_name(&p);
 			if (var)
 			{
@@ -191,7 +155,6 @@ char	*expand_line_heredoc(const char *line, int status)
 		}
 		else
 		{
-			// copiar caracter normal
 			result = realloc(result, res_len + 2);
 			result[res_len++] = *p;
 			result[res_len] = '\0';
@@ -201,6 +164,12 @@ char	*expand_line_heredoc(const char *line, int status)
 	return (result);
 }
 
+/**
+ * Handles errors occurring during a fork operation.
+ * Prints an error message to stderr and closes the 
+ 	provided pipe file descriptors.
+ * Returns -1 to indicate an error.
+ */
 int	handle_fork_error(int *pipefd)
 {
 	perror("fork");
@@ -208,7 +177,13 @@ int	handle_fork_error(int *pipefd)
 	close(pipefd[0]);
 	return (-1);
 }
-
+/**
+ * Processes the exit status of a child process.
+ * Determines if the child exited normally or was terminated by a signal.
+ * Specifically handles SIGINT (Ctrl+C) during heredoc input,
+	returning a specific exit code.
+ * Returns the child's exit code or a signal-based exit code.
+ */
 int	handle_child_exit(int status, int *pipefd)
 {
 	int	code;
@@ -231,26 +206,28 @@ int	handle_child_exit(int status, int *pipefd)
 	return (code);
 }
 
-// src/exec/ft_here_doc.c
-
+/**
+ * Child process logic for heredoc.
+ * Reads lines from standard input until the limiter is encountered.
+ * Expands variables in lines unless the limiter contained quotes.
+ * Writes the processed lines to the pipe.
+ * Exits with status 0 on success, or 1 on allocation failure.
+ */
 int	child_proces_heredoc(char *limiter, int *pipefd, int status)
 {
 	char	*line;
 	char	*expanded;
+	char	*clean_limiter;
 
-	char *clean_limiter; // Variable para el limiter sin comillas
 	close(pipefd[0]);
 	signals_heredoc();
 	line = NULL;
-	// --- INICIO DE LA CORRECCIÓN ---
-	clean_limiter = remove_all_quotes(limiter); // Creamos la copia sin comillas
+	clean_limiter = remove_all_quotes(limiter);
 	if (!clean_limiter)
-		exit(1); // Salir si falla el malloc
-	// --- FIN DE LA CORRECCIÓN ---
+		exit(1);
 	while (1)
 	{
 		line = readline("> ");
-		// Usamos la copia sin comillas para la comparación
 		if (!line || ft_strcmp(line, clean_limiter) == 0)
 		{
 			free(line);
@@ -270,13 +247,19 @@ int	child_proces_heredoc(char *limiter, int *pipefd, int status)
 		}
 		free(line);
 	}
-	// --- INICIO DE LA CORRECCIÓN ---
-	free(clean_limiter); // Liberamos la copia
-	// --- FIN DE LA CORRECCIÓN ---
+	free(clean_limiter);
 	close(pipefd[1]);
 	exit(0);
 }
 
+/**
+ * Processes all heredocs associated with a redirection structure.
+ * It iterates through each heredoc limiter, forks a child process for each,
+ * and sets up a pipe for the child to write to.
+ * The parent process waits for the child and stores the read-end file descriptor.
+ * Handles signals during heredoc input and sets the final input file for the command.
+ * Returns 0 on success, or EXIT_SIGINT if a SIGINT occurs during heredoc input.
+ */
 int	process_all_heredocs(t_redir *redir, int s)
 {
 	int		i;
@@ -286,12 +269,9 @@ int	process_all_heredocs(t_redir *redir, int s)
 	if (!redir || redir->heredoc_count <= 0 || !redir->limiter)
 		return (0);
 	if (expand_heredoc_limiter(redir) != 0)
-		return (-1); // Si la expansión falla, detenemos la ejecución.
-	// --- INICIO DE LA CORRECCIÓN ---
-	// Liberamos el array pre-asignado para evitar una fuga de memoria.
+		return (-1);
 	if (redir->heredoc_fds)
 		free(redir->heredoc_fds);
-	// --- FIN DE LA CORRECCIÓN ---
 	redir->heredoc_fds = malloc(sizeof(int) * redir->heredoc_count);
 	if (!redir->heredoc_fds)
 		return (-1);
@@ -323,7 +303,14 @@ int	process_all_heredocs(t_redir *redir, int s)
 	return (0);
 }
 
-// Procesa recursivamente todos los heredocs del AST antes de ejecutar
+/**
+ * Recursively preprocesses heredoc redirections within the 
+	Abstract Syntax Tree (AST).
+ * It traverses the AST, finds all command nodes with heredocs,
+	and initiates their processing.
+ * Returns 0 on success, or
+	-1 if a SIGINT occurs during heredoc processing in any child.
+ */
 int	preprocess_heredocs(t_ast *node, int status)
 {
 	if (!node)
@@ -354,4 +341,3 @@ int	preprocess_heredocs(t_ast *node, int status)
 	}
 	return (0);
 }
-
