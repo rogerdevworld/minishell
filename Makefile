@@ -19,14 +19,14 @@ OBJ_DIR = ./obj
 SRCS =  $(SRC_DIR)minishell.c $(SRC_DIR)init.c $(SRC_DIR)exit.c $(SRC_DIR)expansor.c  \
         $(SRC_DIR)syntax/ft_lexer.c $(SRC_DIR)syntax/ft_lexer_utils.c $(SRC_DIR)syntax/syntax.c $(SRC_DIR)syntax/syntax2.c $(SRC_DIR)syntax/redirs.c \
         $(SRC_DIR)syntax/ft_syntax_redir.c $(SRC_DIR)syntax/ft_syntax_logic.c $(SRC_DIR)syntax/ft_syntax_init.c $(SRC_DIR)syntax/ft_syntax_subshell.c $(SRC_DIR)syntax/ft_syntax_pipes.c $(SRC_DIR)syntax/ft_syntax_cmd.c \
-        $(SRC_DIR_BUI)builtins.c $(SRC_DIR_BUI)pwd.c $(SRC_DIR_BUI)ft_cd.c $(SRC_DIR_BUI)ft_exit_builtin.c $(SRC_DIR_BUI)ft_unset.c $(SRC_DIR_BUI)ft_echo.c $(SRC_DIR_BUI)ft_export.c $(SRC_DIR_BUI)ft_env.c \
+        $(SRC_DIR_BUI)builtins.c $(SRC_DIR_BUI)ft_pwd.c $(SRC_DIR_BUI)ft_cd.c $(SRC_DIR_BUI)ft_exit_builtin.c $(SRC_DIR_BUI)ft_unset.c $(SRC_DIR_BUI)ft_echo.c $(SRC_DIR_BUI)ft_export.c $(SRC_DIR_BUI)ft_env.c \
         $(SRC_DIR)signals.c \
         $(SRC_DIR)wildcards.c \
         $(SRC_DIR)utils/ft_shlvl.c $(SRC_DIR)utils/get_path.c \
         $(SRC_DIR)utils/cleanup/ft_free.c $(SRC_DIR)utils/cleanup/ft_free2.c $(SRC_DIR)utils/cleanup/free_split.c $(SRC_DIR)utils/cleanup/ft_destroyer.c \
         $(SRC_DIR)utils/builtins/ft_echo_utils.c $(SRC_DIR)utils/builtins/ft_echo_utils2.c $(SRC_DIR)utils/builtins/ft_echo_utils3.c \
         $(SRC_DIR)utils/export/ft_export_utils.c $(SRC_DIR)utils/export/ft_export_utils2.c \
-        $(SRC_DIR)utils/redirs/ft_add_to_array.c $(SRC_DIR)utils/redirs/ft_open.c \
+        $(SRC_DIR)utils/redirs/ft_add_to_array.c $(SRC_DIR)utils/redirs/ft_open.c $(SRC_DIR)utils/redirs/utils.c \
         $(SRC_DIR)utils/signals/signals_utils.c \
         $(SRC_DIR)utils/env/env.c $(SRC_DIR)utils/env/env_utils.c \
         $(SRC_DIR)utils/quotes/ft_quotes_utils.c  $(SRC_DIR)utils/quotes/ft_split_quotes.c\
@@ -63,7 +63,7 @@ BSRCS = $(addprefix $(BSRC_DIR), \
 # This will add _bonus to the object filenames
 BOBJS = $(patsubst $(BSRC_DIR)%.c,$(B_OBJ_DIR)/%_bonus.o,$(BSRCS))
 
-CC = cc -g #-fsanitize=address,leak
+CC = cc -g -fsanitize=address,leak
 
 CFLAGS = -I./include -Wall -Werror -Wextra -I./include
 RM = rm -rf

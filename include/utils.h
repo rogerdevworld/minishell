@@ -125,4 +125,6 @@ char	*handle_question_mark(int *i, int s);
 char	*extract_braced_var(const char *arg, int *i);
 char	*extract_simple_var(const char *arg, int *i);
 
+int	has_internal_whitespace(const char *str);
+int	set_token_type(char *value);
 #endif
