@@ -116,7 +116,7 @@ char	**add_arg(char **arr, int *count, char *value)
 {
 	char	**new_arr;
 
-	new_arr = realloc(arr, sizeof(char *) * (*count + 2));
+	new_arr = ft_realloc(arr, sizeof(char *) * (*count + 2));
 	if (!new_arr)
 	{
 		free(value);
