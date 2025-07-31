@@ -11,23 +11,6 @@
 /* ************************************************************************** */
 #include "../include/minishell.h"
 
-/**
- * @brief Expands a shell variable within an argument string.
- *
- * This function handles the expansion of environment variables (`$VAR`),
- * special parameters (`$?`), and braced parameters (`${VAR}`) found in
- * an argument string. It identifies the variable name, retrieves its value
- * from the environment, and returns the expanded string.
- *
- * @param arg The full argument string being processed.
- * @param i A pointer to the current index in `arg`. This index will be
- * advanced past the variable name.
- * @param env A pointer to the environment variables list.
- * @param s The exit status of the previous command (used for `$?`).
- * @return A newly allocated string containing the expanded value. Returns a
- * strdup("$") if the '$' is not followed by a valid variable name,
- * an empty string for an unset variable, or NULL on memory allocation failure.
- */
 char	*expand_variable_ini(const char *arg, int *i, t_env *env, int s)
 {
 	char	*var_name;
@@ -57,22 +40,6 @@ char	*expand_variable_ini(const char *arg, int *i, t_env *env, int s)
 	return (ft_strdup(""));
 }
 
-/**
- * @brief Copies and expands content within double quotes.
- *
- * This function processes a segment of an argument string that is enclosed
- * in double quotes. It handles backslash escapes and variable expansions
- * within these quotes, concatenating the results.
- *
- * @param arg The full argument string.
- * @param i A pointer to the current index in `arg`. This index will be
- * advanced past the end of the double-quoted section.
- * @param env A pointer to the environment variables list.
- * @param s The exit status of the previous command.
- * @return A newly allocated string containing the 
-	expanded content within quotes,
- * or NULL on memory allocation failure.
- */
 char	*copy_double_quoted_text_ini(const char *arg, int *i, t_env *env, int s)
 {
 	char	*result;
@@ -101,21 +68,6 @@ char	*copy_double_quoted_text_ini(const char *arg, int *i, t_env *env, int s)
 	return (result);
 }
 
-/**
- * @brief Expands an argument string, handling quotes and variable expansions.
- *
- * This is the main expansion function that iterates through an argument string,
- * identifies different segments (plain text, single quotes, double quotes,
- * and variable expansions), processes each segment,
-	and concatenates the results
- * to produce the fully expanded string.
- *
- * @param arg The original argument string to be expanded.
- * @param env A pointer to the environment variables list.
- * @param s The exit status of the previous command.
- * @return A newly allocated string representing the expanded argument,
- * or NULL on memory allocation failure.
- */
 char	*ft_expand_arg_ini(char *arg, t_env *env, int s)
 {
 	char	*result;
@@ -138,21 +90,6 @@ char	*ft_expand_arg_ini(char *arg, t_env *env, int s)
 	return (result);
 }
 
-/**
- * @brief Performs expansions on token values before command execution.
- *
- * This function iterates through a list of tokens. For each token of type
- * `TOKEN_WORD` that contains characters indicating a need for expansion
- * (as determined by `check_expansion`), it calls `ft_expand_arg_ini` to
- * perform the actual expansion. The original token value is then freed
- * and replaced with the expanded value.
- *
- * @param tokens A pointer to the head of the token list. The token values
- * will be modified in place.
- * @param env A pointer to the environment variables list.
- * @param status The exit status of the previous command,
-	passed to expansion functions.
- */
 void	expand_before_executor(t_token **tokens, t_env *env, int status)
 {
 	t_token	*cur;
@@ -160,7 +97,7 @@ void	expand_before_executor(t_token **tokens, t_env *env, int status)
 
 	cur = *tokens;
 	expanded = NULL;
-	while (cur)
+	while (cur && ft_strncmp(cur->value, "echo", 4))
 	{
 		if (cur->type == TOKEN_WORD && check_expansion(cur->value))
 		{
@@ -180,21 +117,6 @@ void	expand_before_executor(t_token **tokens, t_env *env, int status)
 	}
 }
 
-/**
- * @brief Checks for multiple non-empty expansions at the 
-	beginning of a command.
- * This function specifically looks for a scenario where multiple consecutive
- * tokens at the start of a command (before a pipe) result in non-empty
- * expansions. This is often an indication of a syntax error or an unintended
- * expansion that should be flagged (e.g., `echo $VAR1$VAR2` where both expand
- * to non-empty strings,
-	but the shell might interpret it as too many arguments).
- *
- * @param tokens A pointer to the head of the token list.
- * @param env A pointer to the environment variables list.
- * @return Returns 1 if multiple non-empty expansions are found at the start,
- * otherwise returns 0.
- */
 int	check_multiple_expansions_at_start(t_token *tokens, t_env *env)
 {
 	t_token	*cur;

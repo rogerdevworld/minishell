@@ -37,28 +37,53 @@ int	msg(char *error, char *arg)
  * environment variables, and specific paths.
  * Returns 0 on success, or 1 on error.
  */
-int	ft_cd(char **path, t_myenv *env)
+void	should_free_target(int should_free, char *target_dir)
+{
+	if (should_free)
+		free(target_dir);
+}
+
+static char	*get_target_dir(char **path, t_myenv *env, int *should_free)
 {
 	char	*target_dir;
 
-	target_dir = NULL;
-	if (path[1] && path[2])
-		return (msg(" too many arguments", NULL));
 	if (!path[1])
 	{
 		target_dir = ft_echo_expand("HOME", env->list_env);
 		if (!target_dir)
-			return (msg("HOME not set", NULL));
+			return (msg("HOME not set", NULL), NULL);
+		*should_free = 1;
 	}
 	else if (path[1][0] == '$')
 	{
 		target_dir = ft_echo_expand(path[1] + 1, env->list_env);
 		if (!target_dir)
-			return (msg("environment variable not found", path[1]));
+			return (msg("environment variable not found", path[1]), NULL);
+		*should_free = 1;
 	}
 	else
+	{
 		target_dir = path[1];
+		*should_free = 0;
+	}
+	return (target_dir);
+}
+
+int	ft_cd(char **path, t_myenv *env)
+{
+	char	*target_dir;
+	int		should_free;
+
+	if (path[1] && path[2])
+		return (msg(" too many arguments", NULL));
+	target_dir = get_target_dir(path, env, &should_free);
+	if (!target_dir)
+		return (1);
 	if (chdir(target_dir) == -1)
+	{
+		should_free_target(should_free, target_dir);
 		return (msg("No such file or directory", target_dir));
+	}
+	should_free_target(should_free, target_dir);
 	return (0);
 }

@@ -28,7 +28,7 @@ SRCS = $(SRC_DIR)minishell.c $(SRC_DIR)main_loop.c $(SRC_DIR)loop_processing.c $
         $(SRC_DIR)utils/ft_shlvl.c $(SRC_DIR)utils/get_path.c \
         $(SRC_DIR)utils/cleanup/ft_free.c $(SRC_DIR)utils/cleanup/ft_free2.c $(SRC_DIR)utils/cleanup/ft_free3.c $(SRC_DIR)utils/cleanup/free_split.c \
         $(SRC_DIR)utils/builtins/ft_echo_utils.c $(SRC_DIR)utils/builtins/ft_echo_utils2.c $(SRC_DIR)utils/builtins/ft_echo_utils3.c \
-        $(SRC_DIR)utils/export/ft_export_utils.c $(SRC_DIR)utils/export/ft_export_utils2.c \
+        $(SRC_DIR)utils/export/ft_export_utils.c $(SRC_DIR)utils/export/ft_export_utils2.c $(SRC_DIR)utils/export/ft_export_utils3.c\
         $(SRC_DIR)utils/redirs/ft_add_to_array.c $(SRC_DIR)utils/redirs/ft_open.c $(SRC_DIR)utils/redirs/utils.c \
         $(SRC_DIR)utils/signals/signals_utils.c \
         $(SRC_DIR)utils/env/env.c $(SRC_DIR)utils/env/env_utils.c \

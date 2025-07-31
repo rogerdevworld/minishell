@@ -22,12 +22,25 @@
  */
 int	check_expansion(char *str)
 {
+	int		in_single;
+	int		in_double;
+	int		i;
+
+	in_single = 0;
+	in_double = 0;
+	i = 0;
 	if (!str)
 		return (0);
-	if (str[0] == '$' && str[1] != '\0')
-		return (1);
-	if (str[0] == '"' && str[1] == '$')
-		return (1);
+	while (str[i])
+	{
+		if (str[i] == '\'' && !in_double)
+			in_single = !in_single;
+		else if (str[i] == '"' && !in_single)
+			in_double = !in_double;
+		else if (str[i] == '$' && !in_single && str[i + 1] != '\0')
+			return (1);
+		i++;
+	}
 	return (0);
 }
 

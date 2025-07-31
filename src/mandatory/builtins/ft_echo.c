@@ -11,6 +11,30 @@
 /* ************************************************************************** */
 #include "../../../include/minishell.h"
 
+char	*handle_spec_quot_var(t_minishell *minishell, const char *arg,
+	int *i, int s)
+{
+	char	*quoted_raw;
+	char	*quoted_expanded;
+	int		start;
+
+	if (arg[*i] == '"')
+	{
+		start = ++(*i);
+		while (arg[*i] && arg[*i] != '"')
+			(*i)++;
+		quoted_raw = ft_substr(arg, start, *i - start);
+		if (arg[*i] == '"')
+			(*i)++;
+		quoted_expanded = ft_expand_arg(minishell, quoted_raw, s);
+		free(quoted_raw);
+		return (quoted_expanded);
+	}
+	else if (arg[*i] == '\'')
+		return (copy_single_quoted_text(arg, i));
+	return (NULL);
+}
+
 /**
  * Expands a shell variable within a string.
  * Handles '$?' for the last exit status,
@@ -25,6 +49,8 @@ char	*expand_variable(t_minishell *minishell, const char *arg, int *i, int s)
 
 	var_name = NULL;
 	(*i)++;
+	if ((arg[*i] == '"' || arg[*i] == '\'') && arg[*i + 1])
+		return (handle_spec_quot_var(minishell, arg, i, s));
 	if (!arg[*i] || (!ft_isalpha(arg[*i]) && arg[*i] != '_' && arg[*i] != '?'
 			&& arg[*i] != '{'))
 		return (ft_strdup("$"));

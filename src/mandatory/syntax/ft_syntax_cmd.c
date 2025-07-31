@@ -40,7 +40,7 @@ t_ast	*parse_simple_command(t_token **tokens, char **envp)
 			break ;
 	}
 	cmd->args[i] = NULL;
-	if (cmd->args[0])
+	if (cmd->args[0] && ft_strncmp(cmd->args[0], ".", 1) != 0)
 		cmd->path = get_path(cmd->args[0], envp);
 	tmp_node = init_ast_node(NODE_COMMAND, cmd);
 	return (tmp_node);

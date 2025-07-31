@@ -21,12 +21,37 @@
  * Returns 0 on success, or -1 on error (e.g., permission denied,
 	or wildcard expansion failure).
  */
+static int	process_output_file(t_redir *redir, char *filename, int i)
+{
+	char	*expanded_file;
+	int		open_mode;
+	int		fd;
+
+	expanded_file = expand_redir_wildcard(filename);
+	if (!expanded_file)
+		return (-1);
+	if (redir->out_file_type[i] == TOKEN_APPEND)
+		open_mode = 2;
+	else
+		open_mode = 1;
+	fd = ft_open(expanded_file, open_mode);
+	if (fd == -1)
+	{
+		perror(expanded_file);
+		free(expanded_file);
+		return (-1);
+	}
+	free(expanded_file);
+	if (redir->output_file > 2)
+		close(redir->output_file);
+	redir->output_file = fd;
+	return (0);
+}
+
 int	ft_output_redirections(t_redir *redir)
 {
-	int		fd;
-	char	**files;
 	int		i;
-	char	*expanded_file;
+	char	**files;
 
 	if (!redir || !redir->out_file)
 		return (0);
@@ -34,16 +59,8 @@ int	ft_output_redirections(t_redir *redir)
 	i = 0;
 	while (files[i])
 	{
-		expanded_file = expand_redir_wildcard(files[i]);
-		if (!expanded_file)
+		if (process_output_file(redir, files[i], i) == -1)
 			return (-1);
-		fd = ft_open(expanded_file, 1);
-		if (fd == -1)
-			return (perror(expanded_file), free(expanded_file), -1);
-		free(expanded_file);
-		if (redir->output_file > 2)
-			close(redir->output_file);
-		redir->output_file = fd;
 		i++;
 	}
 	return (0);

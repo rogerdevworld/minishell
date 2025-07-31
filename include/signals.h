@@ -29,5 +29,6 @@ typedef enum e_signal
 void	signal_init(void);
 void	ft_sigint(int sig);
 int		update_exit_status(int status, t_minishell *minishell);
+int		verify_sigint(int status);
 
 #endif

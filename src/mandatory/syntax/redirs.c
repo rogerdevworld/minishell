@@ -31,6 +31,7 @@ void	init_redir(t_redir *redir)
 	redir->limiter = ft_calloc(64, sizeof(char *));
 	redir->in_file = ft_calloc(64, sizeof(char *));
 	redir->out_file = ft_calloc(64, sizeof(char *));
+	redir->out_file_type = ft_calloc(64, sizeof(int));
 }
 
 /**

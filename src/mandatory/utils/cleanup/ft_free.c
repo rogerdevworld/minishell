@@ -29,13 +29,15 @@ void	free_redir(t_redir *redir)
 		free_split(redir->in_file);
 	if (redir->out_file)
 		free_split(redir->out_file);
+	if (redir->out_file_type)
+		free(redir->out_file_type);
 	free(redir);
 }
 
 /**
  * Frees all nodes in a linked list of `t_token` structures.
  * It iterates through the list,
-	freeing the `value` string and then the `t_token` node 
+	freeing the `value` string and then the `t_token` node
 	itself for each element.
  */
 void	free_tokens(t_token *tokens)
@@ -94,7 +96,7 @@ void	free_ast(t_ast *node)
 
 /**
  * Frees all memory associated with the main `t_myenv` structure.
- * This includes deallocating the linked list of 
+ * This includes deallocating the linked list of
 	environment variables (`list_env`)
  * and the `char** env` array,
 	then finally freeing the `t_myenv` structure itself.

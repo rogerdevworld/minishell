@@ -68,17 +68,49 @@ void	add_back(t_token **tokens, t_token *new_token)
 	identifying and extracting operators and words (including quoted sections).
  * Returns the head of the linked list of tokens.
  */
+
+void	process_operator(const char *input, int *len,
+		t_token **tokens, int *heredoc_flag)
+{
+	char	*token_val;
+	t_token	*token;
+
+	*len = read_operator(input, &token_val);
+	token = init_lexer(token_val);
+	add_back(tokens, token);
+	if (ft_strncmp(token_val, "<<", 2) == 0)
+		*heredoc_flag = 1;
+	else
+		*heredoc_flag = 0;
+	free(token_val);
+}
+
+void	process_word(const char *input, int *len,
+		t_token **tokens, int *heredoc_flag)
+{
+	char	*token_val;
+	t_token	*new_token;
+
+	*len = read_word(input, &token_val);
+	new_token = init_lexer(token_val);
+	if (*heredoc_flag)
+		new_token->type = TOKEN_LIMITER;
+	add_back(tokens, new_token);
+	*heredoc_flag = 0;
+	free(token_val);
+}
+
 t_token	*lexer(char *input)
 {
 	t_token	*tokens;
-	char	*token_val;
 	int		i;
 	int		len;
+	int		last_operator_was_heredoc;
 
 	tokens = NULL;
-	token_val = NULL;
 	i = 0;
 	len = 0;
+	last_operator_was_heredoc = 0;
 	while (input[i])
 	{
 		while (ft_isspace(input[i]))
@@ -86,12 +118,11 @@ t_token	*lexer(char *input)
 		if (!input[i])
 			break ;
 		if (is_operator(&input[i]))
-			len = read_operator(&input[i], &token_val);
+			process_operator(&input[i], &len, &tokens,
+				&last_operator_was_heredoc);
 		else
-			len = read_word(&input[i], &token_val);
-		add_back(&tokens, init_lexer(token_val));
+			process_word(&input[i], &len, &tokens, &last_operator_was_heredoc);
 		i += len;
-		free(token_val);
 	}
 	return (tokens);
 }

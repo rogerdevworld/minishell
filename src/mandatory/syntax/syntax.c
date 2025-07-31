@@ -63,7 +63,10 @@ int	check_redirection_args(t_token *tokens)
 		if (tokens->type == TOKEN_REDIR_IN || tokens->type == TOKEN_REDIR_OUT
 			|| tokens->type == TOKEN_APPEND || tokens->type == TOKEN_HEREDOC)
 		{
-			if (!tokens->next || tokens->next->type != TOKEN_WORD)
+			if (!tokens->next || (tokens->type == TOKEN_HEREDOC
+					&& tokens->next->type != TOKEN_LIMITER)
+				|| (tokens->type != TOKEN_HEREDOC
+					&& tokens->next->type != TOKEN_WORD))
 			{
 				ft_msg_syntax("syntax error near unexpected token ",
 					tokens->value);
@@ -74,6 +77,25 @@ int	check_redirection_args(t_token *tokens)
 	}
 	return (0);
 }
+// int	check_redirection_args(t_token *tokens)
+// {
+// 	while (tokens)
+// 	{
+// 		if (tokens->type == TOKEN_REDIR_IN || tokens->type == TOKEN_REDIR_OUT
+// 			|| tokens->type == TOKEN_APPEND || tokens->type == TOKEN_HEREDOC)
+// 		{
+// 			if (!tokens->next || tokens->next->type != TOKEN_WORD
+// 				|| tokens->next->type != TOKEN_LIMITER)
+// 			{
+// 				ft_msg_syntax("syntax error near unexpected token ",
+// 					tokens->value);
+// 				return (1);
+// 			}
+// 		}
+// 		tokens = tokens->next;
+// 	}
+// 	return (0);
+// }
 
 /*
  * check_parentheses_balance:

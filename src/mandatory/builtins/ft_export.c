@@ -60,10 +60,10 @@ int	export_add_or_update(t_env **env_list, char *arg)
 {
 	char	*key;
 	char	*value;
-	int		has_equal;
+	int		mode;
 	char	*expanded;
 
-	if (!parse_export_arg(arg, &key, &value, &has_equal))
+	if (!parse_export_arg(arg, &key, &value, &mode))
 		return (1);
 	if (!is_valid_identifier(key))
 	{
@@ -79,10 +79,38 @@ int	export_add_or_update(t_env **env_list, char *arg)
 			value = expanded;
 		}
 	}
-	update_or_add_env(env_list, key, value, has_equal);
+	update_or_add_env(env_list, key, value, mode);
 	free(key);
 	return (0);
 }
+
+// int	export_add_or_update(t_env **env_list, char *arg)
+// {
+// 	char	*key;
+// 	char	*value;
+// 	int		has_equal;
+// 	char	*expanded;
+
+// 	if (!parse_export_arg(arg, &key, &value, &has_equal))
+// 		return (1);
+// 	if (!is_valid_identifier(key))
+// 	{
+// 		print_invalid_identifier_error(arg);
+// 		return (free(key), free(value), 1);
+// 	}
+// 	if (value && check_expansion(value))
+// 	{
+// 		expanded = ft_expand_arg_ini(value, *env_list, 0);
+// 		if (expanded)
+// 		{
+// 			free(value);
+// 			value = expanded;
+// 		}
+// 	}
+// 	update_or_add_env(env_list, key, value, has_equal);
+// 	free(key);
+// 	return (0);
+// }
 
 /**
 

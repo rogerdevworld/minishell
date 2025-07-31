@@ -11,18 +11,6 @@
 /* ************************************************************************** */
 #include "../../../include/minishell.h"
 
-/**
- * @brief Updates the "SHLVL" environment variable.
- *
- * This function iterates through the environment variables to find "SHLVL".
- * If found, it increments its value. If the value is not a valid number,
- * it defaults to 1. If the incremented level is 1000 or more, it prints
- * a warning and resets the SHLVL to 1, as per standard shell behavior
- * for excessively high shell levels.
- *
- * @param myenv A pointer to the custom environment structure containing
- * the list of environment variables.
- */
 void	ft_shlvl(t_myenv *myenv)
 {
 	t_env	*env;

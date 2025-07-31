@@ -32,6 +32,7 @@ enum e_token_type
 	TOKEN_OPEN_PAREN,
 	TOKEN_CLOSE_PAREN,
 	TOKEN_BG,
+	TOKEN_LIMITER,
 	TOKEN_INVALID
 };
 
@@ -65,6 +66,7 @@ struct s_redir
 	int		*heredoc_fds;
 	char	**in_file;
 	char	**out_file;
+	int		*out_file_type;
 };
 
 struct s_command

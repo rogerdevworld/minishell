@@ -28,7 +28,7 @@ t_command	*init_command(void)
 		return (NULL);
 	cmd->args = ft_calloc(64, sizeof(char *));
 	cmd->path = NULL;
-	cmd->redir = malloc(sizeof(t_redir));
+	cmd->redir = ft_calloc(1, sizeof(t_redir));
 	if (!cmd->redir)
 	{
 		free(cmd->args);

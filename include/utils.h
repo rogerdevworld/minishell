@@ -102,6 +102,8 @@ char				*handle_inside_double_quotes(t_minishell *minishell,
 char				*get_variable_value(t_minishell *minishell, char *var_name);
 char				*extract_variable_name(const char *arg, int *i);
 
+// ... (resto de tus prototipos) ...
+
 /**
  * ft_export
  */
@@ -111,11 +113,16 @@ void				sort_env_array(t_env **array);
 char				*ft_strjoin_free_env(char *s1, char *s2);
 void				print_export(t_env *env);
 int					count_env_items(t_env *list_env);
-int					parse_export_arg(char *arg, char **key, char **value,
-						int *has_equal);
+int					parse_export_arg(const char *arg, char **key, char **value,
+						int *mode);
 void				print_invalid_identifier_error(char *arg);
-void				update_or_add_env(t_env **env_list, char *key, char *value,
-						int has_equal);
+void				update_or_add_env(t_env **env_list, char *key,
+						char *value, int mode);
+
+// int	parse_export_arg(const char *arg, char **key, char **value, int *mode);
+void				print_invalid_identifier_error(char *arg);
+void				update_or_add_env(t_env **env_list, char *key,
+						char *value, int has_equal);
 
 /**
  * Utils used for redirections, heredocs, and appends
