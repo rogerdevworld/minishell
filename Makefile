@@ -1,12 +1,12 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/09/16 12:58:52 by rmarrero          #+    #+#              #
-#    Updated: 2025/07/29 18:13:37 by arhea            ###   ########.fr       #
+#    Makefile                                         :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+     #
+#    By: rmarrero <marvin@42.fr>                    +#+  +:+       +#+        #
+#                                                 +#+#+#+#+#+   +#+           #
+#    Created: 2024/09/16 12:58:52 by rmarrero          #+    #+    #+          #
+#    Updated: 2025/07/29 18:13:37 by arhea           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,6 +50,10 @@ LIBFT_REPO_URL = https://github.com/rogerdevworld/libftall.git
 LIBFT_DIR = ./src/libft
 EX_LIB = $(LIBFT_DIR)/libft.a
 
+# --- Tester --- #
+TESTER_REPO_URL = https://github.com/LucasKuhn/minishell_tester.git
+TESTER_DIR = ./minishell_tester
+
 # --- Colores --- #
 RED     = \033[31m
 GREEN   = \033[32m
@@ -63,8 +67,6 @@ all: libft $(NAME)
 $(NAME): $(OBJS) $(EX_LIB)
 	@echo "$(GREEN)Compilando $(NAME)...$(RESET)"
 	$(CC) $(CFLAGS) $(OBJS) $(EX_LIB) -o $(NAME) -lreadline -g
-	@echo ""
-	@echo ""
 	@echo "# **************************************************************************** #"
 	@echo "#                                                                              #"
 	@echo "#                                                         :::      ::::::::    #"
@@ -72,41 +74,41 @@ $(NAME): $(OBJS) $(EX_LIB)
 	@echo "#                                                     +:+ +:+         +:+      #"
 	@echo "#    By: rmarrero rmarrero@student.42barcelona.com  +#+  +:+       +#+         #"
 	@echo "#                                                 +#+#+#+#+#+   +#+            #"
-	@echo "#    Created: 2024/09/16 12:58:52 by rmarrero          #+    #+#              #"
-	@echo "#    Updated: 2025/07/29 13:04:23 by rmarrero         ###   ########.fr       #"
+	@echo "#    Created: 2024/09/16 12:58:52 by rmarrero          #+#    #+#              #"
+	@echo "#    Updated: 2025/07/29 13:04:23 by rmarrero         ###   ########.fr        #"
 	@echo "#                                                                              #"
 	@echo "# **************************************************************************** #"
-	@echo ""
-	@echo ""
-	@echo ""
-	@echo ""
-	@echo "                          %%%%%%%%%%                                            "
-	@echo "                        +%%%%%%%%%%%%%%%%%%%%+                                  "
-	@echo "                      %%%%%%%%%%%%%%%%%%%%%%%%%%%%                              "
-	@echo "                    %%%%%%%%%......%%......%%%%%%%%%                            "
-	@echo "                  %%%%%%:..%%......%%......%%..:%%%%%%                          "
-	@echo "                %%%%%%......%......%%......%......%%%%%%                        "
-	@echo "                %%%%%%%......%%.....%%.....%%......%%%%%%%                      "
-	@echo "               %%%%..%%......%.....%%.....%......%%..%%%%%                      "
-	@echo "              %%%%....%%.....%*....##....*%.....%%....%%%%%                     "
-	@echo "              =%%%%......%*.....%....##....%.....*%......%%%%=                    "
-	@echo "              %%%%%%......%.....%....--....%.....%......%%%%%%                     "
-	@echo "              %%%.%%:.....%.....%........%.....%......%%.%%%%                     "
-	@echo "              %%%%%...%%.....%....%........%....%.....%%...%%%%%                   "
-	@echo "              %%%%#.....%:....%................%.....%.....#%%%%                   "
-	@echo "              %%%%%.......%....%...%......%...%....%.......%%%%%                   "
-	@echo "               %%%%%=......=....%............%....=......=%%%%%                   "
-	@echo "                 %%%%%%%......%...=..:....:..=...%......%%%%%%%                    "
-	@echo "                   #%%%%%%#.....-..............-.....#%%%%%%#                     "
-	@echo "                     %%%%%%........................%%%%%%                          "
-	@echo "                       %%%%........................%%%%.                           "
-	@echo "                       %%%%........................%%%%                            "
-	@echo "                       %%%%........................%%%%                            "
-	@echo "                       %%%%%%%%%%%%%%%++%%%%%%%%%%%%%%%                            "
-	@echo "                       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#                             "
-	@echo "                                 %%%%                                              "
-	@echo "                                                                                 "
-	@echo "                          You are beyond the $(NAME)                          "
+	@echo "                                                                                "
+	@echo "                                                                                "
+	@echo "                                                                                "
+	@echo "                                                                                "
+	@echo "                                   %%%%%%%%%%                                   "
+	@echo "                             +%%%%%%%%%%%%%%%%%%%%+                             "
+	@echo "                          %%%%%%%%%%%%%%%%%%%%%%%%%%%%                          "
+	@echo "                        %%%%%%%%%......%%......%%%%%%%%%                        "
+	@echo "                      %%%%%%:..%%......%%......%%..:%%%%%%                      "
+	@echo "                    %%%%%%......%......%%......%......%%%%%%                    "
+	@echo "                   %%%%%%%......%%.....%%.....%%......%%%%%%%                   "
+	@echo "                  %%%%%..%%......%.....%%.....%......%%..%%%%%                  "
+	@echo "                 %%%%%....%%.....%*....##....*%.....%%....%%%%%                 "
+	@echo "                =%%%%......%*.....%....##....%.....*%......%%%%=                "
+	@echo "                %%%%%%......%.....%....--....%.....%......%%%%%%                "
+	@echo "                %%%%.%%:.....%.....%........%.....%......%%.%%%%                "
+	@echo "               %%%%%...%%.....%....%........%....%.....%%...%%%%%               "
+	@echo "               %%%%#.....%:....%................%.....%.....#%%%%               "
+	@echo "               %%%%%.......%....%...%......%...%....%.......%%%%%               "
+	@echo "                %%%%%=......=....%............%....=......=%%%%%                "
+	@echo "                 %%%%%%%......%...=..:....:..=...%......%%%%%%%                 "
+	@echo "                   #%%%%%%#.....-..............-.....#%%%%%%#                   "
+	@echo "                      %%%%%%........................%%%%%%                      "
+	@echo "                        %%%%........................%%%%.                       "
+	@echo "                        %%%%........................%%%%                        "
+	@echo "                        %%%%........................%%%%                        "
+	@echo "                        %%%%%%%%%%%%%%%++%%%%%%%%%%%%%%%                        "
+	@echo "                        #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#                        "
+	@echo "                                      %%%%                                      "
+	@echo "                                                                                "
+	@echo "                        You are beyond the minishell                            "
 	@echo "$(RESET)"
 
 # --- Targets Auxiliares --- #
@@ -138,6 +140,29 @@ libft:
 	fi
 	@make -C $(LIBFT_DIR)
 
+# --- Reglas de Testeo --- #
+TESTER_DIR = ./minishell_tester
+TESTER_REPO_URL = https://github.com/LucasKuhn/minishell_tester.git
+
+.PHONY: tester bonus_tester
+
+tester: $(NAME)
+	@echo "$(YELLOW)Verificando y clonando minishell_tester...$(RESET)"
+	@if [ ! -d "$(TESTER_DIR)" ]; then \
+		git clone $(TESTER_REPO_URL) $(TESTER_DIR); \
+		chmod +x $(TESTER_DIR)/tester; \
+	fi
+	@echo "$(GREEN)Copiando minishell al directorio del tester...$(RESET)"
+	@cp $(NAME) $(TESTER_DIR)
+	@echo "$(GREEN)Ejecutando tester...$(RESET)"
+	@cd $(TESTER_DIR) && ./tester
+
+bonus_tester: $(NAME)
+	@echo "$(GREEN)Copiando minishell al directorio del tester...$(RESET)"
+	@cp $(NAME) minishell_bonus
+	@echo "$(GREEN)Ejecutando bonus tester...$(RESET)"
+	@cd $(TESTER_DIR) && ./tester bonus
+
 # --- Reglas de Limpieza --- #
 clean:
 	@echo "$(GREEN)Eliminando archivos objeto...$(RESET)"
@@ -147,8 +172,9 @@ clean:
 fclean: clean
 	@echo "$(GREEN)Eliminando ejecutable y librerías...$(RESET)"
 	$(RM) -f $(NAME)
-	@make fclean -C $(LIBFT_DIR)
+	$(RM) -f minishell_tester
+	$(RM) -f minishell_bonus
+	$(RM) -rf $(LIBFT_DIR)
+	$(RM) -rf $(TESTER_DIR)
 
-re: fclean all
-
-.PHONY: all clean fclean re libft
+re: fclean all tester
