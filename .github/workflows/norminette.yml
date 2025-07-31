@@ -57,4 +57,4 @@ jobs:
           path: minishell_tester
 
       - name: Run tester
-        run: ./minishell_tester/tester ./minishell/minishell
+        run: ./minishell_tester/tester ./minishell
