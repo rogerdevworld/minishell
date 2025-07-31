@@ -28,7 +28,7 @@ jobs:
       - name: Run Norminette
         run: norminette -R CheckGlobalVars -R CheckLineLen -R CheckFuncLen -R CheckOpenFile -R CheckReadline
         
-  build_and_test:
+build_and_test:
     name: Build & Test Project
     runs-on: ubuntu-latest
 
@@ -57,4 +57,4 @@ jobs:
           path: minishell_tester
 
       - name: Run tester
-        run: ./minishell_tester/tester ./minishell
+        run: ./minishell_tester/tester ./minishell/minishell
