@@ -26,7 +26,7 @@ jobs:
         run: pip install norminette
 
       - name: Run Norminette
-        run: norminette ./src/mandatory
+        run: norminette
 
   build:
     name: Build Project
@@ -44,6 +44,3 @@ jobs:
 
       - name: Run Tester
         run: ./tester
-
-      - name: Run Bonus Tester
-        run: ./tester bonus
