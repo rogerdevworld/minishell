@@ -106,7 +106,7 @@ $(NAME): $(OBJS) $(EX_LIB)
 	@echo "                        #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#                        "
 	@echo "                                      %%%%                                      "
 	@echo "                                                                                "
-	@echo "                     You are beyond the $(TARGET_NAME)                          "
+	@echo "                      You are beyond the minishell                              "
 	@echo "$(RESET)"
 
 # --- Targets Auxiliares --- #
