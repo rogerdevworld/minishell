@@ -28,33 +28,33 @@ jobs:
       - name: Run Norminette
         run: norminette -R CheckGlobalVars -R CheckLineLen -R CheckFuncLen -R CheckOpenFile -R CheckReadline
         
-build_and_test:
-    name: Build & Test Project
-    runs-on: ubuntu-latest
+  build_and_test:
+      name: Build & Test Project
+      runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout minishell repository
-        uses: actions/checkout@v4
-        with:
-          path: minishell
+      steps:
+        - name: Checkout minishell repository
+          uses: actions/checkout@v4
+          with:
+            path: minishell
 
-      - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y make gcc libreadline-dev
+        - name: Install dependencies
+          run: sudo apt-get update && sudo apt-get install -y make gcc libreadline-dev
 
-      - name: Clone libft
-        run: git clone https://github.com/rogerdevworld/libftall.git ./minishell/src/libft
+        - name: Clone libft
+          run: git clone https://github.com/rogerdevworld/libftall.git ./minishell/src/libft
 
-      - name: Build libft
-        run: make -C ./minishell/src/libft
+        - name: Build libft
+          run: make -C ./minishell/src/libft
 
-      - name: Build minishell
-        run: make -C ./minishell
+        - name: Build minishell
+          run: make -C ./minishell
 
-      - name: Checkout tester repository
-        uses: actions/checkout@v4
-        with:
-          repository: LucasKuhn/minishell_tester
-          path: minishell_tester
+        - name: Checkout tester repository
+          uses: actions/checkout@v4
+          with:
+            repository: LucasKuhn/minishell_tester
+            path: minishell_tester
 
-      - name: Run tester
-        run: ./minishell_tester/tester ./minishell/minishell
+        - name: Run tester
+          run: ./minishell_tester/tester ./minishell/minishell
